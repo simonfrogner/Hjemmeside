@@ -1,8 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="no">
 <head>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
+  <title>Simon sin stilige nettside</title>
+  <meta name="description" content="Simon sin personlige nettside med navnefakta og et klassisk Tetris-spill.">
+  <meta name="author" content="Simon Frogner">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Simon sin stilige nettside">
+  <meta property="og:description" content="Finn fakta om navnet ditt og spill Tetris!">
+  <meta property="og:url" content="https://simonfrogner.github.io/Hjemmeside">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="nb_NO">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+<style>
     * {
       box-sizing: border-box;
       margin: 0;
@@ -10,6 +24,26 @@
     }
 
     /* LOADING */
+    #partikkel-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    #museglow {
+      position: fixed;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 0;
+      transition: opacity 0.3s;
+      mix-blend-mode: overlay;
+    }
+
     #loader {
       position: fixed;
       inset: 0;
@@ -49,11 +83,32 @@
     }
 
 
+    @keyframes gradientSkift {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
     body {
-      background: linear-gradient(135deg, #667eea, #764ba2);
+      background: linear-gradient(-45deg, #667eea, #764ba2, #a855f7, #4f46e5, #667eea);
+      background-size: 300% 300%;
+      animation: gradientSkift 12s ease infinite;
       font-family: 'Segoe UI', sans-serif;
       min-height: 100vh;
     }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: -30%;
+      background: radial-gradient(ellipse at 60% 40%, rgba(118, 75, 162, 0.6) 0%, rgba(102, 126, 234, 0.4) 50%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      will-change: transform;
+      transform: translateY(var(--parallax-y, 0px));
+    }
+
+    .page, nav { position: relative; z-index: 1; }
 
     /* NAV */
     nav {
@@ -62,8 +117,11 @@
       left: 0;
       right: 0;
       z-index: 100;
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(12px);
+      background: linear-gradient(90deg, rgba(102,126,234,0.25), rgba(118,75,162,0.25), rgba(168,85,247,0.2));
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      box-shadow: 0 4px 24px rgba(102,126,234,0.15);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -76,6 +134,75 @@
       font-size: 1.2rem;
       font-weight: 700;
       text-shadow: 0 1px 4px rgba(0,0,0,0.2);
+      position: relative;
+      cursor: default;
+    }
+
+    .nav-logo.glitch {
+      animation: glitch 0.4s steps(2) forwards;
+    }
+
+    @keyframes glitch {
+      0%   { text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff; transform: translate(0); }
+      20%  { text-shadow: -3px 0 #ff00ff, 3px 0 #00ffff; transform: translate(-2px, 1px); }
+      40%  { text-shadow: 3px 0 #ff00ff, -3px 0 #00ffff; transform: translate(2px, -1px); clip-path: inset(20% 0 30% 0); }
+      60%  { text-shadow: -2px 0 #ff00ff, 2px 0 #00ffff; transform: translate(-1px); clip-path: inset(50% 0 10% 0); }
+      80%  { text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff; transform: translate(1px, 1px); }
+      100% { text-shadow: 0 1px 4px rgba(0,0,0,0.2); transform: translate(0); clip-path: none; }
+    }
+
+    /* Cursor trail */
+    .trail-dot {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      animation: trail-fade 0.6s ease forwards;
+    }
+
+    @keyframes trail-fade {
+      0%   { transform: scale(1); opacity: 0.8; }
+      100% { transform: scale(0); opacity: 0; }
+    }
+
+    /* Easter egg overlay */
+    #claude-egg {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(10, 5, 30, 0.95);
+      backdrop-filter: blur(12px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s;
+    }
+
+    #claude-egg.aktiv {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    #claude-egg h2 {
+      font-size: 2rem;
+      color: white;
+      text-align: center;
+      text-shadow: 0 0 30px rgba(167,139,250,0.9);
+      margin-bottom: 12px;
+      padding: 0 24px;
+    }
+
+    #claude-egg p {
+      color: rgba(255,255,255,0.6);
+      font-size: 1rem;
+      margin-bottom: 24px;
+    }
+
+    #claude-egg button {
+      background: linear-gradient(135deg, #667eea, #764ba2);
     }
 
     .nav-links {
@@ -167,8 +294,95 @@
       color: white;
       font-size: 2.6rem;
       margin-bottom: 24px;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
       text-align: center;
+      min-height: 3.2rem;
+      text-shadow:
+        0 0 10px rgba(255,255,255,0.8),
+        0 0 30px rgba(167,139,250,0.8),
+        0 0 60px rgba(139,92,246,0.6);
+      animation: neon-puls 3s ease-in-out infinite;
+    }
+
+    @keyframes neon-puls {
+      0%, 100% {
+        text-shadow:
+          0 0 10px rgba(255,255,255,0.8),
+          0 0 30px rgba(167,139,250,0.8),
+          0 0 60px rgba(139,92,246,0.6);
+      }
+      50% {
+        text-shadow:
+          0 0 20px rgba(255,255,255,1),
+          0 0 50px rgba(167,139,250,1),
+          0 0 100px rgba(139,92,246,0.9);
+      }
+    }
+
+    .page-title::after {
+      content: '|';
+      animation: blink-cursor 0.7s step-end infinite;
+      margin-left: 2px;
+    }
+
+    .page-title.ferdig::after {
+      display: none;
+    }
+
+    @keyframes blink-cursor {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* SCROLL TIL TOPP */
+    #topp-knapp {
+      position: fixed;
+      bottom: 32px;
+      right: 28px;
+      z-index: 200;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color: white;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.3s, transform 0.3s;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+
+    #topp-knapp.synlig {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #topp-knapp:hover {
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 32px 16px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9rem;
+    }
+
+    footer a {
+      color: rgba(255, 255, 255, 0.85);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    footer a:hover {
+      color: white;
     }
 
     .section-title {
@@ -181,13 +395,19 @@
 
     /* KORT */
     .card {
-      background: white;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
       border-radius: 16px;
       padding: 48px 40px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255,255,255,0.8);
       text-align: center;
       max-width: 460px;
       width: 90%;
+      transform-style: preserve-3d;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      will-change: transform;
     }
 
     p {
@@ -231,6 +451,21 @@
       font-weight: 600;
       transition: transform 0.2s, box-shadow 0.2s;
       white-space: nowrap;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .rippel {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.35);
+      transform: scale(0);
+      animation: rippel-ut 0.5s ease-out forwards;
+      pointer-events: none;
+    }
+
+    @keyframes rippel-ut {
+      to { transform: scale(4); opacity: 0; }
     }
 
     button:hover {
@@ -247,6 +482,7 @@
       font-size: 1.3rem;
       min-height: 1.5em;
       margin-bottom: 0;
+      text-align: left;
     }
 
     /* NAVNEFAKTA-SEKSJON */
@@ -327,8 +563,11 @@
     }
 
     body.dark .card {
-      background: #1e1e2f;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      background: rgba(30, 30, 47, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05);
     }
 
     body.dark p {
@@ -456,6 +695,17 @@
       transform: translateY(0);
     }
 
+    .card.fade-in {
+      opacity: 0;
+      transform: perspective(800px) rotateY(25deg) translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .card.fade-in.synlig {
+      opacity: 1;
+      transform: perspective(800px) rotateY(0deg) translateY(0);
+    }
+
     @keyframes fall {
       to {
         transform: translateY(105vh) rotate(720deg);
@@ -465,13 +715,20 @@
   </style>
 </head>
 <body>
+<canvas id="partikkel-canvas"></canvas>
+<div id="museglow"></div>
+<div id="claude-egg">
+  <h2>🤖 Hei, Claude Code her!<br>Jeg bygde denne siden sammen med Simon!</h2>
+  <p>Trykk hvor som helst for å lukke</p>
+  <button onclick="lukkEgg()">Tilbake til siden</button>
+</div>
 <div id="loader">
   <div class="spinner"></div>
   <p>Laster...</p>
 </div>
 
   <nav>
-    <div class="nav-logo">Simon sin stilige nettside</div>
+    <div class="nav-logo">Simon som vibe-koder med Claude Code</div>
     <div class="nav-links" id="navLinks">
       <a href="#hjem" class="active" onclick="lukkMeny()">Hjem</a>
       <a href="#navnefakta" onclick="lukkMeny()">Navnefakta</a>
@@ -489,6 +746,8 @@
       <span>🌙</span>
     </div>
   </nav>
+
+  <button id="topp-knapp" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Til toppen">↑</button>
 
   <div class="page">
 
@@ -533,13 +792,29 @@
       let navn = document.getElementById("navnBoks").value.trim();
       if (navn === "") {
         document.getElementById("svar").innerText = "Vennligst skriv inn navnet ditt.";
+      } else if (navn.toLowerCase() === "claude") {
+        åpneEgg();
       } else {
-        document.getElementById("svar").innerText = "Heisann, " + navn + "!";
-
+        document.getElementById("svar").innerText = "Heisann, " + navn + "! Så hyggelig å se deg her! 🎉";
         launchConfetti();
         visFakta();
       }
     }
+
+    function åpneEgg() {
+      document.getElementById("claude-egg").classList.add("aktiv");
+      launchConfetti();
+    }
+
+    function lukkEgg() {
+      document.getElementById("claude-egg").classList.remove("aktiv");
+      document.getElementById("navnBoks").value = "";
+      document.getElementById("svar").innerText = "";
+    }
+
+    document.getElementById("claude-egg").addEventListener("click", e => {
+      if (e.target === document.getElementById("claude-egg")) lukkEgg();
+    });
 
     const navnDatabase = {
       "simon": ["Simon kommer fra hebraisk og betyr «den som hører».", "Simon var et av de vanligste navnene blant apostlene i Bibelen.", "Simon er populært i Skandinavia, Storbritannia og Sør-Europa.", "Kjente Simoner inkluderer Simon Bolivar, frigjøringshelten fra Sør-Amerika.", "🎉 Fun fact: Folk med navnet Simon beskrives ofte som nysgjerrige og gode lyttere — akkurat som navnet antyder!"],
@@ -603,6 +878,82 @@
       }
     });
 
+    // Glitch på nav-logo
+    const navLogo = document.querySelector(".nav-logo");
+    setInterval(() => {
+      if (Math.random() < 0.15) {
+        navLogo.classList.add("glitch");
+        navLogo.addEventListener("animationend", () => navLogo.classList.remove("glitch"), { once: true });
+      }
+    }, 3000);
+
+    // Cursor trail
+    const trailFarger = ["#a78bfa", "#818cf8", "#38bdf8", "#f472b6", "#34d399"];
+    document.addEventListener("mousemove", e => {
+      const dot = document.createElement("div");
+      dot.className = "trail-dot";
+      const size = 6 + Math.random() * 6;
+      dot.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - size/2}px;top:${e.clientY - size/2}px;background:${trailFarger[Math.floor(Math.random()*trailFarger.length)]}`;
+      document.body.appendChild(dot);
+      dot.addEventListener("animationend", () => dot.remove());
+    });
+
+    // Partikkel-bakgrunn
+    (function() {
+      const cv = document.getElementById("partikkel-canvas");
+      const cx = cv.getContext("2d");
+      let W, H, dots = [];
+
+      function resize() {
+        W = cv.width = window.innerWidth;
+        H = cv.height = window.innerHeight;
+      }
+
+      function lagDot() {
+        return {
+          x: Math.random() * W,
+          y: Math.random() * H,
+          r: 0.8 + Math.random() * 1.8,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: -0.1 - Math.random() * 0.3,
+          alpha: 0.2 + Math.random() * 0.5
+        };
+      }
+
+      resize();
+      for (let i = 0; i < 80; i++) dots.push(lagDot());
+      window.addEventListener("resize", resize);
+
+      (function loop() {
+        cx.clearRect(0, 0, W, H);
+        for (const d of dots) {
+          cx.beginPath();
+          cx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+          cx.fillStyle = `rgba(255,255,255,${d.alpha})`;
+          cx.fill();
+          d.x += d.vx;
+          d.y += d.vy;
+          if (d.y < -4) { d.y = H + 4; d.x = Math.random() * W; }
+          if (d.x < -4) d.x = W + 4;
+          if (d.x > W + 4) d.x = -4;
+        }
+        requestAnimationFrame(loop);
+      })();
+    })();
+
+    // Musepeker-glow
+    const museglow = document.getElementById("museglow");
+    document.addEventListener("mousemove", e => {
+      museglow.style.left = e.clientX + "px";
+      museglow.style.top = e.clientY + "px";
+    });
+
+    // Parallax-effekt
+    window.addEventListener("scroll", () => {
+      const y = window.scrollY * 0.25;
+      document.body.style.setProperty("--parallax-y", `${y}px`);
+    }, { passive: true });
+
     // Oppdater aktiv nav-lenke ved scrolling
     const sections = document.querySelectorAll("section");
     const navLinks = document.querySelectorAll(".nav-links a");
@@ -658,7 +1009,78 @@
         setTimeout(() => confetti.remove(), 3500);
       }
     }
+    // 3D tilt-effekt på kort
+    document.querySelectorAll(".card").forEach(card => {
+      card.addEventListener("mousemove", e => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        card.style.transform = `perspective(800px) rotateY(${x * 12}deg) rotateX(${-y * 12}deg) scale(1.02)`;
+        card.style.boxShadow = `${-x * 20}px ${y * 20}px 40px rgba(0,0,0,0.2)`;
+      });
+      card.addEventListener("mouseleave", () => {
+        card.style.transform = "";
+        card.style.boxShadow = "";
+      });
+    });
+
+    // Rippel-effekt på knapper
+    document.addEventListener("click", e => {
+      const btn = e.target.closest("button");
+      if (!btn || btn.id === "hamburger" || btn.id === "topp-knapp") return;
+      const r = document.createElement("span");
+      const size = Math.max(btn.offsetWidth, btn.offsetHeight);
+      const rect = btn.getBoundingClientRect();
+      r.className = "rippel";
+      r.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - rect.left - size/2}px;top:${e.clientY - rect.top - size/2}px`;
+      btn.appendChild(r);
+      r.addEventListener("animationend", () => r.remove());
+    });
+
+    // Deleknapp
+    function delSide() {
+      const btn = document.querySelector("footer button");
+      if (navigator.share) {
+        navigator.share({
+          title: "Simon sin stilige nettside",
+          text: "Sjekk ut denne nettsiden — finn fakta om navnet ditt og spill Tetris!",
+          url: window.location.href
+        });
+      } else {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+          btn.textContent = "✓ Lenke kopiert!";
+          setTimeout(() => btn.textContent = "🔗 Del siden", 2000);
+        });
+      }
+    }
+
+    // Scroll-til-topp-knapp
+    const toppKnapp = document.getElementById("topp-knapp");
+    window.addEventListener("scroll", () => {
+      toppKnapp.classList.toggle("synlig", window.scrollY > 300);
+    }, { passive: true });
+
+    // Typewriter-effekt
+    const tittel = document.querySelector(".page-title");
+    const tekst = "Hei og velkommen!";
+    tittel.textContent = "";
+    let i = 0;
+    function skrivTekst() {
+      if (i < tekst.length) {
+        tittel.textContent += tekst[i++];
+        setTimeout(skrivTekst, 70);
+      } else {
+        tittel.classList.add("ferdig");
+      }
+    }
+    setTimeout(skrivTekst, 600);
+
   </script>
+
+  <footer>
+    <p>Laget av <a href="https://github.com/simonfrogner" target="_blank">Simon Sæterlid Frogner</a> &nbsp;·&nbsp; © 2026</p>
+    <button onclick="delSide()" style="margin-top:12px;padding:8px 20px;font-size:0.85rem;">🔗 Del siden</button>
+  </footer>
 
 </body>
 </html>
