@@ -9,6 +9,45 @@
       padding: 0;
     }
 
+    /* LOADING */
+    #loader {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      transition: opacity 0.5s ease;
+    }
+
+    #loader.skjult {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: snurr 0.8s linear infinite;
+    }
+
+    @keyframes snurr {
+      to { transform: rotate(360deg); }
+    }
+
+    #loader p {
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 1rem;
+      opacity: 0.85;
+    }
+
 
     body {
       background: linear-gradient(135deg, #667eea, #764ba2);
@@ -240,6 +279,19 @@
       text-align: center;
     }
 
+    #navnFakta li {
+      opacity: 0;
+      transform: translateY(12px);
+      animation: faktaInn 0.4s ease forwards;
+    }
+
+    @keyframes faktaInn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     /* TETRIS-SEKSJON */
     .tetris-card {
       text-align: center;
@@ -413,6 +465,10 @@
   </style>
 </head>
 <body>
+<div id="loader">
+  <div class="spinner"></div>
+  <p>Laster...</p>
+</div>
 
   <nav>
     <div class="nav-logo">Simon sin stilige nettside</div>
@@ -466,7 +522,7 @@
       <div class="card tetris-card fade-in">
         <h3>Tetris</h3>
         <p>Klar for en utfordring? Spill Simon sin versjon av det klassiske Tetris-spillet!</p>
-        <a href="tetris.html"><button class="tetris-btn">Spill Tetris!</button></a>
+        <a href="https://simonfrogner.github.io/tetris" target="_blank"><button class="tetris-btn">Spill Tetris!</button></a>
       </div>
     </section>
 
@@ -513,7 +569,7 @@
       const resultater = fakta ? fakta : generiskeFakta.map(f => f(navn));
       tittel.innerText = `Fakta om «${navn}»`;
       liste.classList.remove("tom");
-      liste.innerHTML = resultater.map(f => `<li>${f}</li>`).join("");
+      liste.innerHTML = resultater.map((f, i) => `<li style="animation-delay:${i * 0.12}s">${f}</li>`).join("");
     }
 
     function toggleMeny() {
@@ -530,6 +586,13 @@
       document.body.classList.toggle("dark");
       localStorage.setItem("tema", document.body.classList.contains("dark") ? "dark" : "light");
     }
+
+    // Skjul loader når siden er klar
+    window.addEventListener("load", () => {
+      const loader = document.getElementById("loader");
+      loader.classList.add("skjult");
+      setTimeout(() => loader.remove(), 500);
+    });
 
     // Gjenopprett lagret tema ved lasting
     window.addEventListener("DOMContentLoaded", () => {
