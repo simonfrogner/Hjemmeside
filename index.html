@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     * {
       box-sizing: border-box;
@@ -315,6 +316,79 @@
       color: #ccc;
     }
 
+    /* HAMBURGER-MENY */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: white;
+      border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+
+    .hamburger.åpen span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.åpen span:nth-child(2) { opacity: 0; }
+    .hamburger.åpen span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* MOBIL */
+    @media (max-width: 600px) {
+      .hamburger {
+        display: flex;
+      }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        background: rgba(30, 20, 60, 0.97);
+        padding: 16px;
+        gap: 4px;
+      }
+
+      .nav-links.åpen {
+        display: flex;
+      }
+
+      .nav-links a {
+        padding: 12px 16px;
+        border-radius: 10px;
+        font-size: 1.1rem;
+      }
+
+      .card {
+        padding: 32px 24px;
+      }
+
+      .page-title {
+        font-size: 2rem;
+      }
+
+      .section-title {
+        font-size: 1.6rem;
+      }
+
+      .input-group {
+        flex-direction: column;
+      }
+
+      .input-group button {
+        width: 100%;
+      }
+    }
+
     /* KONFETTI */
     .confetti {
       position: fixed;
@@ -351,11 +425,14 @@
 
   <nav>
     <div class="nav-logo">Simon sin stilige nettside</div>
-    <div class="nav-links">
-      <a href="#hjem" class="active">Hjem</a>
-      <a href="#navnefakta">Navnefakta</a>
-      <a href="#tetris">Tetris</a>
+    <div class="nav-links" id="navLinks">
+      <a href="#hjem" class="active" onclick="lukkMeny()">Hjem</a>
+      <a href="#navnefakta" onclick="lukkMeny()">Navnefakta</a>
+      <a href="#tetris" onclick="lukkMeny()">Tetris</a>
     </div>
+    <button class="hamburger" id="hamburger" onclick="toggleMeny()">
+      <span></span><span></span><span></span>
+    </button>
     <div class="nav-right">
       <span>☀️</span>
       <label class="switch">
@@ -446,6 +523,16 @@
       tittel.innerText = `Fakta om «${navn}»`;
       liste.classList.remove("tom");
       liste.innerHTML = resultater.map(f => `<li>${f}</li>`).join("");
+    }
+
+    function toggleMeny() {
+      document.getElementById("hamburger").classList.toggle("åpen");
+      document.getElementById("navLinks").classList.toggle("åpen");
+    }
+
+    function lukkMeny() {
+      document.getElementById("hamburger").classList.remove("åpen");
+      document.getElementById("navLinks").classList.remove("åpen");
     }
 
     function toggleTheme() {
