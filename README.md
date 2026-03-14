@@ -1,6 +1,6 @@
 # Simon sin stilige nettside
 
-En personlig nettside vibe-kodet med [Claude Code](https://claude.ai/claude-code).
+En personlig nettside vibe-kodet med [Claude Code](https://claude.ai/code).
 
 🌐 **Live:** [simonfrogner.github.io/Hjemmeside](https://simonfrogner.github.io/Hjemmeside)
 
