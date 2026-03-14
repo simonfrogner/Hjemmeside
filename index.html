@@ -2,50 +2,407 @@
 <html>
 <head>
   <style>
-    /* Dette er CSS-delen */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+
     body {
-      background-color: #f0f4f8; /* Lys blågrå bakgrunn */
+      background: linear-gradient(135deg, #667eea, #764ba2);
       font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      height: 64px;
+    }
+
+    .nav-logo {
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 700;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-right span {
+      font-size: 1.1rem;
+    }
+
+    /* TEMA-BRYTER */
+    .switch {
+      position: relative;
+      width: 52px;
+      height: 28px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 28px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .slider::before {
+      content: "";
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      left: 3px;
+      bottom: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.3s;
+    }
+
+    .switch input:checked + .slider {
+      background: rgba(102, 126, 234, 0.6);
+    }
+
+    .switch input:checked + .slider::before {
+      transform: translateX(24px);
+    }
+
+    /* SEKSJONER */
+    .page {
+      padding-top: 64px;
+    }
+
+    section {
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      margin: 0;
+      padding: 80px 20px;
     }
 
-    h1 {
-      color: #2c3e50;
+    .page-title {
+      color: white;
+      font-size: 2.6rem;
+      margin-bottom: 24px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
     }
 
-    input {
-      padding: 10px;
-      border: 2px solid #3498db;
-      border-radius: 5px;
-      margin-bottom: 10px;
+    .section-title {
+      color: white;
+      font-size: 2rem;
+      margin-bottom: 24px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    /* KORT */
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 48px 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      max-width: 460px;
+      width: 90%;
+    }
+
+    p {
+      color: #555;
+      font-size: 1.05rem;
+      margin-bottom: 20px;
+    }
+
+    .label {
+      text-align: left;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 12px 16px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+      outline: none;
+    }
+
+    input[type="text"]:focus {
+      border-color: #667eea;
     }
 
     button {
-      background-color: #3498db;
+      background: linear-gradient(135deg, #667eea, #764ba2);
       color: white;
       border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
+      padding: 12px 24px;
+      border-radius: 10px;
       cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: transform 0.2s, box-shadow 0.2s;
+      white-space: nowrap;
     }
 
     button:hover {
-      background-color: #2980b9; /* Blir mørkere når du holder musa over */
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    #svar {
+      color: #764ba2;
+      font-size: 1.3rem;
+      min-height: 1.5em;
+      margin-bottom: 0;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #e0e0e0;
+      margin: 28px 0;
+    }
+
+    /* NAVNEFAKTA-SEKSJON */
+    .fakta-card {
+      max-width: 560px;
+    }
+
+    .navn-section h3 {
+      color: #2c3e50;
+      margin-top: 0;
+      margin-bottom: 16px;
+    }
+
+    #navnFakta {
+      color: #555;
+      font-size: 1rem;
+      line-height: 1.8;
+      text-align: left;
+      list-style: none;
+      padding: 0;
+    }
+
+    #navnFakta li::before {
+      content: "✨ ";
+    }
+
+    #navnFakta.tom {
+      color: #aaa;
+      font-style: italic;
+      text-align: center;
+    }
+
+    /* TETRIS-SEKSJON */
+    .tetris-card {
+      text-align: center;
+    }
+
+    .tetris-card h3 {
+      color: #2c3e50;
+      margin-bottom: 12px;
+      font-size: 1.4rem;
+    }
+
+    .tetris-card p {
+      margin-bottom: 24px;
+    }
+
+    .tetris-btn {
+      background: linear-gradient(135deg, #a78bfa, #38f9d7);
+      font-size: 1.1rem;
+      padding: 14px 32px;
+    }
+
+    .tetris-btn:hover {
+      box-shadow: 0 4px 12px rgba(167, 139, 250, 0.4);
+    }
+
+    /* MØRKT TEMA */
+    body.dark {
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+    }
+
+    body.dark nav {
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    body.dark .card {
+      background: #1e1e2f;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    body.dark p {
+      color: #aaa;
+    }
+
+    body.dark .navn-section h3,
+    body.dark .tetris-card h3 {
+      color: #e0e0e0;
+    }
+
+    body.dark input[type="text"] {
+      background: #2a2a3d;
+      border-color: #444;
+      color: #e0e0e0;
+    }
+
+    body.dark input[type="text"]:focus {
+      border-color: #667eea;
+    }
+
+    body.dark #svar {
+      color: #a78bfa;
+    }
+
+    body.dark .divider {
+      border-top-color: #333;
+    }
+
+    body.dark #navnFakta {
+      color: #ccc;
+    }
+
+    /* KONFETTI */
+    .confetti {
+      position: fixed;
+      top: -10px;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      animation: fall linear forwards;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    /* Fade-in */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .fade-in.synlig {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(105vh) rotate(720deg);
+        opacity: 0;
+      }
     }
   </style>
 </head>
 <body>
 
-  <h1>Min stilige nettside</h1>
-  <p>Hva heter du?</p>
-  <input type="text" id="navnBoks" placeholder="Skriv navnet ditt her">
-  <button onclick="siHei()">Trykk på meg!</button>
-  <h2 id="svar"></h2>
+  <nav>
+    <div class="nav-logo">Simon sin stilige nettside</div>
+    <div class="nav-links">
+      <a href="#hjem" class="active">Hjem</a>
+      <a href="#navnefakta">Navnefakta</a>
+      <a href="#tetris">Tetris</a>
+    </div>
+    <div class="nav-right">
+      <span>☀️</span>
+      <label class="switch">
+        <input type="checkbox" onchange="toggleTheme()">
+        <span class="slider"></span>
+      </label>
+      <span>🌙</span>
+    </div>
+  </nav>
+
+  <div class="page">
+
+    <!-- HJEM -->
+    <section id="hjem">
+      <h1 class="page-title fade-in">Hei og velkommen!</h1>
+      <div class="card fade-in">
+        <p class="label">Hva heter du?</p>
+        <div class="input-group">
+          <input type="text" id="navnBoks" placeholder="Skriv navnet ditt her" onkeydown="if(event.key==='Enter') siHei()">
+          <button onclick="siHei()">Trykk her!</button>
+        </div>
+        <h2 id="svar"></h2>
+      </div>
+    </section>
+
+    <!-- NAVNEFAKTA -->
+    <section id="navnefakta">
+      <h2 class="section-title fade-in">Fakta om navnet ditt</h2>
+      <div class="card fakta-card fade-in">
+        <div class="navn-section">
+          <h3 id="faktaTittel">Skriv inn navnet ditt på forsiden og trykk «Si hei!»</h3>
+          <ul id="navnFakta" class="tom"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- TETRIS -->
+    <section id="tetris">
+      <h2 class="section-title fade-in">Spill et spill!</h2>
+      <div class="card tetris-card fade-in">
+        <h3>Tetris</h3>
+        <p>Klar for en utfordring? Spill Simon sin versjon av det klassiske Tetris-spillet!</p>
+        <a href="tetris.html"><button class="tetris-btn">Spill Tetris!</button></a>
+      </div>
+    </section>
+
+  </div>
 
   <script>
     function siHei() {
@@ -54,6 +411,110 @@
         document.getElementById("svar").innerText = "Vennligst skriv inn navnet ditt.";
       } else {
         document.getElementById("svar").innerText = "Heisann, " + navn + "!";
+
+        launchConfetti();
+        visFakta();
+      }
+    }
+
+    const navnDatabase = {
+      "simon": ["Simon kommer fra hebraisk og betyr «den som hører».", "Simon var et av de vanligste navnene blant apostlene i Bibelen.", "Simon er populært i Skandinavia, Storbritannia og Sør-Europa.", "Kjente Simoner inkluderer Simon Bolivar, frigjøringshelten fra Sør-Amerika.", "🎉 Fun fact: Folk med navnet Simon beskrives ofte som nysgjerrige og gode lyttere — akkurat som navnet antyder!"],
+      "emma": ["Emma er et germansk navn som betyr «hel» eller «universell».", "Emma har vært et av de mest populære jentenavnene i Norge i mange år.", "Emma Bovary og Emma Woodhouse er to av litteraturens mest kjente Emma-er.", "Navnet ble popularisert av dronning Emma av Normandie på 1000-tallet.", "🎉 Fun fact: Emma har ligget på topp 10-listen over populære navn i Norge nesten hvert eneste år siden 2000!"],
+      "oliver": ["Oliver stammer fra det latinske «olivarius» og er knyttet til oliventreet — et symbol på fred.", "Oliver Twist er en av Charles Dickens' mest elskede karakterer.", "Oliver er svært populært i Storbritannia og Skandinavia.", "Oliventreet kan bli over 2000 år gammelt — et tegn på utholdenhet!", "🎉 Fun fact: Oliver har vært det mest populære guttenavnet i England og Wales i flere år på rad!"],
+      "sofia": ["Sofia betyr «visdom» på gresk.", "Sofia er hovedstaden i Bulgaria, oppkalt etter en gammel kirke.", "Navnet er populært i over 20 land og er et av verdens mest brukte jentenavn.", "Prinsesse Sofia av Sverige har gjort navnet ekstra populært i Norden.", "🎉 Fun fact: Sofia/Sophia er det mest populære jentenavnet i verden — det brukes på alle kontinenter!"],
+      "lucas": ["Lucas er den latinske formen av Lukas, som betyr «lys» eller «den lysende».", "Lucas er et av de mest populære guttenavnene i Europa akkurat nå.", "George Lucas, skaperen av Star Wars, er kanskje verdens mest kjente Lucas.", "Navnet har vært i bruk siden antikken og er nevnt i Det nye testamente.", "🎉 Fun fact: Lucas er det eneste navnet i topp 10 som staves likt på norsk, engelsk, spansk og portugisisk!"],
+      "maja": ["Maja er en nordisk variant av Maria og betyr «den store» eller «dyrebare».", "I romersk mytologi var Maia en gudinne for vekst — mai måned er oppkalt etter henne.", "Maja er et av de mest populære jentenavnene i Skandinavia.", "Biene Maja er kanskje den mest berømte Maja i populærkulturen!", "🎉 Fun fact: Maja er et av få navn som er like populære i alle de skandinaviske landene samtidig!"],
+      "noah": ["Noah betyr «hvile» eller «ro» på hebraisk.", "Noah og arken er en av historiens mest kjente fortellinger, funnet i mange kulturer.", "Noah er konsekvent blant topp 5 guttenavn i Norge og USA.", "Filmregissøren Noah Baumbach er en kjent navnebror.", "🎉 Fun fact: Historien om Noah finnes i tre verdensreligioner — jødedom, kristendom og islam!"],
+      "ida": ["Ida er et gammelnordisk navn som betyr «arbeid» og «aktivitet».", "Ida er også et fjell på Kreta i gresk mytologi, der Zeus ble oppdratt.", "Ida Lupino var Hollywoods første store kvinnelige filmregissør.", "Navnet er enkelt, vakkert og har vært populært i Norden i over 100 år.", "🎉 Fun fact: Ida er et av verdens korteste navn med tre bokstaver — men det er likevel gjenkjennelig i nesten alle språk!"]
+    };
+
+    const generiskeFakta = [
+      (n) => `${n} har ${n.length} bokstaver — ${n.length <= 4 ? "et kort og slagkraftig navn!" : n.length <= 6 ? "en perfekt lengde!" : "et langt og minneverdig navn!"}`,
+      (n) => `Første bokstav er «${n[0].toUpperCase()}» — ${['A','E','I','O','U','Y','Æ','Ø','Å'].includes(n[0].toUpperCase()) ? "en vokal, som gir navnet en åpen og varm lyd." : "en konsonant, som gir navnet en sterk og tydelig start."}`,
+      (n) => { const vokaler = n.split("").filter(c => "aeiouyæøå".includes(c.toLowerCase())).length; return `Navnet inneholder ${vokaler} vokal${vokaler !== 1 ? "er" : ""}.`; },
+      (n) => `«${n}» er et unikt navn som er vanskelig å glemme!`,
+      (n) => `🎉 Fun fact: Bokstavverdiene i «${n}» summerer til ${n.toLowerCase().split("").reduce((s,c) => s + (c.charCodeAt(0) - 96), 0)} — hvert tall er like unikt som deg!`
+    ];
+
+    function visFakta() {
+      const navn = document.getElementById("navnBoks").value.trim();
+      if (navn === "") return;
+      const liste = document.getElementById("navnFakta");
+      const tittel = document.getElementById("faktaTittel");
+      const fakta = navnDatabase[navn.toLowerCase()];
+      const resultater = fakta ? fakta : generiskeFakta.map(f => f(navn));
+      tittel.innerText = `Fakta om «${navn}»`;
+      liste.classList.remove("tom");
+      liste.innerHTML = resultater.map(f => `<li>${f}</li>`).join("");
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle("dark");
+      localStorage.setItem("tema", document.body.classList.contains("dark") ? "dark" : "light");
+    }
+
+    // Gjenopprett lagret tema ved lasting
+    window.addEventListener("DOMContentLoaded", () => {
+      const lagretTema = localStorage.getItem("tema");
+      if (lagretTema === "dark") {
+        document.body.classList.add("dark");
+        document.querySelector(".switch input").checked = true;
+      }
+    });
+
+    // Oppdater aktiv nav-lenke ved scrolling
+    const sections = document.querySelectorAll("section");
+    const navLinks = document.querySelectorAll(".nav-links a");
+    window.addEventListener("scroll", () => {
+      let current = "";
+      sections.forEach(s => {
+        if (window.scrollY >= s.offsetTop - 100) current = s.id;
+      });
+      navLinks.forEach(a => {
+        a.classList.toggle("active", a.getAttribute("href") === "#" + current);
+      });
+    });
+
+    // Fade-in ved scroll
+    const fadeEls = document.querySelectorAll(".fade-in");
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) e.target.classList.add("synlig");
+      });
+    }, { threshold: 0.15 });
+    fadeEls.forEach(el => observer.observe(el));
+
+    function playConfettiSound() {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const notes = [523, 659, 784, 1047];
+      notes.forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = "sine";
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.25, ctx.currentTime + i * 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.1 + 0.3);
+        osc.start(ctx.currentTime + i * 0.1);
+        osc.stop(ctx.currentTime + i * 0.1 + 0.3);
+      });
+    }
+
+    function launchConfetti() {
+      playConfettiSound();
+      const colors = ["#667eea", "#764ba2", "#f093fb", "#f5576c", "#4facfe", "#43e97b", "#ffd700"];
+      for (let i = 0; i < 60; i++) {
+        const confetti = document.createElement("div");
+        confetti.classList.add("confetti");
+        confetti.style.left = Math.random() * 100 + "vw";
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.width = Math.random() * 8 + 6 + "px";
+        confetti.style.height = Math.random() * 8 + 6 + "px";
+        confetti.style.animationDuration = Math.random() * 2 + 1.5 + "s";
+        confetti.style.animationDelay = Math.random() * 0.5 + "s";
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 3500);
       }
     }
   </script>
