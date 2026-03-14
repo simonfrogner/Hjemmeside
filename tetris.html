@@ -26,7 +26,11 @@
     -webkit-user-select: none;
     user-select: none;
     padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    transition: background 0.4s;
   }
+
+  body.retro { background: #0a1a0a; }
+  body.minimal { background: #111; }
 
   /* Animated background */
   body::before {
@@ -37,7 +41,11 @@
     background: radial-gradient(ellipse at center, #0d0d2b 0%, #0a0a1a 70%);
     animation: bgPulse 8s ease-in-out infinite;
     z-index: -2;
+    transition: background 0.4s;
   }
+
+  body.retro::before { background: radial-gradient(ellipse at center, #0d1f0d 0%, #0a1a0a 70%); }
+  body.minimal::before { background: radial-gradient(ellipse at center, #1a1a1a 0%, #111 70%); }
 
   @keyframes bgPulse {
     0%, 100% { transform: scale(1); }
@@ -53,6 +61,9 @@
     animation: float linear infinite;
     z-index: -1;
   }
+
+  body.retro .particle { background: rgba(0, 255, 0, 0.3); }
+  body.minimal .particle { background: rgba(180, 180, 180, 0.2); }
 
   @keyframes float {
     0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
@@ -84,6 +95,9 @@
     box-shadow: 0 0 20px rgba(0, 255, 255, 0.05), inset 0 0 20px rgba(0, 0, 0, 0.3);
   }
 
+  body.retro .panel-box { border-color: rgba(0, 255, 0, 0.2); box-shadow: 0 0 20px rgba(0,255,0,0.05), inset 0 0 20px rgba(0,0,0,0.3); }
+  body.minimal .panel-box { border-color: rgba(180,180,180,0.15); box-shadow: none; }
+
   .panel-box h3 {
     font-size: 10px;
     letter-spacing: 3px;
@@ -91,6 +105,9 @@
     margin-bottom: 12px;
     text-transform: uppercase;
   }
+
+  body.retro .panel-box h3 { color: rgba(0, 255, 0, 0.6); }
+  body.minimal .panel-box h3 { color: rgba(180, 180, 180, 0.5); }
 
   .score-value {
     font-size: 22px;
@@ -101,6 +118,9 @@
     text-align: center;
   }
 
+  body.retro .score-value { background: linear-gradient(135deg, #00ff00, #ffaa00); -webkit-background-clip: text; }
+  body.minimal .score-value { background: linear-gradient(135deg, #ccc, #888); -webkit-background-clip: text; }
+
   .level-value {
     font-size: 28px;
     font-weight: 900;
@@ -109,12 +129,17 @@
     text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
   }
 
+  body.retro .level-value { color: #00ff44; text-shadow: 0 0 20px rgba(0,255,68,0.5); }
+  body.minimal .level-value { color: #bbb; text-shadow: none; }
+
   .lines-value {
     font-size: 20px;
     font-weight: 700;
     color: #ffaa00;
     text-align: center;
   }
+
+  body.minimal .lines-value { color: #999; }
 
   #next-canvas {
     display: block;
@@ -130,6 +155,9 @@
     animation: borderGlow 4s ease-in-out infinite;
   }
 
+  body.retro .game-board-container { background: linear-gradient(135deg, rgba(0,255,0,0.3), rgba(255,170,0,0.3)); box-shadow: 0 0 40px rgba(0,255,0,0.15); }
+  body.minimal .game-board-container { background: rgba(100,100,100,0.3); box-shadow: none; animation: none; }
+
   @keyframes borderGlow {
     0%, 100% { box-shadow: 0 0 40px rgba(0, 255, 255, 0.15), 0 0 80px rgba(255, 0, 255, 0.1); }
     50% { box-shadow: 0 0 60px rgba(0, 255, 255, 0.25), 0 0 120px rgba(255, 0, 255, 0.15); }
@@ -140,6 +168,9 @@
     border-radius: 14px;
     background: rgba(5, 5, 20, 0.95);
   }
+
+  body.retro #game-canvas { background: rgba(0, 10, 0, 0.97); }
+  body.minimal #game-canvas { background: rgba(10, 10, 10, 0.98); }
 
   .overlay {
     position: absolute;
@@ -199,6 +230,81 @@
     50% { opacity: 0.3; }
   }
 
+  /* Difficulty selector in start overlay */
+  .start-name-input {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(0,255,255,0.35);
+    border-radius: 8px;
+    color: #fff;
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    padding: 8px 14px;
+    text-align: center;
+    text-transform: uppercase;
+    width: 180px;
+    margin-bottom: 18px;
+    outline: none;
+    -webkit-user-select: text;
+    user-select: text;
+    touch-action: auto;
+  }
+
+  .start-name-input::placeholder { color: rgba(255,255,255,0.25); letter-spacing: 3px; }
+  .start-name-input:focus { border-color: rgba(0,255,255,0.7); }
+
+  .diff-btns {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .diff-btn {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(0,255,255,0.3);
+    background: rgba(10,10,40,0.7);
+    color: rgba(255,255,255,0.55);
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .diff-btn:hover { background: rgba(0,255,255,0.12); color: #fff; }
+
+  .diff-btn.active {
+    border-color: #00ffff;
+    background: rgba(0,255,255,0.18);
+    color: #00ffff;
+    text-shadow: 0 0 10px rgba(0,255,255,0.6);
+    box-shadow: 0 0 14px rgba(0,255,255,0.2);
+  }
+
+  /* Theme picker */
+  .theme-picker {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .theme-dot {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.15s, border-color 0.15s;
+  }
+
+  .theme-dot:hover { transform: scale(1.2); }
+  .theme-dot.active { border-color: rgba(255,255,255,0.7); transform: scale(1.1); }
+  .theme-dot[data-theme="neon"]    { background: #00ffff; box-shadow: 0 0 8px rgba(0,255,255,0.6); }
+  .theme-dot[data-theme="retro"]   { background: #00cc44; box-shadow: 0 0 8px rgba(0,204,68,0.6); }
+  .theme-dot[data-theme="minimal"] { background: #888; box-shadow: 0 0 8px rgba(136,136,136,0.4); }
+
   .controls-info {
     font-size: 9px;
     color: rgba(255, 255, 255, 0.3);
@@ -206,6 +312,64 @@
     line-height: 2;
     text-align: center;
   }
+
+  .hs-list {
+    list-style: none;
+    margin: 0; padding: 0;
+    font-size: 11px;
+    line-height: 2;
+  }
+
+  .hs-list li {
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 1px;
+  }
+
+  .hs-list li.hs-current {
+    color: #ffee00;
+    text-shadow: 0 0 8px rgba(255, 238, 0, 0.5);
+  }
+
+  .new-hs-badge {
+    font-size: 13px;
+    color: #ffee00;
+    letter-spacing: 2px;
+    text-shadow: 0 0 12px rgba(255, 238, 0, 0.6);
+    margin: 8px 0 4px;
+    animation: titlePulse 1s ease-in-out infinite;
+  }
+
+  .new-hs-badge.hidden { display: none; }
+
+  .share-btn {
+    margin-top: 12px;
+    padding: 8px 20px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+
+  .share-btn:active { transform: scale(0.95); }
+
+  .gameover-hs {
+    list-style: none;
+    margin: 8px 0 0;
+    padding: 0;
+    font-size: 12px;
+    letter-spacing: 1px;
+    line-height: 1.9;
+    text-align: center;
+  }
+
+  .gameover-hs li { color: rgba(255,255,255,0.45); }
+  .gameover-hs li.hs-current { color: #ffee00; text-shadow: 0 0 8px rgba(255,238,0,0.5); }
 
   /* Line clear flash */
   @keyframes lineFlash {
@@ -316,8 +480,9 @@
     .level-value { font-size: 14px; text-shadow: none; }
     .lines-value { font-size: 14px; }
     .controls-info { display: none !important; }
-    /* Hide next-piece, mute button and neste panel on mobile */
+    /* Hide next-piece, hold, theme, mute panels on mobile */
     .side-panel .panel-box:has(#next-canvas),
+    .side-panel .panel-box:has(.theme-picker),
     .side-panel .panel-box:has(#mute-btn) { display: none; }
     .game-board-container {
       padding: 2px;
@@ -331,6 +496,9 @@
     .overlay h1 { font-size: 28px; letter-spacing: 4px; }
     .overlay .game-over-text { font-size: 22px; }
     .overlay p { font-size: 10px; }
+    .start-name-input { font-size: 11px; width: 150px; }
+    .diff-btns { gap: 6px; }
+    .diff-btn { font-size: 9px; padding: 7px 10px; }
   }
 </style>
 </head>
@@ -339,20 +507,32 @@
 <div class="game-wrapper">
   <div class="side-panel">
     <div class="panel-box">
-      <h3>Score</h3>
+      <h3>Poeng</h3>
       <div class="score-value" id="score">0</div>
     </div>
     <div class="panel-box">
-      <h3>Level</h3>
+      <h3>Nivå</h3>
       <div class="level-value" id="level">1</div>
     </div>
     <div class="panel-box">
-      <h3>Lines</h3>
+      <h3>Linjer</h3>
       <div class="lines-value" id="lines">0</div>
+    </div>
+    <div class="panel-box">
+      <h3>Best</h3>
+      <div class="score-value" id="best-score">—</div>
     </div>
     <div class="panel-box">
       <h3>Neste</h3>
       <canvas id="next-canvas" width="120" height="120"></canvas>
+    </div>
+    <div class="panel-box">
+      <h3>Tema</h3>
+      <div class="theme-picker">
+        <div class="theme-dot active" data-theme="neon" title="Neon" onclick="setTheme('neon')"></div>
+        <div class="theme-dot" data-theme="retro" title="Retro" onclick="setTheme('retro')"></div>
+        <div class="theme-dot" data-theme="minimal" title="Minimal" onclick="setTheme('minimal')"></div>
+      </div>
     </div>
     <div class="panel-box controls-info">
       ← → FLYTT<br>
@@ -371,16 +551,33 @@
     <canvas id="game-canvas" width="300" height="600"></canvas>
     <div class="overlay" id="start-overlay">
       <h1>TETRIS</h1>
-      <p>TRYKK FOR Å STARTE</p>
+      <input
+        type="text"
+        class="start-name-input"
+        id="player-name-input"
+        placeholder="DITT NAVN"
+        maxlength="10"
+        autocomplete="off"
+        autocorrect="off"
+        spellcheck="false"
+      >
+      <div class="diff-btns">
+        <button class="diff-btn" data-diff="lett" onclick="startGame('lett')">LETT</button>
+        <button class="diff-btn active" data-diff="normal" onclick="startGame('normal')">NORMAL</button>
+        <button class="diff-btn" data-diff="hardt" onclick="startGame('hardt')">HARDT</button>
+      </div>
     </div>
     <div class="overlay hidden" id="pause-overlay">
       <h1 style="font-size:28px">PAUSE</h1>
       <p>TRYKK P FOR Å FORTSETTE</p>
     </div>
     <div class="overlay hidden" id="gameover-overlay">
-      <div class="game-over-text">GAME OVER</div>
+      <div class="game-over-text">SPILL OVER</div>
       <div class="final-score" id="final-score"></div>
-      <p>TRYKK FOR Å SPILLE IGJEN</p>
+      <div class="new-hs-badge hidden" id="new-hs-badge">🏆 NY REKORD!</div>
+      <ol class="gameover-hs" id="gameover-hs"></ol>
+      <button class="share-btn" id="share-btn" onclick="shareScore(); event.stopPropagation();">DEL POENG</button>
+      <p style="margin-top:14px">TRYKK FOR Å SPILLE IGJEN</p>
     </div>
   </div>
 </div>
@@ -393,7 +590,7 @@
     <div class="mobile-btn" data-action="right">▶</div>
   </div>
   <div class="mobile-controls-row">
-    <div class="mobile-btn wide" data-action="drop">DROP</div>
+    <div class="mobile-btn wide" data-action="drop">SLIPP</div>
     <div class="mobile-btn small" data-action="pause">⏸</div>
     <div class="mobile-btn small" data-action="mute" id="mute-btn-mobile">🔊</div>
   </div>
@@ -409,8 +606,6 @@ function ensureAudio() {
   if (audioCtx.state === 'suspended') audioCtx.resume();
 }
 
-// iOS requires audio to be unlocked by playing a sound inside a user gesture.
-// This plays a silent buffer to unlock, then removes the listeners.
 function unlockAudio() {
   if (audioUnlocked) return;
   ensureAudio();
@@ -420,10 +615,7 @@ function unlockAudio() {
   src.connect(audioCtx.destination);
   src.start(0);
   src.onended = () => { audioUnlocked = true; };
-  // Also force resume for iOS 17+
-  if (audioCtx.state === 'suspended') {
-    audioCtx.resume();
-  }
+  if (audioCtx.state === 'suspended') audioCtx.resume();
 }
 
 ['touchstart', 'touchend', 'click'].forEach(evt => {
@@ -432,7 +624,7 @@ function unlockAudio() {
 
 function playTone(freq, duration, type = 'square', volume = 0.12, detune = 0) {
   ensureAudio();
-  if (audioCtx.state === 'suspended') return; // iOS: skip if not yet unlocked
+  if (audioCtx.state === 'suspended') return;
   const osc = audioCtx.createOscillator();
   const gain = audioCtx.createGain();
   const filter = audioCtx.createBiquadFilter();
@@ -538,8 +730,6 @@ const BGM = {
   bpm: 140,
   muted: false,
 
-  // Korobeiniki melody — note, duration in beats
-  // E5 B4 C5 D5 C5 B4 A4 A4 C5 E5 D5 C5 B4 C5 D5 E5 C5 A4 A4 ...
   melody: [
     [659,2],[494,1],[523,1],[587,2],[523,1],[494,1],
     [440,2],[440,1],[523,1],[659,2],[587,1],[523,1],
@@ -552,7 +742,6 @@ const BGM = {
     [523,2],[440,2],[440,2],[0,2],
   ],
 
-  // Bass line (root notes, longer durations)
   bass: [
     [165,4],[131,4],[147,4],[131,4],
     [147,4],[165,4],[131,4],[110,4],
@@ -595,10 +784,9 @@ const BGM = {
 
   scheduleAhead() {
     if (!this.playing || !this.masterGain) return;
-    const lookAhead = 2; // seconds to schedule ahead
+    const lookAhead = 2;
     while (this.scheduledUntil < audioCtx.currentTime + lookAhead) {
       this.scheduleMelodyPass(this.scheduledUntil);
-      // Calculate total melody duration
       const beatLen = 60 / this.bpm;
       const totalBeats = this.melody.reduce((s, n) => s + n[1], 0);
       this.scheduledUntil += totalBeats * beatLen;
@@ -609,18 +797,15 @@ const BGM = {
   scheduleMelodyPass(startTime) {
     const beatLen = 60 / this.bpm;
 
-    // Schedule melody
     let t = startTime;
     for (const [freq, beats] of this.melody) {
       if (freq > 0) {
         this.scheduleNote(freq, t, beats * beatLen * 0.85, 'square', 0.7);
-        // Harmony: add a quiet note a 5th below for richness
         this.scheduleNote(freq * 0.667, t, beats * beatLen * 0.6, 'triangle', 0.2);
       }
       t += beats * beatLen;
     }
 
-    // Schedule bass — loop bass to fill melody duration
     const melodyDuration = t - startTime;
     const bassBeatTotal = this.bass.reduce((s, n) => s + n[1], 0);
     const bassDuration = bassBeatTotal * beatLen;
@@ -635,13 +820,12 @@ const BGM = {
       }
     }
 
-    // Schedule simple drum pattern
     let dt = startTime;
     const stepLen = beatLen;
     while (dt < startTime + melodyDuration - 0.01) {
-      this.scheduleDrum(dt, 0.4); // kick on every beat
+      this.scheduleDrum(dt, 0.4);
       if (Math.round((dt - startTime) / beatLen) % 2 === 1) {
-        this.scheduleHihat(dt, 0.15); // hihat on off-beats
+        this.scheduleHihat(dt, 0.15);
       }
       dt += stepLen;
     }
@@ -698,6 +882,124 @@ const BGM = {
   }
 };
 
+// ── Theme ─────────────────────────────────────────────
+const PIECES_NEON = [
+  { shape: [[1,1,1,1]],             color: '#00ffff', glow: 'rgba(0,255,255,0.4)' },
+  { shape: [[1,0,0],[1,1,1]],       color: '#0066ff', glow: 'rgba(0,102,255,0.4)' },
+  { shape: [[0,0,1],[1,1,1]],       color: '#ff8800', glow: 'rgba(255,136,0,0.4)' },
+  { shape: [[1,1],[1,1]],           color: '#ffee00', glow: 'rgba(255,238,0,0.4)' },
+  { shape: [[0,1,1],[1,1,0]],       color: '#00ff66', glow: 'rgba(0,255,102,0.4)' },
+  { shape: [[0,1,0],[1,1,1]],       color: '#aa00ff', glow: 'rgba(170,0,255,0.4)' },
+  { shape: [[1,1,0],[0,1,1]],       color: '#ff0044', glow: 'rgba(255,0,68,0.4)' },
+];
+
+const PIECES_RETRO = [
+  { shape: [[1,1,1,1]],             color: '#00ff88', glow: 'rgba(0,255,136,0.4)' },
+  { shape: [[1,0,0],[1,1,1]],       color: '#00cc44', glow: 'rgba(0,204,68,0.4)' },
+  { shape: [[0,0,1],[1,1,1]],       color: '#ffaa00', glow: 'rgba(255,170,0,0.4)' },
+  { shape: [[1,1],[1,1]],           color: '#ffcc00', glow: 'rgba(255,204,0,0.4)' },
+  { shape: [[0,1,1],[1,1,0]],       color: '#44ff44', glow: 'rgba(68,255,68,0.4)' },
+  { shape: [[0,1,0],[1,1,1]],       color: '#88ff00', glow: 'rgba(136,255,0,0.4)' },
+  { shape: [[1,1,0],[0,1,1]],       color: '#ff8800', glow: 'rgba(255,136,0,0.4)' },
+];
+
+const PIECES_MINIMAL = [
+  { shape: [[1,1,1,1]],             color: '#cccccc', glow: 'rgba(200,200,200,0.3)' },
+  { shape: [[1,0,0],[1,1,1]],       color: '#999999', glow: 'rgba(153,153,153,0.3)' },
+  { shape: [[0,0,1],[1,1,1]],       color: '#bbbbbb', glow: 'rgba(187,187,187,0.3)' },
+  { shape: [[1,1],[1,1]],           color: '#dddddd', glow: 'rgba(221,221,221,0.3)' },
+  { shape: [[0,1,1],[1,1,0]],       color: '#aaaaaa', glow: 'rgba(170,170,170,0.3)' },
+  { shape: [[0,1,0],[1,1,1]],       color: '#888888', glow: 'rgba(136,136,136,0.3)' },
+  { shape: [[1,1,0],[0,1,1]],       color: '#b0b0b0', glow: 'rgba(176,176,176,0.3)' },
+];
+
+let PIECES = PIECES_NEON.map(p => ({ ...p, shape: p.shape.map(r => [...r]) }));
+let currentTheme = 'neon';
+
+function setTheme(theme) {
+  currentTheme = theme;
+  localStorage.setItem('tetris-theme', theme);
+  document.body.className = '';
+  if (theme === 'retro') document.body.classList.add('retro');
+  if (theme === 'minimal') document.body.classList.add('minimal');
+  // Update PIECES colors
+  const src = theme === 'retro' ? PIECES_RETRO : theme === 'minimal' ? PIECES_MINIMAL : PIECES_NEON;
+  PIECES = src.map(p => ({ ...p, shape: p.shape.map(r => [...r]) }));
+  // Update active dot
+  document.querySelectorAll('.theme-dot').forEach(d => {
+    d.classList.toggle('active', d.dataset.theme === theme);
+  });
+  // Re-draw
+  drawNext();
+}
+
+function loadTheme() {
+  const saved = localStorage.getItem('tetris-theme') || 'neon';
+  setTheme(saved);
+}
+
+// ── Highscore (with name support) ────────────────────
+function getPlayerName() {
+  return (localStorage.getItem('tetris-name') || '').toUpperCase();
+}
+
+function savePlayerName(name) {
+  localStorage.setItem('tetris-name', name.toUpperCase().trim().slice(0, 10));
+}
+
+function getHighscores() {
+  try {
+    const raw = JSON.parse(localStorage.getItem('tetris-hs') || '[]');
+    // Migrate old number-only format
+    return raw.map(entry => {
+      if (typeof entry === 'number') return { name: '???', score: entry };
+      return entry;
+    });
+  } catch { return []; }
+}
+
+function saveHighscore(s, name) {
+  const hs = getHighscores();
+  hs.push({ name: name || '???', score: s });
+  hs.sort((a, b) => b.score - a.score);
+  const top5 = hs.slice(0, 5);
+  localStorage.setItem('tetris-hs', JSON.stringify(top5));
+  return top5;
+}
+
+function renderSideHs() {
+  const hs = getHighscores();
+  document.getElementById('best-score').textContent = hs.length ? hs[0].score.toLocaleString() : '—';
+}
+
+function renderGameoverHs(newScore) {
+  const hs = getHighscores();
+  const badge = document.getElementById('new-hs-badge');
+  badge.classList.toggle('hidden', !hs.length || hs[0].score !== newScore);
+  const list = document.getElementById('gameover-hs');
+  let marked = false;
+  list.innerHTML = hs.map((entry, i) => {
+    const isCurrent = !marked && entry.score === newScore;
+    if (isCurrent) marked = true;
+    const nameStr = entry.name ? entry.name + ' – ' : '';
+    return `<li class="${isCurrent ? 'hs-current' : ''}">${i + 1}. ${nameStr}${entry.score.toLocaleString()}</li>`;
+  }).join('');
+}
+
+function shareScore() {
+  const name = getPlayerName() || 'Du';
+  const text = `${name} fikk ${score.toLocaleString()} poeng i Simon sitt Tetris! 🎮`;
+  const btn = document.getElementById('share-btn');
+  if (navigator.share) {
+    navigator.share({ title: 'Tetris Score', text });
+  } else {
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'KOPIERT! ✓';
+      setTimeout(() => btn.textContent = 'DEL POENG', 2000);
+    });
+  }
+}
+
 // ── Constants ──────────────────────────────────────────
 const COLS = 10, ROWS = 20, BLOCK = 30;
 const canvas = document.getElementById('game-canvas');
@@ -705,22 +1007,20 @@ const ctx = canvas.getContext('2d');
 const nextCanvas = document.getElementById('next-canvas');
 const nextCtx = nextCanvas.getContext('2d');
 
-// Tetromino shapes & colors (SRS)
-const PIECES = [
-  { shape: [[1,1,1,1]],             color: '#00ffff', glow: 'rgba(0,255,255,0.4)' },   // I
-  { shape: [[1,0,0],[1,1,1]],       color: '#0066ff', glow: 'rgba(0,102,255,0.4)' },   // J
-  { shape: [[0,0,1],[1,1,1]],       color: '#ff8800', glow: 'rgba(255,136,0,0.4)' },   // L
-  { shape: [[1,1],[1,1]],           color: '#ffee00', glow: 'rgba(255,238,0,0.4)' },   // O
-  { shape: [[0,1,1],[1,1,0]],       color: '#00ff66', glow: 'rgba(0,255,102,0.4)' },   // S
-  { shape: [[0,1,0],[1,1,1]],       color: '#aa00ff', glow: 'rgba(170,0,255,0.4)' },   // T
-  { shape: [[1,1,0],[0,1,1]],       color: '#ff0044', glow: 'rgba(255,0,68,0.4)' },    // Z
-];
+// ── Difficulty config ─────────────────────────────────
+const DIFF_CONFIG = {
+  lett:   { startInterval: 1100, minInterval: 150 },
+  normal: { startInterval: 800,  minInterval: 50  },
+  hardt:  { startInterval: 450,  minInterval: 30  },
+};
 
 // ── State ──────────────────────────────────────────────
 let board, current, next, score, lines, level, gameState, dropInterval, lastDrop;
 let flashRows = [], flashTimer = 0;
 let shakeAmount = 0;
 let combo = 0;
+let currentDifficulty = 'normal';
+let particles = [];
 
 // ── Background particles ──────────────────────────────
 for (let i = 0; i < 30; i++) {
@@ -783,6 +1083,53 @@ function lock() {
   if (!valid(current.shape, current.x, current.y)) gameOver();
 }
 
+function spawnParticles(fullRows) {
+  const B = window._mobileBlock || BLOCK;
+  for (const r of fullRows) {
+    for (let c = 0; c < COLS; c++) {
+      const cell = board[r][c];
+      if (!cell) continue;
+      const count = 4;
+      for (let i = 0; i < count; i++) {
+        const cx = (c + 0.5) * B;
+        const cy = (r + 0.5) * B;
+        particles.push({
+          x: cx,
+          y: cy,
+          vx: (Math.random() - 0.5) * 6,
+          vy: (Math.random() - 0.8) * 6,
+          color: cell.color,
+          alpha: 1,
+          size: 3 + Math.random() * 3
+        });
+      }
+    }
+  }
+}
+
+function updateParticles() {
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.25; // gravity
+    p.alpha -= 0.025;
+    if (p.alpha <= 0) particles.splice(i, 1);
+  }
+}
+
+function drawParticles() {
+  for (const p of particles) {
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, p.alpha);
+    ctx.fillStyle = p.color;
+    ctx.shadowColor = p.color;
+    ctx.shadowBlur = 6;
+    ctx.fillRect(p.x - p.size / 2, p.y - p.size / 2, p.size, p.size);
+    ctx.restore();
+  }
+}
+
 function clearLines() {
   const full = [];
   for (let r = 0; r < ROWS; r++)
@@ -790,18 +1137,32 @@ function clearLines() {
 
   if (full.length === 0) { combo = 0; SFX.lock(); return; }
 
+  // Vibration
+  if (navigator.vibrate) {
+    if (full.length === 4) {
+      navigator.vibrate([80, 30, 80]);
+    } else {
+      navigator.vibrate(30 * full.length);
+    }
+  }
+
+  // Spawn particles BEFORE removing rows
+  spawnParticles(full);
+
   combo++;
   flashRows = full;
   flashTimer = 12;
 
-  // Scoring: 100, 300, 500, 800 + combo bonus
   const pts = [0, 100, 300, 500, 800][full.length] * level;
   const comboBonus = combo > 1 ? 50 * (combo - 1) * level : 0;
   score += pts + comboBonus;
   lines += full.length;
   const prevLevel = level;
   level = Math.floor(lines / 10) + 1;
-  dropInterval = Math.max(50, 800 - (level - 1) * 70);
+
+  const cfg = DIFF_CONFIG[currentDifficulty];
+  dropInterval = Math.max(cfg.minInterval, cfg.startInterval - (level - 1) * 70);
+
   if (level > prevLevel) SFX.levelUp();
 
   shakeAmount = full.length >= 4 ? 8 : full.length >= 2 ? 4 : 2;
@@ -837,24 +1198,20 @@ function drawBlock(context, x, y, color, glow, size = BLOCK, ghost = false) {
     return;
   }
 
-  // Glow
   context.shadowColor = glow;
   context.shadowBlur = 12;
 
-  // Main block
   const grad = context.createLinearGradient(px, py, px + size, py + size);
   grad.addColorStop(0, color);
   grad.addColorStop(1, shadeColor(color, -30));
   context.fillStyle = grad;
   context.fillRect(px + inset, py + inset, size - inset * 2, size - inset * 2);
 
-  // Highlight
   context.shadowBlur = 0;
   context.fillStyle = 'rgba(255,255,255,0.15)';
   context.fillRect(px + inset, py + inset, size - inset * 2, 3);
   context.fillRect(px + inset, py + inset, 3, size - inset * 2);
 
-  // Inner shadow
   context.fillStyle = 'rgba(0,0,0,0.15)';
   context.fillRect(px + size - inset - 3, py + inset, 3, size - inset * 2);
   context.fillRect(px + inset, py + size - inset - 3, size - inset * 2, 3);
@@ -872,7 +1229,6 @@ function draw() {
   const B = window._mobileBlock || BLOCK;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Shake
   ctx.save();
   if (shakeAmount > 0) {
     const sx = (Math.random() - 0.5) * shakeAmount;
@@ -921,9 +1277,12 @@ function draw() {
           drawBlock(ctx, current.x + c, current.y + r, current.color, current.glow, B);
   }
 
+  // Particles
+  updateParticles();
+  drawParticles();
+
   ctx.restore();
 
-  // Draw next piece
   drawNext();
 }
 
@@ -960,10 +1319,12 @@ function updateUI() {
 }
 
 // ── Game Logic ────────────────────────────────────────
-function init() {
+function init(diff) {
   board = createBoard();
   score = 0; lines = 0; level = 1; combo = 0;
-  dropInterval = 800;
+  particles = [];
+  const cfg = DIFF_CONFIG[diff || 'normal'];
+  dropInterval = cfg.startInterval;
   current = randomPiece();
   next = randomPiece();
   updateUI();
@@ -973,7 +1334,11 @@ function gameOver() {
   gameState = 'over';
   BGM.stop();
   SFX.gameOver();
-  document.getElementById('final-score').textContent = `SCORE: ${score.toLocaleString()}`;
+  const name = getPlayerName();
+  saveHighscore(score, name);
+  renderSideHs();
+  renderGameoverHs(score);
+  document.getElementById('final-score').textContent = `POENG: ${score.toLocaleString()}`;
   document.getElementById('gameover-overlay').classList.remove('hidden');
 }
 
@@ -983,14 +1348,22 @@ function showOverlay(id) {
   });
 }
 
-function startGame() {
+function startGame(diff) {
+  // Save name from input if on start screen
+  const nameInput = document.getElementById('player-name-input');
+  if (nameInput && nameInput.value.trim()) {
+    savePlayerName(nameInput.value);
+  }
+
+  const useDiff = diff || currentDifficulty;
+  currentDifficulty = useDiff;
+
   unlockAudio();
   ensureAudio();
   if (audioCtx.state === 'suspended') audioCtx.resume();
   SFX.start();
-  init();
+  init(useDiff);
   gameState = 'playing';
-  showOverlay(null);
   ['start-overlay', 'pause-overlay', 'gameover-overlay'].forEach(id =>
     document.getElementById(id).classList.add('hidden'));
   if (typeof resizeCanvas === 'function') resizeCanvas();
@@ -1062,7 +1435,10 @@ function handleInput(action) {
 }
 
 document.addEventListener('keydown', e => {
-  if (gameState === 'over' && e.key !== 'p') { startGame(); return; }
+  if (gameState === 'over' && e.key !== 'p' && e.key !== 'P') {
+    startGame(currentDifficulty);
+    return;
+  }
 
   if (e.key === 'm' || e.key === 'M') {
     BGM.toggleMute();
@@ -1095,16 +1471,31 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// Start on click/touch
-['start-overlay', 'gameover-overlay'].forEach(id => {
-  const el = document.getElementById(id);
-  el.addEventListener('click', startGame);
-  el.addEventListener('touchend', e => { e.preventDefault(); startGame(); }, { passive: false });
+// Start on click: only gameover restarts (not start-overlay)
+document.getElementById('gameover-overlay').addEventListener('click', () => startGame(currentDifficulty));
+document.getElementById('gameover-overlay').addEventListener('touchend', e => {
+  e.preventDefault();
+  startGame(currentDifficulty);
+}, { passive: false });
+
+// Prevent clicks on start-overlay from bubbling to diff buttons (already handled by onclick)
+// Highlight selected diff button
+document.querySelectorAll('.diff-btn').forEach(btn => {
+  btn.addEventListener('mouseenter', () => {
+    document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+  btn.addEventListener('mouseleave', () => {
+    document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.diff-btn[data-diff="${currentDifficulty}"]`).classList.add('active');
+  });
 });
+
+// Restore diff button highlight on page load
+document.querySelector(`.diff-btn[data-diff="normal"]`).classList.add('active');
 
 // ── Mobile touch handling ─────────────────────────────
 (function() {
-  // Button touch (with repeat for left/right/down)
   const controls = document.getElementById('mobile-controls');
   let repeatTimer = null, repeatInterval = null;
 
@@ -1135,7 +1526,6 @@ document.addEventListener('keydown', e => {
     if (gameState !== 'playing') return;
     handleInput(action);
 
-    // Auto-repeat for directional buttons
     if (['left', 'right', 'down'].includes(action)) {
       stopRepeat();
       repeatTimer = setTimeout(() => {
@@ -1190,7 +1580,6 @@ document.addEventListener('keydown', e => {
     e.preventDefault();
     if (gameState !== 'playing') return;
     const elapsed = Date.now() - touchStartTime;
-    // Quick tap = rotate
     if (!swiped && elapsed < 200) {
       handleInput('rotate');
     }
@@ -1206,6 +1595,8 @@ document.addEventListener('keydown', e => {
   // Prevent double-tap zoom
   let lastTap = 0;
   document.addEventListener('touchend', e => {
+    // Allow text input interactions
+    if (e.target.tagName === 'INPUT') return;
     const now = Date.now();
     if (now - lastTap < 300) e.preventDefault();
     lastTap = now;
@@ -1221,15 +1612,10 @@ function resizeCanvas() {
     window._mobileBlock = null;
     return;
   }
-  // Measure actual heights of fixed elements
   const mobileControls = document.getElementById('mobile-controls');
   const sidePanel = document.querySelector('.side-panel');
-  // Force layout so we can measure
   const controlsH = mobileControls.offsetHeight || 110;
   const panelH = sidePanel ? sidePanel.offsetHeight : 30;
-  const safeTop = parseInt(getComputedStyle(document.documentElement).getPropertyValue('env(safe-area-inset-top)')) || 0;
-  const safeBottom = parseInt(getComputedStyle(document.documentElement).getPropertyValue('env(safe-area-inset-bottom)')) || 0;
-  // Total available height = viewport - top info - bottom controls - some padding
   const availH = window.innerHeight - panelH - controlsH - 12;
   const availW = window.innerWidth - 8;
   const blockFromW = Math.floor(availW / COLS);
@@ -1244,8 +1630,20 @@ window.addEventListener('resize', () => { resizeCanvas(); draw(); });
 window.addEventListener('orientationchange', () => { setTimeout(() => { resizeCanvas(); draw(); }, 200); });
 resizeCanvas();
 
-// Initial draw
-init();
+// ── Name input: allow text input (override user-select) ──
+const nameInput = document.getElementById('player-name-input');
+nameInput.addEventListener('touchstart', e => { e.stopPropagation(); }, { passive: true });
+nameInput.addEventListener('input', () => {
+  nameInput.value = nameInput.value.toUpperCase();
+});
+// Load saved name
+const savedName = getPlayerName();
+if (savedName) nameInput.value = savedName;
+
+// ── Init ──────────────────────────────────────────────
+loadTheme();
+init('normal');
+renderSideHs();
 draw();
 </script>
 </body>
