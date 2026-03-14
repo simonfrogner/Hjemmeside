@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* Dette er CSS-delen */
+    body {
+      background-color: #f0f4f8; /* Lys blågrå bakgrunn */
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      color: #2c3e50;
+    }
+
+    input {
+      padding: 10px;
+      border: 2px solid #3498db;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #2980b9; /* Blir mørkere når du holder musa over */
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Min stilige nettside</h1>
+  <p>Hva heter du?</p>
+  <input type="text" id="navnBoks" placeholder="Skriv navnet ditt her">
+  <button onclick="siHei()">Trykk på meg!</button>
+  <h2 id="svar"></h2>
+
+  <script>
+    function siHei() {
+      let navn = document.getElementById("navnBoks").value.trim();
+      if (navn === "") {
+        document.getElementById("svar").innerText = "Vennligst skriv inn navnet ditt.";
+      } else {
+        document.getElementById("svar").innerText = "Heisann, " + navn + "!";
+      }
+    }
+  </script>
+
+</body>
+</html>
