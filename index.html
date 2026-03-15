@@ -682,7 +682,36 @@
       margin-bottom: 24px;
       padding-bottom: 20px;
       border-bottom: 1px solid rgba(0,0,0,0.08);
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+      padding: 16px;
+      transition: background 0.6s;
     }
+
+    .vær-nå.sol { background: linear-gradient(135deg, #fff8e0, #fffaf0); }
+    .vær-nå.regn { background: linear-gradient(135deg, #e8eef8, #f0f4fa); }
+    .vær-nå.snø { background: linear-gradient(135deg, #eaf0f8, #f2f6ff); }
+    .vær-nå.sky { background: linear-gradient(135deg, #efefef, #f8f8f8); }
+    .vær-nå.torden { background: linear-gradient(135deg, #e0e0ef, #ececf5); }
+    .vær-nå.tåke { background: linear-gradient(135deg, #e8e8e8, #f2f2f2); }
+
+    body.dark .vær-nå.sol { background: linear-gradient(135deg, #2a2010, #1e1e2e); }
+    body.dark .vær-nå.regn { background: linear-gradient(135deg, #101828, #1a1e2e); }
+    body.dark .vær-nå.snø { background: linear-gradient(135deg, #141828, #1e2030); }
+    body.dark .vær-nå.sky { background: linear-gradient(135deg, #181818, #202020); }
+    body.dark .vær-nå.torden { background: linear-gradient(135deg, #0e0e20, #181824); }
+
+    #vær-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .vær-ikon-stor, .vær-info { position: relative; z-index: 1; }
 
     .vær-ikon-stor { font-size: 4rem; line-height: 1; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1)); }
 
@@ -853,7 +882,8 @@
         </div>
         <div id="vær-feil" class="vær-feil skjult">Fant ikke byen. Prøv igjen.</div>
         <div id="vær-resultat" class="vær-resultat skjult">
-          <div class="vær-nå">
+          <div class="vær-nå" id="vær-nå-boks">
+            <canvas id="vær-canvas"></canvas>
             <div class="vær-ikon-stor" id="vær-ikon">☀️</div>
             <div class="vær-info">
               <div class="vær-by-navn" id="vær-by-navn"></div>
@@ -1201,10 +1231,126 @@
           </div>`;
         }).join("");
         visVærResultat();
+        startVærAnimasjon(c.weather_code);
       } catch { visVærFeil(); }
     }
 
+    // ── Vær-animasjon ──
+    let _værAnim = null, _værPartikler = [];
+
+    function startVærAnimasjon(kode) {
+      stopVærAnimasjon();
+      const canvas = document.getElementById('vær-canvas');
+      const boks = document.getElementById('vær-nå-boks');
+      if (!canvas || !boks) return;
+
+      let type = 'sol';
+      if (kode === 0 || kode === 1) type = 'sol';
+      else if (kode === 2 || kode === 3) type = 'sky';
+      else if (kode === 45 || kode === 48) type = 'tåke';
+      else if (kode >= 51 && kode <= 67) type = 'regn';
+      else if (kode >= 71 && kode <= 77) type = 'snø';
+      else if (kode >= 80 && kode <= 82) type = 'regn';
+      else if (kode === 85 || kode === 86) type = 'snø';
+      else if (kode >= 95) type = 'torden';
+
+      boks.className = boks.className.replace(/\b(sol|sky|tåke|regn|snø|torden)\b/g, '').trim();
+      boks.classList.add(type);
+
+      canvas.width = boks.offsetWidth;
+      canvas.height = boks.offsetHeight;
+      const W = canvas.width, H = canvas.height;
+      const ctx = canvas.getContext('2d');
+      _værPartikler = [];
+
+      if (type === 'regn' || type === 'torden') {
+        for (let i = 0; i < 55; i++) _værPartikler.push({
+          x: Math.random() * W, y: Math.random() * H,
+          len: 8 + Math.random() * 10, speed: 5 + Math.random() * 4,
+          op: 0.2 + Math.random() * 0.35
+        });
+      } else if (type === 'snø') {
+        for (let i = 0; i < 38; i++) _værPartikler.push({
+          x: Math.random() * W, y: Math.random() * H,
+          r: 1.5 + Math.random() * 2.5, speed: 0.4 + Math.random() * 1,
+          drift: (Math.random() - 0.5) * 0.4, op: 0.5 + Math.random() * 0.4
+        });
+      } else if (type === 'sky' || type === 'tåke') {
+        for (let i = 0; i < 4; i++) _værPartikler.push({
+          x: Math.random() * W, y: H * 0.2 + Math.random() * H * 0.6,
+          r: 25 + Math.random() * 30, speed: 0.15 + Math.random() * 0.2,
+          op: 0.06 + Math.random() * 0.07
+        });
+      }
+
+      let lightning = 0;
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+
+        if (type === 'sol') {
+          const cx = W * 0.82, cy = H * 0.15, t = Date.now() / 1000;
+          for (let i = 0; i < 10; i++) {
+            const angle = (i / 10) * Math.PI * 2;
+            const len = 55 + Math.sin(t * 1.5 + i) * 15;
+            ctx.save(); ctx.translate(cx, cy); ctx.rotate(angle);
+            const g = ctx.createLinearGradient(0, 0, 0, len);
+            g.addColorStop(0, 'rgba(255,210,40,0.45)');
+            g.addColorStop(1, 'rgba(255,180,0,0)');
+            ctx.fillStyle = g;
+            ctx.beginPath(); ctx.moveTo(-3,0); ctx.lineTo(3,0); ctx.lineTo(0.5,len); ctx.lineTo(-0.5,len); ctx.fill();
+            ctx.restore();
+          }
+          ctx.save();
+          const sg = ctx.createRadialGradient(cx, cy, 0, cx, cy, 28);
+          sg.addColorStop(0, 'rgba(255,230,60,0.9)'); sg.addColorStop(0.6, 'rgba(255,200,0,0.4)'); sg.addColorStop(1, 'rgba(255,160,0,0)');
+          ctx.fillStyle = sg; ctx.beginPath(); ctx.arc(cx, cy, 28, 0, Math.PI*2); ctx.fill();
+          ctx.restore();
+
+        } else if (type === 'regn' || type === 'torden') {
+          if (type === 'torden') {
+            if (--lightning > 0) { ctx.fillStyle = `rgba(255,255,200,${lightning/30*0.18})`; ctx.fillRect(0,0,W,H); }
+            if (Math.random() < 0.004) lightning = 25;
+          }
+          for (const p of _værPartikler) {
+            ctx.save(); ctx.strokeStyle = `rgba(100,140,230,${p.op})`; ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x + p.len*0.25, p.y + p.len); ctx.stroke(); ctx.restore();
+            p.x += p.speed * 0.25; p.y += p.speed;
+            if (p.y > H + p.len) { p.y = -p.len; p.x = Math.random() * W; }
+            if (p.x > W) p.x = 0;
+          }
+
+        } else if (type === 'snø') {
+          for (const p of _værPartikler) {
+            ctx.save(); ctx.fillStyle = `rgba(210,230,255,${p.op})`; ctx.shadowColor = 'rgba(180,210,255,0.8)'; ctx.shadowBlur = 4;
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill(); ctx.restore();
+            p.y += p.speed; p.x += p.drift;
+            if (p.y > H + p.r) { p.y = -p.r; p.x = Math.random() * W; }
+            if (p.x < -p.r) p.x = W + p.r;
+            if (p.x > W + p.r) p.x = -p.r;
+          }
+
+        } else if (type === 'sky' || type === 'tåke') {
+          for (const p of _værPartikler) {
+            const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+            g.addColorStop(0, `rgba(180,190,200,${p.op*2})`); g.addColorStop(1, 'rgba(180,190,200,0)');
+            ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+            p.x += p.speed;
+            if (p.x - p.r > W) p.x = -p.r;
+          }
+        }
+        _værAnim = requestAnimationFrame(draw);
+      }
+      draw();
+    }
+
+    function stopVærAnimasjon() {
+      if (_værAnim) { cancelAnimationFrame(_værAnim); _værAnim = null; }
+      const c = document.getElementById('vær-canvas');
+      if (c) c.getContext('2d').clearRect(0, 0, c.width, c.height);
+    }
+
     function visVærLaster() {
+      stopVærAnimasjon();
       document.getElementById("vær-resultat").classList.add("skjult");
       document.getElementById("vær-feil").classList.add("skjult");
       document.getElementById("vær-laster").classList.remove("skjult");
