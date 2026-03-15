@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kryssord — Simon</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --cs: 46px; }
+
+    body {
+      background: #f5f5f7;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+      color: #1d1d1f;
+      min-height: 100vh;
+    }
+
+    nav {
+      position: sticky; top: 0;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      padding: 0 32px; height: 52px;
+      display: flex; align-items: center; justify-content: space-between;
+      z-index: 100;
+    }
+    .nav-logo { font-weight: 600; font-size: 1rem; letter-spacing: -0.01em; }
+    .nav-back { color: #0071e3; text-decoration: none; font-size: 0.9rem; transition: opacity 0.2s; }
+    .nav-back:hover { opacity: 0.7; }
+
+    main { max-width: 960px; margin: 0 auto; padding: 56px 32px 80px; }
+
+    .etikett { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #6e6e73; margin-bottom: 8px; }
+    h1 { font-size: 4rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 8px; }
+    .subtitle { color: #6e6e73; margin-bottom: 32px; font-size: 1rem; }
+
+    /* TEMA-VELGER */
+    .tema-velger { display: flex; gap: 8px; margin-bottom: 40px; flex-wrap: wrap; }
+    .tema-btn {
+      padding: 8px 18px; border-radius: 980px; border: 1.5px solid rgba(0,0,0,0.1);
+      background: white; color: #1d1d1f; font-size: 0.875rem; font-weight: 500;
+      cursor: pointer; transition: all 0.2s; font-family: inherit;
+    }
+    .tema-btn:hover { border-color: #0071e3; color: #0071e3; }
+    .tema-btn.aktiv { background: #0071e3; color: white; border-color: #0071e3; box-shadow: 0 4px 12px rgba(0,113,227,0.25); }
+
+    /* TIMER & HIGHSCORE */
+    .spill-info { display: flex; align-items: center; gap: 24px; margin-bottom: 16px; flex-wrap: wrap; }
+    .timer-boks { display: flex; align-items: baseline; gap: 6px; }
+    .timer-verdi { font-size: 2rem; font-weight: 700; letter-spacing: -0.03em; color: #1d1d1f; font-variant-numeric: tabular-nums; line-height: 1; }
+    .timer-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #a1a1a6; }
+    .highscore-boks { display: flex; align-items: baseline; gap: 6px; }
+    .highscore-verdi { font-size: 2rem; font-weight: 700; letter-spacing: -0.03em; color: #0071e3; font-variant-numeric: tabular-nums; line-height: 1; }
+
+    /* LAYOUT */
+    .layout { display: flex; gap: 56px; align-items: flex-start; }
+    .grid-wrapper { flex-shrink: 0; }
+
+    /* GRID */
+    .kryssord-grid {
+      display: grid;
+      gap: 2px; background: #1d1d1f; padding: 2px; border-radius: 14px; overflow: hidden;
+    }
+
+    .celle { width: var(--cs); height: var(--cs); position: relative; }
+    .celle.svart { background: #1d1d1f; }
+    .celle.hvit  { background: #ffffff; transition: background 0.12s; }
+    .celle.hvit.ord-highlight { background: #e8f1fd; }
+    .celle.hvit.aktiv-celle   { background: #dbeafe; box-shadow: inset 0 -3px 0 #0071e3; }
+    .celle.hvit.riktig        { background: #f0fdf4; }
+    .celle.hvit.feil          { background: #fff5f5; }
+
+    .celle-nr {
+      position: absolute; top: 3px; left: 4px;
+      font-size: 9px; font-weight: 700; color: #86868b;
+      line-height: 1; pointer-events: none; z-index: 1;
+    }
+
+    .celle input {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      border: none; outline: none; background: transparent;
+      text-align: center;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+      font-size: 1.2rem; font-weight: 700; color: #000000;
+      text-transform: uppercase; cursor: pointer;
+      caret-color: #0071e3; padding-top: 8px;
+      transition: color 0.12s;
+    }
+    .celle.riktig input { color: #16a34a; }
+    .celle.feil   input { color: #dc2626; }
+
+    /* CLUES */
+    .ledetråder { flex: 1; min-width: 0; }
+    .ledetråd-gruppe { margin-bottom: 28px; }
+    .ledetråd-tittel { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #6e6e73; margin-bottom: 10px; }
+    .ledetråd-liste { list-style: none; }
+    .ledetråd-liste li { display: flex; align-items: baseline; gap: 10px; padding: 8px 10px; border-radius: 8px; cursor: pointer; transition: background 0.15s; font-size: 0.9rem; line-height: 1.4; }
+    .ledetråd-liste li:hover { background: rgba(0,0,0,0.04); }
+    .ledetråd-liste li.aktiv { background: rgba(0,113,227,0.08); }
+    .ledetråd-nr { font-weight: 700; color: #0071e3; min-width: 18px; flex-shrink: 0; font-size: 0.85rem; }
+    .ledetråd-tekst { color: #1d1d1f; }
+    .ledetråd-tekst.løst { text-decoration: line-through; color: #a1a1a6; }
+
+    /* BUTTONS */
+    .knapper { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+    button {
+      background: #0071e3; color: white; border: none;
+      padding: 10px 20px; border-radius: 980px; cursor: pointer;
+      font-size: 0.9rem; font-weight: 500; font-family: inherit;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+    button:hover { background: #0077ed; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,113,227,0.28); }
+    button:active { transform: translateY(0); box-shadow: none; }
+    .btn-sek { background: rgba(0,0,0,0.06); color: #1d1d1f; box-shadow: none; }
+    .btn-sek:hover { background: rgba(0,0,0,0.1); box-shadow: none; }
+
+    #melding { margin-top: 14px; font-size: 0.95rem; font-weight: 500; min-height: 1.4em; transition: color 0.3s; }
+
+    /* AKTIV LEDETRÅD */
+    .aktiv-ledetråd {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #ffffff;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+      min-height: 48px;
+      transition: opacity 0.2s;
+    }
+    .aktiv-ledetråd.tom { opacity: 0; }
+    .aktiv-ledetråd-nr {
+      font-size: 0.8rem; font-weight: 700;
+      color: #0071e3; white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .aktiv-ledetråd-tekst {
+      font-size: 0.95rem; color: #1d1d1f; line-height: 1.3;
+    }
+
+    /* HINT */
+    .hint-rad { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+    .hint-prikker { display: flex; gap: 5px; }
+    .hint-prikk {
+      width: 9px; height: 9px; border-radius: 50%;
+      background: #0071e3; transition: background 0.3s, transform 0.3s;
+    }
+    .hint-prikk.brukt { background: rgba(0,0,0,0.12); }
+    #hint-btn:disabled { opacity: 0.35; cursor: default; transform: none !important; box-shadow: none !important; }
+
+    /* ORD LØST */
+    @keyframes ord-løst {
+      0%   { transform: scale(1); }
+      40%  { transform: scale(1.03); color: #16a34a; }
+      100% { transform: scale(1); }
+    }
+    .ledetråd-liste li.løst-animasjon { animation: ord-løst 0.4s ease forwards; }
+
+    /* BØLGE-ANIMASJON */
+    @keyframes celle-bølge {
+      0%   { background: #ffffff; }
+      25%  { background: #22c55e; }
+      100% { background: #f0fdf4; }
+    }
+    @keyframes tekst-bølge {
+      0%   { color: #000000; }
+      25%  { color: #ffffff; }
+      100% { color: #16a34a; }
+    }
+    .celle.bølge        { animation: celle-bølge 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+    .celle.bølge input  { animation: tekst-bølge 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+
+    /* KONFETTI */
+    .konfetti {
+      position: fixed; top: -12px; pointer-events: none; z-index: 9999;
+      border-radius: 2px;
+      animation: fall linear forwards;
+    }
+    @keyframes fall {
+      to { transform: translateY(105vh) rotate(720deg); opacity: 0; }
+    }
+
+    @media (max-width: 720px) {
+      :root { --cs: 38px; }
+      .layout { flex-direction: column; gap: 32px; }
+      h1 { font-size: 2.5rem; }
+      main { padding: 40px 20px 60px; }
+      nav { padding: 0 20px; }
+    }
+    @media (max-width: 400px) {
+      :root { --cs: 32px; }
+      .celle input { font-size: 0.9rem; padding-top: 6px; }
+      .celle-nr { font-size: 7px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Kryssord</div>
+  <a href="index.html" class="nav-back">← Tilbake</a>
+</nav>
+
+<main>
+  <p class="etikett">Spill</p>
+  <h1>Kryssord</h1>
+  <p class="subtitle">Velg et tema og løs kryssordet</p>
+
+  <div class="tema-velger" id="tema-velger"></div>
+
+  <div class="spill-info">
+    <div class="timer-boks">
+      <div class="timer-verdi" id="timer">0:00</div>
+      <div class="timer-label">Tid</div>
+    </div>
+    <div class="highscore-boks" id="hs-boks" style="display:none">
+      <div class="highscore-verdi" id="hs-verdi">—</div>
+      <div class="timer-label">Rekord</div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="grid-wrapper">
+      <div class="aktiv-ledetråd tom" id="aktiv-ledetråd">
+        <span class="aktiv-ledetråd-nr" id="aktiv-nr"></span>
+        <span class="aktiv-ledetråd-tekst" id="aktiv-tekst"></span>
+      </div>
+      <div class="kryssord-grid" id="grid"></div>
+      <div class="knapper">
+        <button onclick="sjekkSvar()">Sjekk svar</button>
+        <button id="hint-btn" class="btn-sek" onclick="brukHint()">Hint</button>
+        <button class="btn-sek" onclick="avslørSvar()">Avslør</button>
+        <button class="btn-sek" onclick="nullstill()">Nullstill</button>
+      </div>
+      <div class="hint-rad">
+        <span style="font-size:0.78rem;font-weight:600;color:#6e6e73;">Hint igjen:</span>
+        <div class="hint-prikker">
+          <div class="hint-prikk" id="hp0"></div>
+          <div class="hint-prikk" id="hp1"></div>
+          <div class="hint-prikk" id="hp2"></div>
+        </div>
+      </div>
+      <div id="melding"></div>
+    </div>
+
+    <div class="ledetråder">
+      <div class="ledetråd-gruppe">
+        <div class="ledetråd-tittel">Vannrett</div>
+        <ul class="ledetråd-liste" id="vannrett"></ul>
+      </div>
+      <div class="ledetråd-gruppe">
+        <div class="ledetråd-tittel">Loddrett</div>
+        <ul class="ledetråd-liste" id="loddrett"></ul>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+/* ─── KRYSSORD-DATA ────────────────────────────────────────────────────────
+  Alle kryss er manuelt verifisert. ✓ = bekreftet korrekt bokstav.
+
+  TEKNOLOGI (9×8):
+    BLANK[4]=KODING[0]=K (0,4)✓  PIANO[3]=NORSK[0]=N (1,3)✓
+    PIANO[4]=KODING[1]=O (1,4)✓  KODER[1]=NORSK[1]=O (2,3)✓
+    KODER[2]=KODING[2]=D (2,4)✓  TETRIS[3]=NORSK[2]=R (3,3)✓
+    TETRIS[4]=KODING[3]=I (3,4)✓  TETRIS[5]=SIKKER[0]=S (3,5)✓
+    SNILL[0]=NORSK[3]=S (4,3)✓   SNILL[1]=KODING[4]=N (4,4)✓
+    SNILL[2]=SIKKER[1]=I (4,5)✓
+
+  MAT (5×5):
+    SUPPE[0]=SALAT[0]=S (0,0)✓  LAKS[0]=SALAT[2]=L (0,2)✓
+    TOMAT[0]=SALAT[4]=T (0,4)✓  PASTA[0]=SUPPE[3]=P (3,0)✓
+    PASTA[2]=LAKS[3]=S (3,2)✓   PASTA[4]=TOMAT[3]=A (3,4)✓
+    EPLE[0]=SUPPE[4]=E  (4,0)✓
+
+  GEOGRAFI (6×6):
+    EUROPA[0]=BERGEN[1]=E (0,1)✓  GROTTE[0]=BERGEN[3]=G (0,3)✓
+    NORGE[0]=BERGEN[5]=N  (0,5)✓  POTTE[0]=EUROPA[4]=P  (4,1)✓
+    POTTE[2]=GROTTE[4]=T  (4,3)✓  POTTE[4]=NORGE[4]=E   (4,5)✓
+    ALENE[0]=EUROPA[5]=A  (5,1)✓  ALENE[2]=GROTTE[5]=E  (5,3)✓
+
+  SPORT (6×8):
+    TENNIS[0]=FOTBALL[2]=T  (0,2)✓  BRONSE[0]=FOTBALL[3]=B (0,3)✓
+    ANONYM[1]=TENNIS[2]=N   (2,2)✓  ANONYM[2]=BRONSE[2]=O  (2,3)✓
+    ISKREM[0]=TENNIS[4]=I   (4,2)✓  ISKREM[1]=BRONSE[4]=S  (4,3)✓
+    SENDE[0]=TENNIS[5]=S    (5,2)✓  SENDE[1]=BRONSE[5]=E   (5,3)✓
+─────────────────────────────────────────────────────────────────────────── */
+
+const ALLE_KRYSSORD = {
+  teknologi: {
+    tittel: 'Teknologi', rows: 9, cols: 8,
+    ord: [
+      { id:'1a', nr:1, dir:'a', r:0, c:0, svar:'BLANK',  ledetråd:'Tom og uten innhold' },
+      { id:'2d', nr:2, dir:'d', r:0, c:4, svar:'KODING', ledetråd:'Å skrive dataprogrammer' },
+      { id:'3a', nr:3, dir:'a', r:1, c:0, svar:'PIANO',  ledetråd:'Klassisk tangentinstrument' },
+      { id:'4d', nr:4, dir:'d', r:1, c:3, svar:'NORSK',  ledetråd:'Skandinavisk språk' },
+      { id:'5a', nr:5, dir:'a', r:2, c:2, svar:'KODER',  ledetråd:'En som skriver programmer' },
+      { id:'6a', nr:6, dir:'a', r:3, c:0, svar:'TETRIS', ledetråd:'Klassisk blokkspill fra 1984' },
+      { id:'7d', nr:7, dir:'d', r:3, c:5, svar:'SIKKER', ledetråd:'Trygg og pålitelig' },
+      { id:'8a', nr:8, dir:'a', r:4, c:3, svar:'SNILL',  ledetråd:'Hyggelig og god av natur' },
+    ]
+  },
+  mat: {
+    tittel: 'Mat', rows: 5, cols: 5,
+    ord: [
+      { id:'1a', nr:1, dir:'a', r:0, c:0, svar:'SALAT', ledetråd:'Grønn og sunn rett' },
+      { id:'1d', nr:1, dir:'d', r:0, c:0, svar:'SUPPE', ledetråd:'Varm rett servert i bolle' },
+      { id:'2d', nr:2, dir:'d', r:0, c:2, svar:'LAKS',  ledetråd:'Populær norsk fisk' },
+      { id:'3d', nr:3, dir:'d', r:0, c:4, svar:'TOMAT', ledetråd:'Rød grønnsak til salaten' },
+      { id:'4a', nr:4, dir:'a', r:3, c:0, svar:'PASTA', ledetråd:'Italiensk rett av hvetemel' },
+      { id:'5a', nr:5, dir:'a', r:4, c:0, svar:'EPLE',  ledetråd:'Rund og sprø frukt' },
+    ]
+  },
+  geografi: {
+    tittel: 'Geografi', rows: 6, cols: 6,
+    ord: [
+      { id:'1a', nr:1, dir:'a', r:0, c:0, svar:'BERGEN', ledetråd:'Norges nest største by' },
+      { id:'2d', nr:2, dir:'d', r:0, c:1, svar:'EUROPA', ledetråd:'Verdensdelen Norge tilhører' },
+      { id:'3d', nr:3, dir:'d', r:0, c:3, svar:'GROTTE', ledetråd:'Naturlig hule i fjellet' },
+      { id:'4d', nr:4, dir:'d', r:0, c:5, svar:'NORGE',  ledetråd:'Landet i nord' },
+      { id:'5a', nr:5, dir:'a', r:4, c:1, svar:'POTTE',  ledetråd:'Beholder for blomster' },
+      { id:'6a', nr:6, dir:'a', r:5, c:1, svar:'ALENE',  ledetråd:'Uten andre til stede' },
+    ]
+  },
+  sport: {
+    tittel: 'Sport', rows: 6, cols: 8,
+    ord: [
+      { id:'1a', nr:1, dir:'a', r:0, c:0, svar:'FOTBALL', ledetråd:'Verdens mest populære idrett' },
+      { id:'2d', nr:2, dir:'d', r:0, c:2, svar:'TENNIS',  ledetråd:'Spilles med racket og gul ball' },
+      { id:'3d', nr:3, dir:'d', r:0, c:3, svar:'BRONSE',  ledetråd:'Tredjeplassens medalje' },
+      { id:'4a', nr:4, dir:'a', r:2, c:1, svar:'ANONYM',  ledetråd:'Uten kjent identitet' },
+      { id:'5a', nr:5, dir:'a', r:4, c:2, svar:'ISKREM',  ledetråd:'Kald og søt dessert' },
+      { id:'6a', nr:6, dir:'a', r:5, c:2, svar:'SENDE',   ledetråd:'Det TV gjør med kampen' },
+    ]
+  }
+};
+
+// ─── STATE ───────────────────────────────────────────────────────────────
+let aktivTema    = 'teknologi';
+let ORD          = [];
+let ROWS         = 9;
+let COLS         = 8;
+let cellMap      = {};
+let aktivCelle   = null;
+let aktivOrdId   = null;
+let timerSek     = 0;
+let timerIntv    = null;
+let timerStartet = false;
+let løst         = false;
+let hintsIgjen   = 3;
+
+// ─── INIT ─────────────────────────────────────────────────────────────────
+function initTema(temaId) {
+  aktivTema     = temaId;
+  løst          = false;
+  timerStartet  = false;
+  timerSek      = 0;
+  clearInterval(timerIntv);
+  oppdaterTimerVis();
+
+  const data = ALLE_KRYSSORD[temaId];
+  ORD  = data.ord;
+  ROWS = data.rows;
+  COLS = data.cols;
+
+  // Update subtitle
+  document.querySelector('.subtitle').textContent =
+    `${data.tittel}-tema — fyll inn alle svar`;
+
+  // Build cell map
+  cellMap = {};
+  ORD.forEach(o => {
+    for (let i = 0; i < o.svar.length; i++) {
+      const r = o.dir === 'a' ? o.r : o.r + i;
+      const c = o.dir === 'a' ? o.c + i : o.c;
+      const key = `${r},${c}`;
+      if (!cellMap[key]) cellMap[key] = { ordIds: [], nr: null };
+      if (!cellMap[key].ordIds.includes(o.id)) cellMap[key].ordIds.push(o.id);
+    }
+  });
+  // Assign numbers
+  ORD.forEach(o => {
+    const key = `${o.r},${o.c}`;
+    if (cellMap[key] && !cellMap[key].nr) cellMap[key].nr = o.nr;
+  });
+
+  aktivCelle = null;
+  aktivOrdId = null;
+  hintsIgjen = 3;
+
+  byggGrid();
+  byggLedetråder();
+  visHighscore();
+  oppdaterHintUI();
+
+  document.getElementById('melding').textContent = '';
+  inputEl(ORD[0].r, ORD[0].c)?.focus();
+}
+
+// ─── TEMA-VELGER ─────────────────────────────────────────────────────────
+function byggTemaVelger() {
+  const el = document.getElementById('tema-velger');
+  Object.entries(ALLE_KRYSSORD).forEach(([id, data]) => {
+    const btn = document.createElement('button');
+    btn.className = 'tema-btn' + (id === aktivTema ? ' aktiv' : '');
+    btn.textContent = data.tittel;
+    btn.dataset.tema = id;
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tema-btn').forEach(b => b.classList.remove('aktiv'));
+      btn.classList.add('aktiv');
+      initTema(id);
+    });
+    el.appendChild(btn);
+  });
+}
+
+// ─── TIMER ────────────────────────────────────────────────────────────────
+function startTimer() {
+  if (timerStartet || løst) return;
+  timerStartet = true;
+  timerIntv = setInterval(() => {
+    timerSek++;
+    oppdaterTimerVis();
+  }, 1000);
+}
+
+function oppdaterTimerVis() {
+  const m = Math.floor(timerSek / 60);
+  const s = timerSek % 60;
+  document.getElementById('timer').textContent = `${m}:${String(s).padStart(2, '0')}`;
+}
+
+function formatTid(sek) {
+  const m = Math.floor(sek / 60);
+  const s = sek % 60;
+  return `${m}:${String(s).padStart(2, '0')}`;
+}
+
+function visHighscore() {
+  const hs = localStorage.getItem(`kryssord_hs_${aktivTema}`);
+  const boks = document.getElementById('hs-boks');
+  if (hs) {
+    document.getElementById('hs-verdi').textContent = formatTid(parseInt(hs));
+    boks.style.display = 'flex';
+  } else {
+    boks.style.display = 'none';
+  }
+}
+
+function lagreHighscore() {
+  const key = `kryssord_hs_${aktivTema}`;
+  const hs = localStorage.getItem(key);
+  if (!hs || timerSek < parseInt(hs)) {
+    localStorage.setItem(key, timerSek);
+    visHighscore();
+    return !hs ? false : true; // true = ny rekord
+  }
+  return false;
+}
+
+// ─── GRID ─────────────────────────────────────────────────────────────────
+function byggGrid() {
+  const el = document.getElementById('grid');
+  el.innerHTML = '';
+  el.style.gridTemplateColumns = `repeat(${COLS}, var(--cs))`;
+  el.style.gridTemplateRows    = `repeat(${ROWS}, var(--cs))`;
+
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const celle = cellMap[`${r},${c}`];
+      const div = document.createElement('div');
+      div.className = 'celle ' + (celle ? 'hvit' : 'svart');
+      div.dataset.r = r; div.dataset.c = c;
+
+      if (celle) {
+        if (celle.nr) {
+          const nr = document.createElement('span');
+          nr.className = 'celle-nr';
+          nr.textContent = celle.nr;
+          div.appendChild(nr);
+        }
+        const inp = document.createElement('input');
+        inp.type = 'text'; inp.maxLength = 2; inp.id = `c${r}_${c}`;
+        inp.autocomplete = 'off'; inp.autocorrect = 'off';
+        inp.autocapitalize = 'off'; inp.spellcheck = false;
+        inp.addEventListener('focus', () => velgCelle(r, c));
+        inp.addEventListener('keydown', e => tastDown(e, r, c));
+        inp.addEventListener('input',   e => tastInput(e, r, c));
+        div.appendChild(inp);
+      }
+      el.appendChild(div);
+    }
+  }
+}
+
+function celleEl(r, c) { return document.querySelector(`.celle[data-r="${r}"][data-c="${c}"]`); }
+function inputEl(r, c)  { return document.getElementById(`c${r}_${c}`); }
+
+// ─── CELLEVALG & HIGHLIGHT ────────────────────────────────────────────────
+function velgCelle(r, c) {
+  const celle = cellMap[`${r},${c}`];
+  if (!celle) return;
+
+  if (aktivCelle && aktivCelle[0] === r && aktivCelle[1] === c && aktivOrdId) {
+    const gjeldende = ORD.find(o => o.id === aktivOrdId);
+    const annenDir  = gjeldende?.dir === 'a' ? 'd' : 'a';
+    const annet     = ORD.find(o => celle.ordIds.includes(o.id) && o.dir === annenDir);
+    if (annet) { aktivOrdId = annet.id; oppdaterHighlight(); oppdaterLedetråd(); return; }
+  }
+
+  aktivCelle = [r, c];
+  if (aktivOrdId) {
+    const gjeldende = ORD.find(o => o.id === aktivOrdId);
+    if (!celle.ordIds.includes(aktivOrdId)) {
+      const sameDir = ORD.find(o => celle.ordIds.includes(o.id) && o.dir === gjeldende?.dir);
+      aktivOrdId = (sameDir || ORD.find(o => celle.ordIds.includes(o.id)))?.id || null;
+    }
+  } else {
+    aktivOrdId = ORD.find(o => celle.ordIds.includes(o.id))?.id || null;
+  }
+
+  oppdaterHighlight();
+  oppdaterLedetråd();
+}
+
+function oppdaterHighlight() {
+  document.querySelectorAll('.celle.hvit').forEach(el => el.classList.remove('aktiv-celle', 'ord-highlight'));
+  if (!aktivCelle) return;
+  celleEl(...aktivCelle)?.classList.add('aktiv-celle');
+  if (!aktivOrdId) return;
+  const o = ORD.find(o => o.id === aktivOrdId);
+  if (!o) return;
+  for (let i = 0; i < o.svar.length; i++) {
+    const r = o.dir === 'a' ? o.r : o.r + i;
+    const c = o.dir === 'a' ? o.c + i : o.c;
+    if (aktivCelle[0] !== r || aktivCelle[1] !== c) celleEl(r, c)?.classList.add('ord-highlight');
+  }
+}
+
+function oppdaterLedetråd() {
+  document.querySelectorAll('.ledetråd-liste li').forEach(li => li.classList.remove('aktiv'));
+  const boks = document.getElementById('aktiv-ledetråd');
+  if (aktivOrdId) {
+    const li = document.querySelector(`[data-id="${aktivOrdId}"]`);
+    li?.classList.add('aktiv');
+    li?.scrollIntoView({ block: 'nearest' });
+    const o = ORD.find(o => o.id === aktivOrdId);
+    if (o) {
+      document.getElementById('aktiv-nr').textContent  = `${o.nr} ${o.dir === 'a' ? 'vannrett' : 'loddrett'}`;
+      document.getElementById('aktiv-tekst').textContent = o.ledetråd;
+      boks.classList.remove('tom');
+    }
+  } else {
+    boks.classList.add('tom');
+  }
+}
+
+// ─── TASTATUR ────────────────────────────────────────────────────────────
+function tastInput(e, r, c) {
+  startTimer();
+  const inp = e.target;
+  const rå  = inp.value.replace(/[^a-zA-ZæøåÆØÅ]/g, '');
+  inp.value = rå ? rå[rå.length - 1].toUpperCase() : '';
+  fjernFeedback(r, c);
+  if (inp.value) {
+    sjekkOrdEtterInput(r, c);
+    nesteIOrdet(r, c);
+  }
+}
+
+function sjekkOrdEtterInput(r, c) {
+  const celle = cellMap[`${r},${c}`];
+  if (!celle) return;
+  celle.ordIds.forEach(ordId => {
+    const o = ORD.find(o => o.id === ordId);
+    if (!o) return;
+    for (let i = 0; i < o.svar.length; i++) {
+      const or = o.dir === 'a' ? o.r : o.r + i;
+      const oc = o.dir === 'a' ? o.c + i : o.c;
+      if ((inputEl(or, oc)?.value || '').toUpperCase() !== o.svar[i]) return;
+    }
+    // Hele ordet er riktig
+    for (let i = 0; i < o.svar.length; i++) {
+      const or = o.dir === 'a' ? o.r : o.r + i;
+      const oc = o.dir === 'a' ? o.c + i : o.c;
+      celleEl(or, oc)?.classList.add('riktig');
+    }
+    const li = document.querySelector(`[data-id="${o.id}"]`);
+    const tekst = li?.querySelector('.ledetråd-tekst');
+    if (li && tekst && !tekst.classList.contains('løst')) {
+      li.classList.add('løst-animasjon');
+      setTimeout(() => { li.classList.remove('løst-animasjon'); tekst.classList.add('løst'); }, 420);
+    }
+  });
+}
+
+function brukHint() {
+  if (hintsIgjen === 0 || !aktivOrdId || løst) return;
+  const o = ORD.find(o => o.id === aktivOrdId);
+  if (!o) return;
+  const kandidater = [];
+  for (let i = 0; i < o.svar.length; i++) {
+    const r = o.dir === 'a' ? o.r : o.r + i;
+    const c = o.dir === 'a' ? o.c + i : o.c;
+    if ((inputEl(r, c)?.value || '').toUpperCase() !== o.svar[i]) kandidater.push({ r, c, bokstav: o.svar[i] });
+  }
+  if (kandidater.length === 0) return;
+  const valgt = kandidater[Math.floor(Math.random() * kandidater.length)];
+  const inp = inputEl(valgt.r, valgt.c);
+  if (inp) {
+    inp.value = valgt.bokstav;
+    celleEl(valgt.r, valgt.c)?.classList.remove('feil');
+    sjekkOrdEtterInput(valgt.r, valgt.c);
+  }
+  hintsIgjen--;
+  oppdaterHintUI();
+}
+
+function oppdaterHintUI() {
+  for (let i = 0; i < 3; i++)
+    document.getElementById(`hp${i}`)?.classList.toggle('brukt', i >= hintsIgjen);
+  const btn = document.getElementById('hint-btn');
+  if (btn) btn.disabled = hintsIgjen === 0 || løst;
+}
+
+function tastDown(e, r, c) {
+  if (e.key === 'Backspace') {
+    if (!inputEl(r, c)?.value) forrigeIOrdet(r, c); else fjernFeedback(r, c);
+  } else if (e.key === 'ArrowRight') { e.preventDefault(); flytt(r, c, 0,  1); }
+  else if   (e.key === 'ArrowLeft')  { e.preventDefault(); flytt(r, c, 0, -1); }
+  else if   (e.key === 'ArrowDown')  { e.preventDefault(); flytt(r, c, 1,  0); }
+  else if   (e.key === 'ArrowUp')    { e.preventDefault(); flytt(r, c,-1,  0); }
+  else if   (e.key === 'Tab')        { e.preventDefault(); nestOrd(); }
+}
+
+function nesteIOrdet(r, c) {
+  const o = ORD.find(o => o.id === aktivOrdId); if (!o) return;
+  const dr = o.dir === 'd' ? 1 : 0, dc = o.dir === 'a' ? 1 : 0;
+  const nr = r + dr, nc = c + dc;
+  if (cellMap[`${nr},${nc}`]) inputEl(nr, nc)?.focus();
+}
+
+function forrigeIOrdet(r, c) {
+  const o = ORD.find(o => o.id === aktivOrdId); if (!o) return;
+  const dr = o.dir === 'd' ? -1 : 0, dc = o.dir === 'a' ? -1 : 0;
+  const nr = r + dr, nc = c + dc;
+  if (cellMap[`${nr},${nc}`]) inputEl(nr, nc)?.focus();
+}
+
+function flytt(r, c, dr, dc) {
+  const nr = r + dr, nc = c + dc;
+  if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && cellMap[`${nr},${nc}`]) inputEl(nr, nc)?.focus();
+}
+
+function nestOrd() {
+  if (!aktivOrdId) return;
+  const idx   = ORD.findIndex(o => o.id === aktivOrdId);
+  const neste = ORD[(idx + 1) % ORD.length];
+  aktivOrdId  = neste.id; aktivCelle = [neste.r, neste.c];
+  inputEl(neste.r, neste.c)?.focus();
+}
+
+function fjernFeedback(r, c) { celleEl(r, c)?.classList.remove('riktig', 'feil'); }
+
+// ─── LEDETRÅDER ───────────────────────────────────────────────────────────
+function byggLedetråder() {
+  document.getElementById('vannrett').innerHTML = '';
+  document.getElementById('loddrett').innerHTML = '';
+  ORD.filter(o => o.dir === 'a').forEach(o => byggLi(o, 'vannrett'));
+  ORD.filter(o => o.dir === 'd').forEach(o => byggLi(o, 'loddrett'));
+}
+
+function byggLi(o, listId) {
+  const ul = document.getElementById(listId);
+  const li = document.createElement('li');
+  li.dataset.id = o.id;
+  li.innerHTML  = `<span class="ledetråd-nr">${o.nr}</span><span class="ledetråd-tekst">${o.ledetråd}</span>`;
+  li.addEventListener('click', () => {
+    aktivOrdId = o.id; aktivCelle = [o.r, o.c];
+    inputEl(o.r, o.c)?.focus(); oppdaterHighlight(); oppdaterLedetråd();
+  });
+  ul.appendChild(li);
+}
+
+// ─── SJEKK / AVSLØR / NULLSTILL ──────────────────────────────────────────
+function sjekkSvar() {
+  document.querySelectorAll('.celle').forEach(el => el.classList.remove('riktig', 'feil'));
+  let riktig = 0, totalt = 0;
+  const unike = new Set();
+
+  ORD.forEach(o => {
+    let ordRiktig = true;
+    for (let i = 0; i < o.svar.length; i++) {
+      const r   = o.dir === 'a' ? o.r : o.r + i;
+      const c   = o.dir === 'a' ? o.c + i : o.c;
+      const key = `${r},${c}`;
+      const val = (inputEl(r, c)?.value || '').toUpperCase();
+      if (!unike.has(key)) {
+        unike.add(key);
+        totalt++;
+        if (val === cellMap[key]?.bokstav || ORD.find(ox => ox.svar[ox.dir==='a' ? c-ox.c : r-ox.r] === val && ox.id === o.id)) {
+          // check via answer directly
+        }
+      }
+      if (val === o.svar[i]) {
+        celleEl(r, c)?.classList.add('riktig');
+        if (!unike.has(key+'r')) { riktig++; unike.add(key+'r'); }
+      } else {
+        if (val) celleEl(r, c)?.classList.add('feil');
+        ordRiktig = false;
+      }
+    }
+    if (ordRiktig) document.querySelector(`[data-id="${o.id}"] .ledetråd-tekst`)?.classList.add('løst');
+  });
+
+  // Count unique correct cells properly
+  const alleCeller = new Map();
+  ORD.forEach(o => {
+    for (let i = 0; i < o.svar.length; i++) {
+      const r = o.dir === 'a' ? o.r : o.r + i;
+      const c = o.dir === 'a' ? o.c + i : o.c;
+      alleCeller.set(`${r},${c}`, o.svar[i]);
+    }
+  });
+
+  let korrekte = 0;
+  alleCeller.forEach((bokstav, key) => {
+    const [r, c] = key.split(',').map(Number);
+    if ((inputEl(r, c)?.value || '').toUpperCase() === bokstav) korrekte++;
+  });
+
+  const melding = document.getElementById('melding');
+  if (korrekte === alleCeller.size) {
+    clearInterval(timerIntv);
+    løst = true;
+    feirSeier();
+  } else {
+    melding.textContent = `${korrekte} av ${alleCeller.size} riktig. Fortsett!`;
+    melding.style.color = '#dc2626';
+  }
+}
+
+function feirSeier() {
+  // Samle alle hvite celler i rekkefølge
+  const celler = [];
+  for (let r = 0; r < ROWS; r++)
+    for (let c = 0; c < COLS; c++)
+      if (cellMap[`${r},${c}`]) celler.push([r, c]);
+
+  // Bølge-animasjon celle for celle
+  celler.forEach(([r, c], idx) => {
+    setTimeout(() => {
+      const el = celleEl(r, c);
+      if (!el) return;
+      el.classList.remove('riktig', 'feil', 'ord-highlight', 'aktiv-celle');
+      el.classList.add('bølge');
+      setTimeout(() => {
+        el.classList.remove('bølge');
+        el.classList.add('riktig');
+      }, 550);
+    }, idx * 55);
+  });
+
+  // Konfetti + melding etter bølgen
+  const forsinkelse = celler.length * 55 + 300;
+  setTimeout(() => {
+    launchConfetti();
+    const nyRekord = lagreHighscore();
+    const melding = document.getElementById('melding');
+    melding.textContent = nyRekord
+      ? `🏆 Ny rekord: ${formatTid(timerSek)}!`
+      : `🎉 Perfekt! Løst på ${formatTid(timerSek)}!`;
+    melding.style.color = '#16a34a';
+  }, forsinkelse);
+}
+
+function launchConfetti() {
+  const farger = ['#0071e3','#34aadc','#30d158','#ff9f0a','#ff375f','#bf5af2','#ffd60a'];
+  for (let i = 0; i < 70; i++) {
+    const el = document.createElement('div');
+    el.className = 'konfetti';
+    el.style.left              = Math.random() * 100 + 'vw';
+    el.style.backgroundColor   = farger[Math.floor(Math.random() * farger.length)];
+    el.style.width             = Math.random() * 8 + 6 + 'px';
+    el.style.height            = Math.random() * 8 + 6 + 'px';
+    el.style.animationDuration = Math.random() * 2 + 1.5 + 's';
+    el.style.animationDelay    = Math.random() * 0.6 + 's';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3800);
+  }
+}
+
+function avslørSvar() {
+  clearInterval(timerIntv); løst = true;
+  document.querySelectorAll('.celle').forEach(el => el.classList.remove('riktig', 'feil'));
+  ORD.forEach(o => {
+    for (let i = 0; i < o.svar.length; i++) {
+      const r = o.dir === 'a' ? o.r : o.r + i;
+      const c = o.dir === 'a' ? o.c + i : o.c;
+      const inp = inputEl(r, c);
+      if (inp) { inp.value = o.svar[i]; celleEl(r, c)?.classList.add('riktig'); }
+    }
+    document.querySelector(`[data-id="${o.id}"] .ledetråd-tekst`)?.classList.add('løst');
+  });
+  const m = document.getElementById('melding');
+  m.textContent = 'Svar avslørt!'; m.style.color = '#6e6e73';
+}
+
+function nullstill() {
+  clearInterval(timerIntv);
+  timerSek = 0; timerStartet = false; løst = false; hintsIgjen = 3;
+  oppdaterTimerVis();
+  oppdaterHintUI();
+  document.querySelectorAll('.celle input').forEach(inp => inp.value = '');
+  document.querySelectorAll('.celle').forEach(el => el.classList.remove('riktig', 'feil'));
+  document.querySelectorAll('.ledetråd-tekst').forEach(el => el.classList.remove('løst'));
+  document.getElementById('melding').textContent = '';
+}
+
+// ─── START ────────────────────────────────────────────────────────────────
+byggTemaVelger();
+initTema('teknologi');
+</script>
+</body>
+</html>
