@@ -671,6 +671,69 @@
       }
     }
 
+    /* VÆR */
+    .vær-card { max-width: 560px; text-align: left; }
+    .vær-resultat.skjult, .vær-feil.skjult, .vær-laster.skjult { display: none; }
+
+    .vær-nå {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+
+    .vær-ikon-stor { font-size: 4rem; line-height: 1; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1)); }
+
+    .vær-info { flex: 1; }
+
+    .vær-by-navn { font-size: 0.9rem; color: #888; margin-bottom: 2px; font-weight: 600; letter-spacing: 0.5px; }
+
+    .vær-temp { font-size: 3rem; font-weight: 700; color: #764ba2; line-height: 1; margin-bottom: 4px; }
+
+    .vær-beskrivelse { font-size: 1.05rem; color: #555; margin-bottom: 10px; }
+
+    .vær-detaljer { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 0.85rem; color: #666; }
+
+    .vær-prognose { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; }
+
+    .prognose-dag {
+      flex: 1;
+      min-width: 80px;
+      background: rgba(102, 126, 234, 0.06);
+      border: 1px solid rgba(102, 126, 234, 0.12);
+      border-radius: 12px;
+      padding: 12px 8px;
+      text-align: center;
+      font-size: 0.8rem;
+    }
+
+    .prognose-dag .dag-navn { font-weight: 700; color: #764ba2; margin-bottom: 4px; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .prognose-dag .dag-ikon { font-size: 1.6rem; margin: 4px 0; }
+    .prognose-dag .dag-maks { font-weight: 700; color: #333; }
+    .prognose-dag .dag-min { color: #999; margin-top: 2px; }
+
+    .vær-feil { text-align: center; color: #e74c3c; padding: 12px; font-size: 0.95rem; }
+    .vær-laster { display: flex; justify-content: center; padding: 24px; }
+
+    .gps-btn {
+      background: rgba(102, 126, 234, 0.12);
+      color: #667eea;
+      flex-shrink: 0;
+      padding: 12px 14px;
+    }
+    .gps-btn:hover { background: rgba(102, 126, 234, 0.25); box-shadow: none; }
+
+    body.dark .vær-nå { border-bottom-color: rgba(255,255,255,0.08); }
+    body.dark .vær-by-navn { color: #aaa; }
+    body.dark .vær-temp { color: #a78bfa; }
+    body.dark .vær-beskrivelse { color: #ccc; }
+    body.dark .vær-detaljer { color: #999; }
+    body.dark .prognose-dag { background: rgba(102,126,234,0.08); border-color: rgba(102,126,234,0.15); }
+    body.dark .prognose-dag .dag-maks { color: #e0e0e0; }
+    body.dark .prognose-dag .dag-min { color: #777; }
+
     /* KONFETTI */
     .confetti {
       position: fixed;
@@ -732,6 +795,7 @@
     <div class="nav-links" id="navLinks">
       <a href="#hjem" class="active" onclick="lukkMeny()">Hjem</a>
       <a href="#navnefakta" onclick="lukkMeny()">Navnefakta</a>
+      <a href="#vær" onclick="lukkMeny()">Vær</a>
       <a href="#tetris" onclick="lukkMeny()">Tetris</a>
     </div>
     <button class="hamburger" id="hamburger" onclick="toggleMeny()">
@@ -771,6 +835,39 @@
         <div class="navn-section">
           <h3 id="faktaTittel">Skriv inn navnet ditt på forsiden og trykk «Si hei!»</h3>
           <ul id="navnFakta" class="tom"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- VÆR -->
+    <section id="vær">
+      <h2 class="section-title fade-in">Været akkurat nå</h2>
+      <div class="card vær-card fade-in">
+        <div class="input-group">
+          <input type="text" id="vær-by" placeholder="Søk etter by..." onkeydown="if(event.key==='Enter') hentVær()">
+          <button onclick="hentVær()">Søk</button>
+          <button class="gps-btn" onclick="hentVærGPS()" title="Bruk min posisjon">📍</button>
+        </div>
+        <div id="vær-laster" class="vær-laster skjult">
+          <div class="spinner" style="border-color:rgba(102,126,234,0.3);border-top-color:#667eea;width:32px;height:32px;border-width:3px;"></div>
+        </div>
+        <div id="vær-feil" class="vær-feil skjult">Fant ikke byen. Prøv igjen.</div>
+        <div id="vær-resultat" class="vær-resultat skjult">
+          <div class="vær-nå">
+            <div class="vær-ikon-stor" id="vær-ikon">☀️</div>
+            <div class="vær-info">
+              <div class="vær-by-navn" id="vær-by-navn"></div>
+              <div class="vær-temp" id="vær-temp"></div>
+              <div class="vær-beskrivelse" id="vær-beskrivelse"></div>
+              <div class="vær-detaljer">
+                <span>🌡️ Føles som <strong id="vær-føles"></strong>°</span>
+                <span>💨 <strong id="vær-vind"></strong> m/s</span>
+                <span>💧 <strong id="vær-luftfukt"></strong>%</span>
+                <span>🌧️ <strong id="vær-nedbør"></strong> mm</span>
+              </div>
+            </div>
+          </div>
+          <div class="vær-prognose" id="vær-prognose"></div>
         </div>
       </div>
     </section>
@@ -1036,6 +1133,94 @@
       btn.appendChild(r);
       r.addEventListener("animationend", () => r.remove());
     });
+
+    // ── Vær ──
+    const wmoKoder = {
+      0:["Klarvær","☀️"], 1:["Mest klart","🌤️"], 2:["Delvis skyet","⛅"], 3:["Overskyet","☁️"],
+      45:["Tåke","🌫️"], 48:["Rimtåke","🌫️"],
+      51:["Lett yr","🌦️"], 53:["Moderat yr","🌦️"], 55:["Tett yr","🌦️"],
+      61:["Lett regn","🌧️"], 63:["Moderat regn","🌧️"], 65:["Kraftig regn","🌧️"],
+      71:["Lett snø","❄️"], 73:["Moderat snø","❄️"], 75:["Kraftig snø","❄️"], 77:["Snøkorn","🌨️"],
+      80:["Lett regnbyge","🌦️"], 81:["Moderat regnbyge","🌦️"], 82:["Kraftig regnbyge","⛈️"],
+      85:["Snøbyge","🌨️"], 86:["Kraftig snøbyge","🌨️"],
+      95:["Tordenvær","⛈️"], 96:["Tordenvær med hagl","⛈️"], 99:["Kraftig tordenvær","⛈️"]
+    };
+    const dagNavn = ["Søn","Man","Tir","Ons","Tor","Fre","Lør"];
+
+    async function hentVær() {
+      const by = document.getElementById("vær-by").value.trim();
+      if (!by) return;
+      visVærLaster();
+      try {
+        const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(by)}&count=1&language=no&format=json`);
+        const data = await res.json();
+        if (!data.results?.length) { visVærFeil(); return; }
+        const { latitude, longitude, name, country } = data.results[0];
+        await hentVærData(latitude, longitude, `${name}, ${country}`);
+      } catch { visVærFeil(); }
+    }
+
+    async function hentVærGPS() {
+      if (!navigator.geolocation) { visVærFeil("GPS ikke tilgjengelig."); return; }
+      visVærLaster();
+      navigator.geolocation.getCurrentPosition(async pos => {
+        const { latitude, longitude } = pos.coords;
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
+          const data = await res.json();
+          const sted = data.address?.city || data.address?.town || data.address?.village || "Din posisjon";
+          const land = data.address?.country || "";
+          await hentVærData(latitude, longitude, `${sted}, ${land}`);
+        } catch { await hentVærData(latitude, longitude, "Din posisjon"); }
+      }, () => visVærFeil("Klarte ikke hente posisjon."));
+    }
+
+    async function hentVærData(lat, lon, stednavn) {
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,relative_humidity_2m&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=5`;
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        const c = data.current, d = data.daily;
+        const [beskr, ikon] = wmoKoder[c.weather_code] || ["Ukjent","🌡️"];
+        document.getElementById("vær-ikon").textContent = ikon;
+        document.getElementById("vær-by-navn").textContent = stednavn;
+        document.getElementById("vær-temp").textContent = Math.round(c.temperature_2m) + "°";
+        document.getElementById("vær-beskrivelse").textContent = beskr;
+        document.getElementById("vær-føles").textContent = Math.round(c.apparent_temperature);
+        document.getElementById("vær-vind").textContent = Math.round(c.wind_speed_10m * 10) / 10;
+        document.getElementById("vær-luftfukt").textContent = c.relative_humidity_2m;
+        document.getElementById("vær-nedbør").textContent = c.precipitation;
+        document.getElementById("vær-prognose").innerHTML = d.time.map((dato, i) => {
+          const dag = new Date(dato);
+          const [di, ii] = wmoKoder[d.weather_code[i]] || ["","🌡️"];
+          return `<div class="prognose-dag">
+            <div class="dag-navn">${i === 0 ? "I dag" : dagNavn[dag.getDay()]}</div>
+            <div class="dag-ikon">${ii}</div>
+            <div class="dag-maks">${Math.round(d.temperature_2m_max[i])}°</div>
+            <div class="dag-min">${Math.round(d.temperature_2m_min[i])}°</div>
+          </div>`;
+        }).join("");
+        visVærResultat();
+      } catch { visVærFeil(); }
+    }
+
+    function visVærLaster() {
+      document.getElementById("vær-resultat").classList.add("skjult");
+      document.getElementById("vær-feil").classList.add("skjult");
+      document.getElementById("vær-laster").classList.remove("skjult");
+    }
+    function visVærResultat() {
+      document.getElementById("vær-laster").classList.add("skjult");
+      document.getElementById("vær-feil").classList.add("skjult");
+      document.getElementById("vær-resultat").classList.remove("skjult");
+    }
+    function visVærFeil(msg) {
+      document.getElementById("vær-laster").classList.add("skjult");
+      document.getElementById("vær-resultat").classList.add("skjult");
+      const el = document.getElementById("vær-feil");
+      el.textContent = msg || "Fant ikke byen. Prøv igjen.";
+      el.classList.remove("skjult");
+    }
 
     // Deleknapp
     function delSide() {
