@@ -627,9 +627,26 @@
     .hamburger.åpen span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
     /* MOBIL */
+    .nav-tema-mobil {
+      display: none;
+    }
+
     @media (max-width: 600px) {
       .hamburger {
         display: flex;
+      }
+
+      .nav-right {
+        display: none;
+      }
+
+      .nav-tema-mobil {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        margin-top: 4px;
       }
 
       .nav-links {
@@ -894,13 +911,21 @@
 </div>
 
   <nav>
-    <div class="nav-logo">Simon som vibe-koder med Claude Code</div>
+    <div class="nav-logo">Vibe-koding med Claude</div>
     <div class="nav-links" id="navLinks">
       <a href="#hjem" class="active" onclick="lukkMeny()">Hjem</a>
       <a href="#navnefakta" onclick="lukkMeny()">Navnefakta</a>
       <a href="#vær" onclick="lukkMeny()">Vær</a>
       <a href="#nyheter" onclick="lukkMeny()">Nyheter</a>
       <a href="#tetris" onclick="lukkMeny()">Tetris</a>
+      <div class="nav-tema-mobil">
+        <span>☀️</span>
+        <label class="switch">
+          <input type="checkbox" id="tema-mobil" onchange="toggleTheme(); document.querySelector('.switch input:not(#tema-mobil)').checked = this.checked">
+          <span class="slider"></span>
+        </label>
+        <span>🌙</span>
+      </div>
     </div>
     <button class="hamburger" id="hamburger" onclick="toggleMeny()">
       <span></span><span></span><span></span>
@@ -1079,7 +1104,9 @@
 
     function toggleTheme() {
       document.body.classList.toggle("dark");
-      localStorage.setItem("tema", document.body.classList.contains("dark") ? "dark" : "light");
+      const mørkt = document.body.classList.contains("dark");
+      localStorage.setItem("tema", mørkt ? "dark" : "light");
+      document.querySelectorAll(".switch input").forEach(i => i.checked = mørkt);
     }
 
     // Skjul loader når siden er klar
@@ -1094,7 +1121,7 @@
       const lagretTema = localStorage.getItem("tema");
       if (lagretTema === "dark") {
         document.body.classList.add("dark");
-        document.querySelector(".switch input").checked = true;
+        document.querySelectorAll(".switch input").forEach(i => i.checked = true);
       }
     });
 
