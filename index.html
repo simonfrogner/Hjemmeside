@@ -292,7 +292,7 @@
 
     .page-title {
       color: white;
-      font-size: 2.6rem;
+      font-size: 5.5rem;
       margin-bottom: 24px;
       text-align: center;
       min-height: 3.2rem;
@@ -490,6 +490,10 @@
       max-width: 560px;
     }
 
+    .navn-section {
+      margin-top: 20px;
+    }
+
     .navn-section h3 {
       color: #2c3e50;
       margin-top: 0;
@@ -655,7 +659,7 @@
       }
 
       .page-title {
-        font-size: 2rem;
+        font-size: 3.2rem;
       }
 
       .section-title {
@@ -746,6 +750,7 @@
     .vær-feil { text-align: center; color: #e74c3c; padding: 12px; font-size: 0.95rem; }
     .vær-laster { display: flex; justify-content: center; padding: 24px; }
 
+
     .gps-btn {
       background: rgba(102, 126, 234, 0.12);
       color: #667eea;
@@ -762,6 +767,75 @@
     body.dark .prognose-dag { background: rgba(102,126,234,0.08); border-color: rgba(102,126,234,0.15); }
     body.dark .prognose-dag .dag-maks { color: #e0e0e0; }
     body.dark .prognose-dag .dag-min { color: #777; }
+
+    /* NYHETER */
+    .nyheter-card { max-width: 720px; text-align: left; padding: 32px 28px; }
+
+    .nyheter-tabs { display: flex; gap: 8px; margin-bottom: 20px; justify-content: center; }
+    .nyheter-tab {
+      padding: 8px 16px;
+      border-radius: 12px;
+      background: rgba(102,126,234,0.08);
+      border: 1.5px solid rgba(102,126,234,0.2);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 80px;
+      opacity: 0.5;
+      filter: grayscale(0.4);
+    }
+    .nyheter-tab:hover, .nyheter-tab.aktiv {
+      background: white;
+      border-color: rgba(102,126,234,0.3);
+      transform: none;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      opacity: 1;
+      filter: none;
+    }
+    .nyheter-logo { height: 28px; width: auto; display: block; }
+
+    .nyheter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+
+    .nyhet-item {
+      display: flex;
+      flex-direction: column;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.07);
+      text-decoration: none;
+      color: inherit;
+      background: rgba(255,255,255,0.6);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .nyhet-item:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+
+    .nyhet-bilde {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      display: block;
+    }
+    .nyhet-bilde-tom {
+      width: 100%;
+      height: 140px;
+      background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+
+    .nyhet-innhold { padding: 12px 14px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
+    .nyhet-tittel { font-size: 0.9rem; font-weight: 600; color: #2c3e50; line-height: 1.4; }
+    .nyhet-ingress { font-size: 0.8rem; color: #777; line-height: 1.4; margin: 0; }
+    .nyhet-dato { font-size: 0.75rem; color: #aaa; margin-top: auto; }
+    body.dark .nyhet-ingress { color: #999; }
+
+    body.dark .nyhet-item { background: rgba(30,30,47,0.6); border-color: rgba(255,255,255,0.06); }
+    body.dark .nyhet-tittel { color: #e0e0e0; }
+    body.dark .nyheter-tab { color: #a78bfa; border-color: rgba(167,139,250,0.2); background: rgba(167,139,250,0.08); }
 
     /* KONFETTI */
     .confetti {
@@ -825,6 +899,7 @@
       <a href="#hjem" class="active" onclick="lukkMeny()">Hjem</a>
       <a href="#navnefakta" onclick="lukkMeny()">Navnefakta</a>
       <a href="#vær" onclick="lukkMeny()">Vær</a>
+      <a href="#nyheter" onclick="lukkMeny()">Nyheter</a>
       <a href="#tetris" onclick="lukkMeny()">Tetris</a>
     </div>
     <button class="hamburger" id="hamburger" onclick="toggleMeny()">
@@ -847,22 +922,20 @@
     <!-- HJEM -->
     <section id="hjem">
       <h1 class="page-title fade-in">Hei og velkommen!</h1>
-      <div class="card fade-in">
-        <p class="label">Hva heter du?</p>
-        <div class="input-group">
-          <input type="text" id="navnBoks" placeholder="Skriv navnet ditt her" onkeydown="if(event.key==='Enter') siHei()">
-          <button onclick="siHei()">Si hei!</button>
-        </div>
-        <h2 id="svar"></h2>
-      </div>
     </section>
 
     <!-- NAVNEFAKTA -->
     <section id="navnefakta">
       <h2 class="section-title fade-in">Fakta om navnet ditt</h2>
       <div class="card fakta-card fade-in">
+        <p class="label">Hva heter du?</p>
+        <div class="input-group">
+          <input type="text" id="navnBoks" placeholder="Skriv navnet ditt her" onkeydown="if(event.key==='Enter') siHei()">
+          <button onclick="siHei()">Si hei!</button>
+        </div>
+        <h2 id="svar"></h2>
         <div class="navn-section">
-          <h3 id="faktaTittel">Skriv inn navnet ditt på forsiden og trykk «Si hei!»</h3>
+          <h3 id="faktaTittel"></h3>
           <ul id="navnFakta" class="tom"></ul>
         </div>
       </div>
@@ -899,6 +972,26 @@
           </div>
           <div class="vær-prognose" id="vær-prognose"></div>
         </div>
+      </div>
+    </section>
+
+    <!-- NYHETER -->
+    <section id="nyheter">
+      <h2 class="section-title fade-in">Nyheter</h2>
+      <div class="card nyheter-card fade-in">
+        <div class="nyheter-tabs">
+          <button class="nyheter-tab aktiv" onclick="hentNyheter('nrk')">
+            <img src="https://static.nrk.no/core-icons/latest/nrk-logo.svg" alt="NRK" class="nyheter-logo" onerror="this.outerHTML='NRK'">
+          </button>
+          <button class="nyheter-tab" onclick="hentNyheter('vg')">
+            <img src="https://g.vgc.no/v2/logos/vg-logo.svg" alt="VG" class="nyheter-logo" onerror="this.outerHTML='VG'">
+          </button>
+        </div>
+        <div id="nyheter-laster" class="vær-laster">
+          <div class="spinner" style="border-color:rgba(102,126,234,0.3);border-top-color:#667eea;width:32px;height:32px;border-width:3px;"></div>
+        </div>
+        <div id="nyheter-feil" class="vær-feil skjult">Klarte ikke laste nyheter. Prøv igjen.</div>
+        <div id="nyheter-grid" class="nyheter-grid"></div>
       </div>
     </section>
 
@@ -1230,7 +1323,7 @@
             <div class="dag-min">${Math.round(d.temperature_2m_min[i])}°</div>
           </div>`;
         }).join("");
-        visVærResultat();
+visVærResultat();
         startVærAnimasjon(c.weather_code);
       } catch { visVærFeil(); }
     }
@@ -1367,6 +1460,94 @@
       el.textContent = msg || "Fant ikke byen. Prøv igjen.";
       el.classList.remove("skjult");
     }
+
+    // ── Nyheter ──
+    const nyhetsSources = {
+      nrk: 'https://www.nrk.no/nyheter/siste.rss',
+      vg:  'https://www.vg.no/rss/feed/'
+    };
+    let aktivKilde = 'nrk';
+
+    async function hentNyheter(kilde) {
+      aktivKilde = kilde || aktivKilde;
+      document.querySelectorAll('.nyheter-tab').forEach((t, i) => {
+        t.classList.toggle('aktiv', ['nrk','vg'][i] === aktivKilde);
+      });
+      document.getElementById('nyheter-grid').innerHTML = '';
+      document.getElementById('nyheter-feil').classList.add('skjult');
+      document.getElementById('nyheter-laster').classList.remove('skjult');
+      try {
+        const rssUrl = nyhetsSources[aktivKilde];
+        let xmlText = null;
+        for (const proxy of [
+          `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}`,
+          `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(rssUrl)}`
+        ]) {
+          try {
+            const res = await fetch(proxy);
+            const data = await res.json();
+            xmlText = data.contents || data;
+            if (xmlText) break;
+          } catch {}
+        }
+        if (!xmlText) throw new Error();
+        const xml = new DOMParser().parseFromString(xmlText, 'text/xml');
+        const items = Array.from(xml.querySelectorAll('item')).slice(0, 8);
+        if (!items.length) throw new Error();
+        document.getElementById('nyheter-laster').classList.add('skjult');
+        document.getElementById('nyheter-grid').innerHTML = items.map(item => {
+          const tittel = item.querySelector('title')?.textContent || '';
+          // link-elementet kan være tomt i XML — prøv nextSibling-tekst
+          const linkEl = item.querySelector('link');
+          const lenke = linkEl?.textContent?.trim()
+            || linkEl?.nextSibling?.textContent?.trim()
+            || item.querySelector('guid')?.textContent || '#';
+          const dato = item.querySelector('pubDate')?.textContent || '';
+          const bilde = item.getElementsByTagNameNS('*', 'thumbnail')[0]?.getAttribute('url')
+            || item.getElementsByTagNameNS('*', 'content')[0]?.getAttribute('url')
+            || item.querySelector('enclosure')?.getAttribute('url') || '';
+          const tidsAgo = dato ? tidsiden(new Date(dato)) : '';
+          const bildeHtml = bilde
+            ? `<img class="nyhet-bilde" src="${bilde}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">\
+               <div class="nyhet-bilde-tom" style="display:none">📰</div>`
+            : `<div class="nyhet-bilde-tom">📰</div>`;
+          const råBeskr = item.querySelector('description')?.textContent || '';
+          const beskr = råBeskr.replace(/<[^>]+>/g, '').trim().slice(0, 120);
+          const ingress = beskr && beskr !== tittel ? `<div class="nyhet-ingress">${beskr}${råBeskr.length > 120 ? '…' : ''}</div>` : '';
+          return `<a href="${lenke}" target="_blank" rel="noopener" class="nyhet-item">
+            ${bildeHtml}
+            <div class="nyhet-innhold">
+              <div class="nyhet-tittel">${tittel}</div>
+              ${ingress}
+              <div class="nyhet-dato">${tidsAgo}</div>
+            </div>
+          </a>`;
+        }).join('');
+      } catch {
+        document.getElementById('nyheter-laster').classList.add('skjult');
+        document.getElementById('nyheter-feil').classList.remove('skjult');
+      }
+    }
+
+    function tidsiden(dato) {
+      const min = Math.floor((Date.now() - dato) / 60000);
+      if (min < 60) return `${min} min siden`;
+      const t = Math.floor(min / 60);
+      if (t < 24) return `${t} time${t !== 1 ? 'r' : ''} siden`;
+      const d = Math.floor(t / 24);
+      return `${d} dag${d !== 1 ? 'er' : ''} siden`;
+    }
+
+    // Last nyheter automatisk første gang seksjonen vises, deretter hvert 5. minutt
+    let nyhetInterval = null;
+    const nyhetObserver = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        hentNyheter('nrk');
+        nyhetInterval = setInterval(() => hentNyheter(), 5 * 60 * 1000);
+        nyhetObserver.disconnect();
+      }
+    }, { threshold: 0.1 });
+    nyhetObserver.observe(document.getElementById('nyheter'));
 
     // Deleknapp
     function delSide() {
