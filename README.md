@@ -16,6 +16,7 @@ En personlig nettside vibe-kodet med [Claude Code](https://claude.ai/code).
 - **Skriving** — skrivetesthurtigtest med WPM og nøyaktighetsstatistikk
 - **Tetris** — klassisk Tetris med neon-design, musikk og highscore
 - **Kryssord** — norsk kryssord med hint-system, tema-velger og highscore
+- **Snake** — klassisk Nokia-spill med stigende vanskelighetsgrad og highscore
 - **Mørkt tema** — bryter med SF Symbols-ikoner for å bytte mellom lyst og mørkt
 - **Scroll-til-topp-knapp** — dukker opp når du scroller ned
 - **Easter egg** — prøv å skrive «claude» i navnefeltet

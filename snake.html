@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snake — Simon</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #f5f5f7;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+      color: #1d1d1f;
+      min-height: 100vh;
+    }
+
+    nav {
+      position: sticky; top: 0;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      padding: 0 32px; height: 52px;
+      display: flex; align-items: center; justify-content: space-between;
+      z-index: 100;
+    }
+    .nav-logo { font-weight: 600; font-size: 1rem; letter-spacing: -0.01em; }
+    .nav-back { color: #0071e3; text-decoration: none; font-size: 0.9rem; transition: opacity 0.2s; }
+    .nav-back:hover { opacity: 0.7; }
+
+    main { max-width: 520px; margin: 0 auto; padding: 56px 32px 80px; }
+
+    .etikett { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #6e6e73; margin-bottom: 8px; }
+    h1 { font-size: 4rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 8px; }
+    .subtitle { color: #6e6e73; margin-bottom: 32px; font-size: 1rem; }
+
+    /* POENG */
+    .poeng-rad { display: flex; gap: 32px; margin-bottom: 20px; }
+    .poeng-boks { display: flex; align-items: baseline; gap: 6px; }
+    .poeng-verdi { font-size: 2rem; font-weight: 700; letter-spacing: -0.03em; color: #1d1d1f; font-variant-numeric: tabular-nums; line-height: 1; }
+    .poeng-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #a1a1a6; }
+    .hs-verdi { color: #0071e3; }
+    .hs-sek   { color: #86868b; }
+
+    /* NOKIA-SKJERM */
+    .nokia-ramme {
+      background: #1c1c1e;
+      border-radius: 20px;
+      padding: 14px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+    .nokia-skjerm {
+      position: relative;
+      background: #9eb85c;
+      border-radius: 8px;
+      overflow: hidden;
+      line-height: 0;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.25);
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+
+    /* OVERLAY */
+    .overlay {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 8px; padding: 16px;
+      background: rgba(158, 184, 92, 0.92);
+      text-align: center;
+    }
+    .overlay.skjult { display: none; }
+    .overlay-tittel { font-size: clamp(1rem, 5vw, 1.6rem); font-weight: 900; letter-spacing: -0.02em; color: #1a2a06; }
+    .overlay-sub { font-size: clamp(0.65rem, 3vw, 0.85rem); color: #2e4510; font-weight: 500; line-height: 1.4; }
+    .overlay-score { font-size: clamp(0.85rem, 4vw, 1.1rem); font-weight: 700; color: #1a2a06; }
+    .overlay-btn {
+      background: #1a2a06; color: #9eb85c;
+      border: none; padding: 10px 28px; border-radius: 980px;
+      font-size: 0.9rem; font-weight: 700; cursor: pointer;
+      font-family: inherit; margin-top: 6px;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+    .overlay-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+    .overlay-btn:active { transform: translateY(0); }
+
+    /* WRAP-TOGGLE */
+    .innstilling-rad {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 12px; font-size: 0.85rem; color: #1d1d1f;
+    }
+    .innstilling-rad label { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
+    .wrap-beskrivelse { font-size: 0.78rem; color: #6e6e73; }
+    .switch { position: relative; display: inline-block; width: 40px; height: 24px; flex-shrink: 0; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .switch-spor {
+      position: absolute; inset: 0; border-radius: 24px;
+      background: rgba(0,0,0,0.12); transition: background 0.2s; cursor: pointer;
+    }
+    .switch-spor::before {
+      content: ''; position: absolute;
+      width: 18px; height: 18px; border-radius: 50%;
+      left: 3px; top: 3px; background: white;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+      transition: transform 0.2s;
+    }
+    .switch input:checked + .switch-spor { background: #0071e3; }
+    .switch input:checked + .switch-spor::before { transform: translateX(16px); }
+    body.dark .innstilling-rad { color: #f5f5f7; }
+    body.dark .wrap-beskrivelse { color: #a1a1a6; }
+    body.dark .switch-spor { background: rgba(255,255,255,0.15); }
+
+    /* NIVÅ-INDIKATOR */
+    .nivel-rad {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 14px; font-size: 0.8rem; color: #6e6e73;
+    }
+    .nivel-prikker { display: flex; gap: 4px; }
+    .nivel-prikk {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(0,0,0,0.1); transition: background 0.3s;
+    }
+    .nivel-prikk.aktiv { background: #0071e3; }
+
+    /* D-PAD */
+    .d-pad-wrapper { display: none; margin-top: 28px; justify-content: center; }
+    .d-pad {
+      display: grid;
+      grid-template-columns: repeat(3, 60px);
+      grid-template-rows: repeat(3, 60px);
+      gap: 6px;
+    }
+    .d-btn {
+      background: white; border: 1.5px solid rgba(0,0,0,0.1);
+      border-radius: 14px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; transition: background 0.1s, transform 0.1s;
+      user-select: none; -webkit-user-select: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .d-btn:active { background: #e5e5ea; transform: scale(0.93); }
+    .d-btn.opp     { grid-column: 2; grid-row: 1; }
+    .d-btn.venstre { grid-column: 1; grid-row: 2; }
+    .d-btn.høyre   { grid-column: 3; grid-row: 2; }
+    .d-btn.ned     { grid-column: 2; grid-row: 3; }
+    .d-btn.midt    { grid-column: 2; grid-row: 2; font-size: 0.75rem; font-weight: 700; color: #6e6e73; }
+
+    @media (max-width: 600px) {
+      main { padding: 40px 20px 80px; }
+      nav { padding: 0 20px; }
+      h1 { font-size: 2.5rem; }
+      .d-pad-wrapper { display: flex; }
+    }
+
+    /* MØRKT TEMA */
+    body.dark { background: #000; color: #f5f5f7; }
+    body.dark nav { background: rgba(29,29,31,0.85); border-color: rgba(255,255,255,0.08); }
+    body.dark .nav-back { color: #2997ff; }
+    body.dark .nav-logo, body.dark h1 { color: #f5f5f7; }
+    body.dark .etikett, body.dark .subtitle, body.dark .poeng-label { color: #a1a1a6; }
+    body.dark .poeng-verdi { color: #f5f5f7; }
+    body.dark .hs-verdi { color: #2997ff; }
+    body.dark .hs-sek   { color: #636366; }
+    body.dark .nivel-rad { color: #636366; }
+    body.dark .nivel-prikk { background: rgba(255,255,255,0.12); }
+    body.dark .nivel-prikk.aktiv { background: #2997ff; }
+    body.dark .d-btn { background: #2c2c2e; border-color: rgba(255,255,255,0.1); color: #f5f5f7; }
+    body.dark .d-btn:active { background: #3a3a3c; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html#hjem" class="nav-back">← Tilbake</a>
+  <div class="nav-logo">Snake</div>
+</nav>
+
+<main>
+  <p class="etikett">Spill</p>
+  <h1>Snake</h1>
+  <p class="subtitle">Klassisk Nokia-spill — spis maten, unngå veggene</p>
+
+  <div class="poeng-rad">
+    <div class="poeng-boks">
+      <div class="poeng-verdi" id="poeng">0</div>
+      <div class="poeng-label">Poeng</div>
+    </div>
+    <div id="toppliste" style="display:flex;gap:20px;"></div>
+  </div>
+
+  <div class="nokia-ramme">
+    <div class="nokia-skjerm">
+      <canvas id="canvas" width="400" height="400"></canvas>
+      <div class="overlay" id="overlay">
+        <div class="overlay-tittel" id="overlay-tittel">Snake</div>
+        <div class="overlay-sub" id="overlay-sub">Klassisk Nokia-spill</div>
+        <div class="overlay-score skjult" id="overlay-score"></div>
+        <button class="overlay-btn" id="overlay-btn" onclick="startSpill()">Start spill</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="innstilling-rad">
+    <label>
+      <span class="switch">
+        <input type="checkbox" id="wrap-toggle" onchange="wrapAround = this.checked">
+        <span class="switch-spor"></span>
+      </span>
+      <span>Wrap-around</span>
+    </label>
+    <span class="wrap-beskrivelse">Slangen går gjennom veggen</span>
+  </div>
+
+  <div class="nivel-rad">
+    <span id="nivel-tekst">Nivå 1</span>
+    <div class="nivel-prikker" id="nivel-prikker">
+      <div class="nivel-prikk aktiv" id="np0"></div>
+      <div class="nivel-prikk" id="np1"></div>
+      <div class="nivel-prikk" id="np2"></div>
+      <div class="nivel-prikk" id="np3"></div>
+      <div class="nivel-prikk" id="np4"></div>
+    </div>
+  </div>
+
+  <div class="d-pad-wrapper">
+    <div class="d-pad">
+      <button class="d-btn opp"     onclick="settRetning(0,-1)">▲</button>
+      <button class="d-btn venstre" onclick="settRetning(-1,0)">◄</button>
+      <button class="d-btn midt" id="midt-btn" onclick="togglePause()">▶</button>
+      <button class="d-btn høyre"   onclick="settRetning(1,0)">►</button>
+      <button class="d-btn ned"     onclick="settRetning(0,1)">▼</button>
+    </div>
+  </div>
+</main>
+
+<script>
+const COLS = 20, ROWS = 20, CELL = 20;
+const canvas = document.getElementById('canvas');
+const ctx    = canvas.getContext('2d');
+ctx.imageSmoothingEnabled = false;
+
+// Nokia LCD-farger
+const F = {
+  bg:     '#9eb85c',
+  grid:   '#8faa4e',
+  kropp:  '#1e2d06',
+  hode:   '#0f1803',
+  mat:    '#1e2d06',
+  auge:   '#9eb85c',
+};
+
+// ─── STATE ────────────────────────────────────────────────────────────────
+let slange, retning, nesteRetning, mat, poeng, tilstand, loop, blinkTeller, flashTikk;
+let berøringStart = null;
+let wrapAround = false;
+
+// Top 3 highscore — migrer gammel enkeltrekord om den finnes
+let toppliste = JSON.parse(localStorage.getItem('snake_toppliste') || '[]');
+if (!toppliste.length) {
+  const gammel = parseInt(localStorage.getItem('snake_hs') || '0');
+  if (gammel > 0) toppliste = [gammel];
+}
+
+// ─── LYD ──────────────────────────────────────────────────────────────────
+let audioCtx = null;
+function lyduLås() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+}
+function pip(hz, varighet, forsinkelse = 0, volum = 0.08) {
+  if (!audioCtx) return;
+  const osc  = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain); gain.connect(audioCtx.destination);
+  osc.type = 'square';
+  osc.frequency.setValueAtTime(hz, audioCtx.currentTime + forsinkelse);
+  gain.gain.setValueAtTime(volum, audioCtx.currentTime + forsinkelse);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + forsinkelse + varighet);
+  osc.start(audioCtx.currentTime + forsinkelse);
+  osc.stop(audioCtx.currentTime + forsinkelse + varighet + 0.01);
+}
+function spistLyd()    { lyduLås(); pip(880, 0.06); pip(1320, 0.07, 0.06); }
+function gameOverLyd() { lyduLås(); pip(330, 0.12); pip(220, 0.14, 0.13); pip(147, 0.28, 0.28); }
+
+// ─── START ────────────────────────────────────────────────────────────────
+function startSpill() {
+  slange       = [{x:10,y:10},{x:9,y:10},{x:8,y:10}];
+  retning      = {x:1, y:0};
+  nesteRetning = {x:1, y:0};
+  mat          = spawnMat();
+  poeng        = 0;
+  blinkTeller  = 0;
+  flashTikk    = 0;
+  tilstand     = 'spiller';
+
+  lyduLås();
+  document.getElementById('poeng').textContent = 0;
+  document.getElementById('overlay').classList.add('skjult');
+  document.getElementById('overlay-score').classList.add('skjult');
+  document.getElementById('overlay-btn').onclick = startSpill;
+  oppdaterNivel();
+  oppdaterMidtBtn();
+
+  clearInterval(loop);
+  loop = setInterval(tikk, fart());
+}
+
+function fart() {
+  return Math.max(70, 200 - poeng * 6);
+}
+
+// ─── GAME LOOP ────────────────────────────────────────────────────────────
+function tikk() {
+  blinkTeller++;
+  retning = nesteRetning;
+  const hode = { x: slange[0].x + retning.x, y: slange[0].y + retning.y };
+
+  // Vegg-kollisjon / wrap-around
+  if (wrapAround) {
+    hode.x = (hode.x + COLS) % COLS;
+    hode.y = (hode.y + ROWS) % ROWS;
+  } else if (hode.x < 0 || hode.x >= COLS || hode.y < 0 || hode.y >= ROWS) {
+    spillSlutt(); return;
+  }
+  // Selv-kollisjon
+  if (slange.some(s => s.x === hode.x && s.y === hode.y)) {
+    spillSlutt(); return;
+  }
+
+  slange.unshift(hode);
+
+  if (hode.x === mat.x && hode.y === mat.y) {
+    poeng++;
+    flashTikk = 2;
+    document.getElementById('poeng').textContent = poeng;
+    spistLyd();
+    mat = spawnMat();
+    oppdaterNivel();
+    clearInterval(loop);
+    loop = setInterval(tikk, fart());
+  } else {
+    slange.pop();
+  }
+
+  tegn();
+  if (flashTikk > 0) flashTikk--;
+}
+
+function spillSlutt() {
+  clearInterval(loop);
+  tilstand = 'slutt';
+  gameOverLyd();
+  oppdaterMidtBtn();
+  tegn();
+
+  // Oppdater toppliste
+  const nyRekord = toppliste.length === 0 || poeng > toppliste[0];
+  toppliste.push(poeng);
+  toppliste.sort((a, b) => b - a);
+  toppliste = toppliste.slice(0, 3);
+  localStorage.setItem('snake_toppliste', JSON.stringify(toppliste));
+  visToppliste();
+
+  const overlay = document.getElementById('overlay');
+  document.getElementById('overlay-tittel').textContent = 'Game Over';
+  document.getElementById('overlay-sub').textContent = nyRekord && poeng > 0 ? '🏆 Ny rekord!' : 'Bedre lykke neste gang';
+  const scoreEl = document.getElementById('overlay-score');
+  scoreEl.textContent = `Poeng: ${poeng}`;
+  scoreEl.classList.remove('skjult');
+  document.getElementById('overlay-btn').textContent = 'Prøv igjen';
+  overlay.classList.remove('skjult');
+}
+
+function pauseSpill() {
+  if (tilstand !== 'spiller') return;
+  clearInterval(loop);
+  tilstand = 'pauset';
+  oppdaterMidtBtn();
+  document.getElementById('overlay-tittel').textContent = 'Pause';
+  document.getElementById('overlay-sub').textContent = 'Trykk mellomrom for å fortsette';
+  document.getElementById('overlay-score').classList.add('skjult');
+  document.getElementById('overlay-btn').textContent = 'Fortsett';
+  document.getElementById('overlay-btn').onclick = fortsettSpill;
+  document.getElementById('overlay').classList.remove('skjult');
+}
+
+function fortsettSpill() {
+  if (tilstand !== 'pauset') return;
+  tilstand = 'spiller';
+  oppdaterMidtBtn();
+  document.getElementById('overlay').classList.add('skjult');
+  document.getElementById('overlay-btn').onclick = startSpill;
+  loop = setInterval(tikk, fart());
+}
+
+function togglePause() {
+  if (tilstand === 'spiller') pauseSpill();
+  else if (tilstand === 'pauset') fortsettSpill();
+  else startSpill();
+}
+
+function oppdaterMidtBtn() {
+  const btn = document.getElementById('midt-btn');
+  if (btn) btn.textContent = tilstand === 'spiller' ? '⏸' : '▶';
+}
+
+// ─── TEGNING ──────────────────────────────────────────────────────────────
+function tegn() {
+  // Bakgrunn
+  ctx.fillStyle = F.bg;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Subtilt rutenett
+  ctx.strokeStyle = F.grid;
+  ctx.lineWidth = 0.5;
+  for (let x = 0; x <= COLS; x++) {
+    ctx.beginPath(); ctx.moveTo(x * CELL, 0); ctx.lineTo(x * CELL, ROWS * CELL); ctx.stroke();
+  }
+  for (let y = 0; y <= ROWS; y++) {
+    ctx.beginPath(); ctx.moveTo(0, y * CELL); ctx.lineTo(COLS * CELL, y * CELL); ctx.stroke();
+  }
+
+  // Vegger / wrap-indikator
+  tegnVegger();
+
+  // Mat — lite kryss
+  const mx = mat.x * CELL + CELL / 2, my = mat.y * CELL + CELL / 2;
+  ctx.fillStyle = F.mat;
+  ctx.fillRect(mx - 5, my - 2, 10, 4);
+  ctx.fillRect(mx - 2, my - 5, 4, 10);
+
+  // Slange
+  slange.forEach((s, i) => {
+    ctx.fillStyle = i === 0 ? F.hode : F.kropp;
+    const p = i === 0 ? 1 : 2;
+    ctx.fillRect(s.x * CELL + p, s.y * CELL + p, CELL - p * 2, CELL - p * 2);
+  });
+
+  // Flash ved spising
+  if (flashTikk > 0) {
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
+  // Øyne på hodet
+  if (slange.length > 0) {
+    const h = slange[0];
+    ctx.fillStyle = F.auge;
+    const ex = h.x * CELL, ey = h.y * CELL;
+    if      (retning.x ===  1) { ctx.fillRect(ex+CELL-6, ey+4, 3, 3); ctx.fillRect(ex+CELL-6, ey+CELL-7, 3, 3); }
+    else if (retning.x === -1) { ctx.fillRect(ex+3,      ey+4, 3, 3); ctx.fillRect(ex+3,      ey+CELL-7, 3, 3); }
+    else if (retning.y === -1) { ctx.fillRect(ex+4, ey+3,      3, 3); ctx.fillRect(ex+CELL-7, ey+3,      3, 3); }
+    else                       { ctx.fillRect(ex+4, ey+CELL-6, 3, 3); ctx.fillRect(ex+CELL-7, ey+CELL-6, 3, 3); }
+  }
+}
+
+function visToppliste() {
+  const el = document.getElementById('toppliste');
+  if (!el) return;
+  el.innerHTML = toppliste.map((s, i) => `
+    <div class="poeng-boks">
+      <div class="poeng-verdi ${i === 0 ? 'hs-verdi' : 'hs-sek'}">${s}</div>
+      <div class="poeng-label">#${i + 1}</div>
+    </div>`).join('');
+}
+
+function tegnVegger() {
+  const w = canvas.width, h = canvas.height;
+  const cx = w / 2, cy = h / 2;
+
+  if (!wrapAround) {
+    // Solid vegg
+    ctx.strokeStyle = F.kropp;
+    ctx.lineWidth = 4;
+    ctx.setLineDash([]);
+    ctx.strokeRect(2, 2, w - 4, h - 4);
+  } else {
+    // Stiplet kant — antyder gjennomgang
+    ctx.strokeStyle = F.kropp;
+    ctx.lineWidth = 1.5;
+    ctx.globalAlpha = 0.2;
+    ctx.setLineDash([8, 8]);
+    ctx.strokeRect(1, 1, w - 2, h - 2);
+    ctx.setLineDash([]);
+    ctx.globalAlpha = 1;
+
+  }
+}
+
+function oppdaterNivel() {
+  const nivå = Math.min(Math.floor(poeng / 5) + 1, 5);
+  document.getElementById('nivel-tekst').textContent = `Nivå ${nivå}`;
+  for (let i = 0; i < 5; i++)
+    document.getElementById(`np${i}`)?.classList.toggle('aktiv', i < nivå);
+}
+
+// ─── HJELPEFUNKSJONER ─────────────────────────────────────────────────────
+function spawnMat() {
+  let pos;
+  do { pos = { x: Math.floor(Math.random() * COLS), y: Math.floor(Math.random() * ROWS) }; }
+  while (slange.some(s => s.x === pos.x && s.y === pos.y));
+  return pos;
+}
+
+function settRetning(dx, dy) {
+  if (tilstand !== 'spiller') return;
+  if (dx !== 0 && dx === -retning.x) return; // ingen 180°
+  if (dy !== 0 && dy === -retning.y) return;
+  nesteRetning = { x: dx, y: dy };
+}
+
+// ─── TASTATUR ─────────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault();
+  lyduLås();
+  if (e.key === ' ') { togglePause(); return; }
+  if (e.key === 'Enter' && tilstand !== 'spiller') { startSpill(); return; }
+  if (tilstand !== 'spiller') return;
+  const kart = {
+    ArrowUp: [0,-1], ArrowDown: [0,1], ArrowLeft: [-1,0], ArrowRight: [1,0],
+    w: [0,-1], s: [0,1], a: [-1,0], d: [1,0],
+  };
+  const r = kart[e.key];
+  if (r) settRetning(...r);
+});
+
+// ─── TOUCH / SWIPE ────────────────────────────────────────────────────────
+canvas.addEventListener('touchstart', e => {
+  berøringStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  e.preventDefault();
+}, { passive: false });
+
+canvas.addEventListener('touchend', e => {
+  if (!berøringStart) return;
+  const dx = e.changedTouches[0].clientX - berøringStart.x;
+  const dy = e.changedTouches[0].clientY - berøringStart.y;
+  berøringStart = null;
+  if (tilstand !== 'spiller') { startSpill(); e.preventDefault(); return; }
+  if (Math.abs(dx) < 10 && Math.abs(dy) < 10) { e.preventDefault(); return; }
+  if (Math.abs(dx) > Math.abs(dy)) settRetning(dx > 0 ? 1 : -1, 0);
+  else settRetning(0, dy > 0 ? 1 : -1);
+  e.preventDefault();
+}, { passive: false });
+
+// ─── INIT ─────────────────────────────────────────────────────────────────
+if (localStorage.getItem('tema') === 'dark') document.body.classList.add('dark');
+visToppliste();
+tegn(); // Tegn tomt brett
+</script>
+</body>
+</html>

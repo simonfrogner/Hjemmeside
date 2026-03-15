@@ -36,14 +36,46 @@
     .subtitle { color: #6e6e73; margin-bottom: 32px; font-size: 1rem; }
 
     /* TEMA-VELGER */
-    .tema-velger { display: flex; gap: 8px; margin-bottom: 40px; flex-wrap: wrap; }
-    .tema-btn {
-      padding: 8px 18px; border-radius: 980px; border: 1.5px solid rgba(0,0,0,0.1);
-      background: white; color: #1d1d1f; font-size: 0.875rem; font-weight: 500;
-      cursor: pointer; transition: all 0.2s; font-family: inherit;
+    .tema-dropdown { position: relative; display: inline-block; margin-bottom: 40px; }
+    .tema-dropdown-btn {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 18px; border-radius: 980px;
+      border: 1.5px solid rgba(0,0,0,0.1);
+      background: white; color: #1d1d1f;
+      font-size: 0.9rem; font-weight: 500; font-family: inherit;
+      cursor: pointer; transition: all 0.2s;
     }
-    .tema-btn:hover { border-color: #0071e3; color: #0071e3; }
-    .tema-btn.aktiv { background: #0071e3; color: white; border-color: #0071e3; box-shadow: 0 4px 12px rgba(0,113,227,0.25); }
+    .tema-dropdown-btn:hover { border-color: #0071e3; color: #0071e3; box-shadow: 0 4px 12px rgba(0,113,227,0.12); }
+    .tema-dropdown-chevron {
+      width: 16px; height: 16px; flex-shrink: 0;
+      transition: transform 0.2s; opacity: 0.5;
+    }
+    .tema-dropdown.åpen .tema-dropdown-chevron { transform: rotate(180deg); }
+    .tema-dropdown-liste {
+      position: absolute; top: calc(100% + 8px); left: 0;
+      background: white; border-radius: 14px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+      border: 1px solid rgba(0,0,0,0.08);
+      min-width: 200px; overflow: hidden;
+      opacity: 0; pointer-events: none;
+      transform: translateY(-6px) scale(0.98);
+      transform-origin: top left;
+      transition: opacity 0.15s, transform 0.15s;
+      z-index: 150;
+    }
+    .tema-dropdown.åpen .tema-dropdown-liste { opacity: 1; pointer-events: all; transform: translateY(0) scale(1); }
+    .tema-dropdown-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px; cursor: pointer; font-size: 0.9rem; font-weight: 500;
+      transition: background 0.1s; color: #1d1d1f;
+    }
+    .tema-dropdown-item:hover { background: rgba(0,0,0,0.04); }
+    .tema-dropdown-item.aktiv { color: #0071e3; }
+    .tema-dropdown-hake {
+      width: 16px; height: 16px; color: #0071e3;
+      opacity: 0; transition: opacity 0.1s; flex-shrink: 0;
+    }
+    .tema-dropdown-item.aktiv .tema-dropdown-hake { opacity: 1; }
 
     /* TIMER & HIGHSCORE */
     .spill-info { display: flex; align-items: center; gap: 24px; margin-bottom: 16px; flex-wrap: wrap; }
@@ -149,7 +181,7 @@
       background: #0071e3; transition: background 0.3s, transform 0.3s;
     }
     .hint-prikk.brukt { background: rgba(0,0,0,0.12); }
-    #hint-btn:disabled { opacity: 0.35; cursor: default; transform: none !important; box-shadow: none !important; }
+    #hint-btn:disabled, #ord-hint-btn:disabled { opacity: 0.35; cursor: default; transform: none !important; box-shadow: none !important; }
 
     /* ORD LØST */
     @keyframes ord-løst {
@@ -201,10 +233,6 @@
       main { padding: 40px 20px 80px; }
       nav { padding: 0 20px; }
 
-      /* Temavelger: horisontal scroll */
-      .tema-velger { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; -webkit-overflow-scrolling: touch; }
-      .tema-velger::-webkit-scrollbar { display: none; }
-
       /* Aktiv ledetråd: sticky under nav */
       .aktiv-ledetråd {
         position: sticky; top: 52px; z-index: 50;
@@ -230,6 +258,116 @@
       .celle input { font-size: 0.9rem; padding-top: 6px; }
       .celle-nr { font-size: 7px; }
     }
+
+    /* ── STATISTIKK ─────────────────────────────────────────────────────── */
+    .statistikk-seksjon { margin-top: 56px; }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px; margin-top: 16px;
+    }
+    .stat-kort {
+      background: white; border-radius: 16px; padding: 20px 18px;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .stat-tema-navn {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: #6e6e73; margin-bottom: 14px;
+    }
+    .stat-rad {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: 6px; font-size: 0.85rem;
+    }
+    .stat-rad:last-child { margin-bottom: 0; }
+    .stat-key { color: #6e6e73; }
+    .stat-val { font-weight: 700; color: #1d1d1f; }
+    .stat-val.rekord { color: #0071e3; }
+
+    body.dark .stat-kort { background: #1c1c1e; border-color: rgba(255,255,255,0.06); }
+    body.dark .stat-val { color: #f5f5f7; }
+    body.dark .stat-val.rekord { color: #2997ff; }
+
+    /* ── BEKREFT-MODAL ───────────────────────────────────────────────────── */
+    .modal-bakgrunn {
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .modal-bakgrunn.synlig { opacity: 1; pointer-events: all; }
+    .modal {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 32px 28px 24px;
+      max-width: 320px; width: calc(100% - 48px);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.2);
+      transform: scale(0.93) translateY(8px);
+      transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+      text-align: center;
+    }
+    .modal-bakgrunn.synlig .modal { transform: scale(1) translateY(0); }
+    .modal-ikon { font-size: 2.2rem; margin-bottom: 12px; }
+    .modal-tittel { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
+    .modal-tekst { font-size: 0.9rem; color: #6e6e73; line-height: 1.5; margin-bottom: 24px; }
+    .modal-knapper { display: flex; gap: 10px; }
+    .modal-knapper button { flex: 1; padding: 12px; font-size: 0.9rem; }
+    .btn-fare { background: #ff3b30; }
+    .btn-fare:hover { background: #ff453a; box-shadow: 0 6px 18px rgba(255,59,48,0.3); }
+
+    body.dark .modal { background: #2c2c2e; }
+    body.dark .modal-tittel { color: #f5f5f7; }
+    body.dark .modal-tekst { color: #a1a1a6; }
+
+    /* ── MØRKT TEMA ──────────────────────────────────────────────────────── */
+    body.dark { background: #000000; color: #f5f5f7; }
+    body.dark nav { background: rgba(29,29,31,0.85); border-color: rgba(255,255,255,0.08); }
+    body.dark .nav-back { color: #2997ff; }
+    body.dark .nav-logo, body.dark h1 { color: #f5f5f7; }
+    body.dark .etikett, body.dark .subtitle, body.dark .timer-label { color: #a1a1a6; }
+    body.dark .timer-verdi { color: #f5f5f7; }
+    body.dark .highscore-verdi { color: #2997ff; }
+
+    body.dark .tema-dropdown-btn { background: #2c2c2e; color: #f5f5f7; border-color: rgba(255,255,255,0.12); }
+    body.dark .tema-dropdown-btn:hover { border-color: #2997ff; color: #2997ff; }
+    body.dark .tema-dropdown-liste { background: #2c2c2e; border-color: rgba(255,255,255,0.1); box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+    body.dark .tema-dropdown-item { color: #f5f5f7; }
+    body.dark .tema-dropdown-item:hover { background: rgba(255,255,255,0.06); }
+    body.dark .tema-dropdown-item.aktiv { color: #2997ff; }
+    body.dark .tema-dropdown-hake { color: #2997ff; }
+
+    body.dark .kryssord-grid { background: #3a3a3c; }
+    body.dark .celle.hvit { background: #2c2c2e; }
+    body.dark .celle.hvit.ord-highlight { background: #1a3560; }
+    body.dark .celle.hvit.aktiv-celle { background: #0a3d8f; box-shadow: inset 0 -3px 0 #2997ff; }
+    body.dark .celle.hvit.riktig { background: #0a2e1a; }
+    body.dark .celle.hvit.feil   { background: #2e0a0a; }
+    body.dark .celle input { color: #f5f5f7; }
+    body.dark .celle.riktig input { color: #30d158; }
+    body.dark .celle.feil   input { color: #ff453a; }
+    body.dark .celle-nr { color: #a1a1a6; }
+
+    body.dark .aktiv-ledetråd { background: #2c2c2e; border-color: rgba(255,255,255,0.08); }
+    body.dark .aktiv-ledetråd-nr { color: #2997ff; }
+    body.dark .aktiv-ledetråd-tekst { color: #f5f5f7; }
+
+    body.dark .ledetråder { background: #1c1c1e; }
+    body.dark .panel-håndtak { background: #1c1c1e; }
+    body.dark .panel-strek { background: rgba(255,255,255,0.2); }
+    body.dark .panel-tittel, body.dark .ledetråd-tittel { color: #a1a1a6; }
+    body.dark .ledetråd-tekst { color: #f5f5f7; }
+    body.dark .ledetråd-tekst.løst { color: #636366; }
+    body.dark .ledetråd-nr { color: #2997ff; }
+    body.dark .ledetråd-liste li:hover { background: rgba(255,255,255,0.06); }
+    body.dark .ledetråd-liste li.aktiv { background: rgba(0,113,227,0.2); }
+
+    body.dark .btn-sek { background: rgba(255,255,255,0.1); color: #f5f5f7; }
+    body.dark .btn-sek:hover { background: rgba(255,255,255,0.16); box-shadow: none; }
+    body.dark .hint-label { color: #a1a1a6; }
+    body.dark .hint-prikk { background: #2997ff; }
+    body.dark .hint-prikk.brukt { background: rgba(255,255,255,0.15); }
   </style>
 </head>
 <body>
@@ -244,7 +382,8 @@
   <h1>Kryssord</h1>
   <p class="subtitle">Velg et tema og løs kryssordet</p>
 
-  <div class="tema-velger" id="tema-velger"></div>
+  <p class="etikett" style="margin-bottom: 8px;">Tema</p>
+  <div class="tema-dropdown" id="tema-dropdown"></div>
 
   <div class="spill-info">
     <div class="timer-boks">
@@ -266,8 +405,9 @@
       <div class="kryssord-grid" id="grid"></div>
       <div class="knapper">
         <button onclick="sjekkSvar()">Sjekk svar</button>
-        <button id="hint-btn" class="btn-sek" onclick="brukHint()">Hint</button>
-        <button class="btn-sek" onclick="avslørSvar()">Avslør</button>
+        <button id="hint-btn" class="btn-sek" onclick="brukHint()">Hint (1)</button>
+        <button id="ord-hint-btn" class="btn-sek" onclick="brukOrdHint()">Avslør ord (2)</button>
+        <button class="btn-sek" onclick="avslørSvar()">Avslør alt</button>
         <button class="btn-sek" onclick="nullstill()">Nullstill</button>
       </div>
       <div class="hint-rad">
@@ -296,7 +436,24 @@
       </div>
     </div>
   </div>
+
+  <section class="statistikk-seksjon">
+    <p class="etikett">Statistikk</p>
+    <div class="stat-grid" id="stat-grid"></div>
+  </section>
 </main>
+
+<div class="modal-bakgrunn" id="modal-bakgrunn" onclick="lukkModal(event)">
+  <div class="modal">
+    <div class="modal-ikon">🔓</div>
+    <div class="modal-tittel">Avslør alle svar?</div>
+    <p class="modal-tekst">Dette vil vise alle svarene og avslutte spillet. Dette kan ikke angres.</p>
+    <div class="modal-knapper">
+      <button class="btn-sek" onclick="lukkModal()">Avbryt</button>
+      <button class="btn-fare" onclick="bekreftAvsløring()">Avslør</button>
+    </div>
+  </div>
+</div>
 
 <script>
 /* ─── KRYSSORD-DATA ────────────────────────────────────────────────────────
@@ -445,20 +602,54 @@ function initTema(temaId) {
 }
 
 // ─── TEMA-VELGER ─────────────────────────────────────────────────────────
+const chevronSvg = `<svg class="tema-dropdown-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 6 8 10 12 6"/></svg>`;
+const hakeSvg    = `<svg class="tema-dropdown-hake" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 8 6.5 11.5 13 5"/></svg>`;
+
 function byggTemaVelger() {
-  const el = document.getElementById('tema-velger');
+  const wrapper = document.getElementById('tema-dropdown');
+
+  const btn = document.createElement('button');
+  btn.className = 'tema-dropdown-btn';
+  btn.id = 'tema-dropdown-btn';
+  btn.innerHTML = `<span id="tema-dropdown-label">${ALLE_KRYSSORD[aktivTema].tittel}</span>${chevronSvg}`;
+  btn.addEventListener('click', e => { e.stopPropagation(); toggleDropdown(); });
+
+  const liste = document.createElement('div');
+  liste.className = 'tema-dropdown-liste';
+  liste.id = 'tema-dropdown-liste';
+
   Object.entries(ALLE_KRYSSORD).forEach(([id, data]) => {
-    const btn = document.createElement('button');
-    btn.className = 'tema-btn' + (id === aktivTema ? ' aktiv' : '');
-    btn.textContent = data.tittel;
-    btn.dataset.tema = id;
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.tema-btn').forEach(b => b.classList.remove('aktiv'));
-      btn.classList.add('aktiv');
-      initTema(id);
+    const item = document.createElement('div');
+    item.className = 'tema-dropdown-item' + (id === aktivTema ? ' aktiv' : '');
+    item.dataset.tema = id;
+    item.innerHTML = `<span>${data.tittel}</span>${hakeSvg}`;
+    item.addEventListener('click', () => {
+      velgTema(id);
+      lukkDropdown();
     });
-    el.appendChild(btn);
+    liste.appendChild(item);
   });
+
+  wrapper.appendChild(btn);
+  wrapper.appendChild(liste);
+
+  document.addEventListener('click', lukkDropdown);
+}
+
+function toggleDropdown() {
+  document.getElementById('tema-dropdown').classList.toggle('åpen');
+}
+
+function lukkDropdown() {
+  document.getElementById('tema-dropdown').classList.remove('åpen');
+}
+
+function velgTema(id) {
+  document.querySelectorAll('.tema-dropdown-item').forEach(el => {
+    el.classList.toggle('aktiv', el.dataset.tema === id);
+  });
+  document.getElementById('tema-dropdown-label').textContent = ALLE_KRYSSORD[id].tittel;
+  initTema(id);
 }
 
 // ─── TIMER ────────────────────────────────────────────────────────────────
@@ -493,14 +684,42 @@ function visHighscore() {
 }
 
 function lagreHighscore() {
+  const countKey = `kryssord_løst_${aktivTema}`;
+  localStorage.setItem(countKey, (parseInt(localStorage.getItem(countKey) || '0') + 1).toString());
+
   const key = `kryssord_hs_${aktivTema}`;
   const hs = localStorage.getItem(key);
   if (!hs || timerSek < parseInt(hs)) {
     localStorage.setItem(key, timerSek);
     visHighscore();
+    visStatistikk();
     return !!hs; // true = slo eksisterende rekord
   }
+  visStatistikk();
   return false;
+}
+
+function visStatistikk() {
+  const el = document.getElementById('stat-grid');
+  if (!el) return;
+  el.innerHTML = '';
+  Object.entries(ALLE_KRYSSORD).forEach(([id, data]) => {
+    const antall = parseInt(localStorage.getItem(`kryssord_løst_${id}`) || '0');
+    const hs     = localStorage.getItem(`kryssord_hs_${id}`);
+    const kort   = document.createElement('div');
+    kort.className = 'stat-kort';
+    kort.innerHTML = `
+      <div class="stat-tema-navn">${data.tittel}</div>
+      <div class="stat-rad">
+        <span class="stat-key">Løste</span>
+        <span class="stat-val">${antall > 0 ? antall : '—'}</span>
+      </div>
+      <div class="stat-rad">
+        <span class="stat-key">Rekord</span>
+        <span class="stat-val rekord">${hs ? formatTid(parseInt(hs)) : '—'}</span>
+      </div>`;
+    el.appendChild(kort);
+  });
 }
 
 // ─── GRID ─────────────────────────────────────────────────────────────────
@@ -609,7 +828,7 @@ function tastInput(e, r, c) {
   fjernFeedback(r, c);
   if (inp.value) {
     sjekkOrdEtterInput(r, c);
-    nesteIOrdet(r, c);
+    if (!sjekkAutoSeier()) nesteIOrdet(r, c);
   }
 }
 
@@ -639,6 +858,21 @@ function sjekkOrdEtterInput(r, c) {
   });
 }
 
+function sjekkAutoSeier() {
+  if (løst) return false;
+  for (const o of ORD) {
+    for (let i = 0; i < o.svar.length; i++) {
+      const r = o.dir === 'a' ? o.r : o.r + i;
+      const c = o.dir === 'a' ? o.c + i : o.c;
+      if ((inputEl(r, c)?.value || '').toUpperCase() !== o.svar[i]) return false;
+    }
+  }
+  clearInterval(timerIntv);
+  løst = true;
+  feirSeier();
+  return true;
+}
+
 function brukHint() {
   if (hintsIgjen === 0 || !aktivOrdId || løst) return;
   const o = ORD.find(o => o.id === aktivOrdId);
@@ -659,6 +893,23 @@ function brukHint() {
   }
   hintsIgjen--;
   oppdaterHintUI();
+  sjekkAutoSeier();
+}
+
+function brukOrdHint() {
+  if (hintsIgjen < 2 || !aktivOrdId || løst) return;
+  const o = ORD.find(o => o.id === aktivOrdId);
+  if (!o) return;
+  for (let i = 0; i < o.svar.length; i++) {
+    const r = o.dir === 'a' ? o.r : o.r + i;
+    const c = o.dir === 'a' ? o.c + i : o.c;
+    const inp = inputEl(r, c);
+    if (inp) { inp.value = o.svar[i]; celleEl(r, c)?.classList.remove('feil'); }
+  }
+  sjekkOrdEtterInput(o.r, o.c);
+  hintsIgjen -= 2;
+  oppdaterHintUI();
+  sjekkAutoSeier();
 }
 
 function oppdaterHintUI() {
@@ -666,6 +917,8 @@ function oppdaterHintUI() {
     document.getElementById(`hp${i}`)?.classList.toggle('brukt', i >= hintsIgjen);
   const btn = document.getElementById('hint-btn');
   if (btn) btn.disabled = hintsIgjen === 0 || løst;
+  const ordBtn = document.getElementById('ord-hint-btn');
+  if (ordBtn) ordBtn.disabled = hintsIgjen < 2 || løst;
 }
 
 function tastDown(e, r, c) {
@@ -675,14 +928,30 @@ function tastDown(e, r, c) {
   else if   (e.key === 'ArrowLeft')  { e.preventDefault(); flytt(r, c, 0, -1); }
   else if   (e.key === 'ArrowDown')  { e.preventDefault(); flytt(r, c, 1,  0); }
   else if   (e.key === 'ArrowUp')    { e.preventDefault(); flytt(r, c,-1,  0); }
-  else if   (e.key === 'Tab')        { e.preventDefault(); nestOrd(); }
+  else if   (e.key === 'Tab')        { e.preventDefault(); e.shiftKey ? vorigeOrd() : nestOrd(); }
 }
 
 function nesteIOrdet(r, c) {
   const o = ORD.find(o => o.id === aktivOrdId); if (!o) return;
   const dr = o.dir === 'd' ? 1 : 0, dc = o.dir === 'a' ? 1 : 0;
   const nr = r + dr, nc = c + dc;
-  if (cellMap[`${nr},${nc}`]) inputEl(nr, nc)?.focus();
+  const erSlutt = o.dir === 'a' ? nc >= o.c + o.svar.length : nr >= o.r + o.svar.length;
+  if (!erSlutt) { inputEl(nr, nc)?.focus(); } else { nestUløstOrd(); }
+}
+
+function nestUløstOrd() {
+  const ordIdx = ORD.findIndex(o => o.id === aktivOrdId);
+  for (let i = 1; i <= ORD.length; i++) {
+    const kandidat = ORD[(ordIdx + i) % ORD.length];
+    for (let j = 0; j < kandidat.svar.length; j++) {
+      const r = kandidat.dir === 'a' ? kandidat.r : kandidat.r + j;
+      const c = kandidat.dir === 'a' ? kandidat.c + j : kandidat.c;
+      if (!inputEl(r, c)?.value) {
+        aktivOrdId = kandidat.id; aktivCelle = [r, c];
+        inputEl(r, c)?.focus(); return;
+      }
+    }
+  }
 }
 
 function forrigeIOrdet(r, c) {
@@ -703,6 +972,14 @@ function nestOrd() {
   const neste = ORD[(idx + 1) % ORD.length];
   aktivOrdId  = neste.id; aktivCelle = [neste.r, neste.c];
   inputEl(neste.r, neste.c)?.focus();
+}
+
+function vorigeOrd() {
+  if (!aktivOrdId) return;
+  const idx    = ORD.findIndex(o => o.id === aktivOrdId);
+  const forrige = ORD[(idx - 1 + ORD.length) % ORD.length];
+  aktivOrdId   = forrige.id; aktivCelle = [forrige.r, forrige.c];
+  inputEl(forrige.r, forrige.c)?.focus();
 }
 
 function fjernFeedback(r, c) {
@@ -839,6 +1116,16 @@ function launchConfetti() {
 }
 
 function avslørSvar() {
+  document.getElementById('modal-bakgrunn').classList.add('synlig');
+}
+
+function lukkModal(e) {
+  if (e && e.target !== document.getElementById('modal-bakgrunn')) return;
+  document.getElementById('modal-bakgrunn').classList.remove('synlig');
+}
+
+function bekreftAvsløring() {
+  document.getElementById('modal-bakgrunn').classList.remove('synlig');
   clearInterval(timerIntv); løst = true;
   document.querySelectorAll('.celle').forEach(el => el.classList.remove('riktig', 'feil'));
   ORD.forEach(o => {
@@ -907,8 +1194,10 @@ function oppdaterPanelTittel() {
 }
 
 // ─── START ────────────────────────────────────────────────────────────────
+if (localStorage.getItem('tema') === 'dark') document.body.classList.add('dark');
 byggTemaVelger();
 initTema('teknologi');
+visStatistikk();
 </script>
 </body>
 </html>
