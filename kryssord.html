@@ -142,6 +142,7 @@
 
     /* HINT */
     .hint-rad { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+    .hint-label { font-size: 0.78rem; font-weight: 600; color: #6e6e73; }
     .hint-prikker { display: flex; gap: 5px; }
     .hint-prikk {
       width: 9px; height: 9px; border-radius: 50%;
@@ -270,7 +271,7 @@
         <button class="btn-sek" onclick="nullstill()">Nullstill</button>
       </div>
       <div class="hint-rad">
-        <span style="font-size:0.78rem;font-weight:600;color:#6e6e73;">Hint igjen:</span>
+        <span class="hint-label">Hint igjen:</span>
         <div class="hint-prikker">
           <div class="hint-prikk" id="hp0"></div>
           <div class="hint-prikk" id="hp1"></div>
@@ -471,9 +472,7 @@ function startTimer() {
 }
 
 function oppdaterTimerVis() {
-  const m = Math.floor(timerSek / 60);
-  const s = timerSek % 60;
-  document.getElementById('timer').textContent = `${m}:${String(s).padStart(2, '0')}`;
+  document.getElementById('timer').textContent = formatTid(timerSek);
 }
 
 function formatTid(sek) {
@@ -499,7 +498,7 @@ function lagreHighscore() {
   if (!hs || timerSek < parseInt(hs)) {
     localStorage.setItem(key, timerSek);
     visHighscore();
-    return !hs ? false : true; // true = ny rekord
+    return !!hs; // true = slo eksisterende rekord
   }
   return false;
 }
@@ -745,26 +744,16 @@ function byggLi(o, listId) {
 // ─── SJEKK / AVSLØR / NULLSTILL ──────────────────────────────────────────
 function sjekkSvar() {
   document.querySelectorAll('.celle').forEach(el => el.classList.remove('riktig', 'feil'));
-  let riktig = 0, totalt = 0;
-  const unike = new Set();
 
+  // Merk riktige/feil celler per ord
   ORD.forEach(o => {
     let ordRiktig = true;
     for (let i = 0; i < o.svar.length; i++) {
-      const r   = o.dir === 'a' ? o.r : o.r + i;
-      const c   = o.dir === 'a' ? o.c + i : o.c;
-      const key = `${r},${c}`;
+      const r = o.dir === 'a' ? o.r : o.r + i;
+      const c = o.dir === 'a' ? o.c + i : o.c;
       const val = (inputEl(r, c)?.value || '').toUpperCase();
-      if (!unike.has(key)) {
-        unike.add(key);
-        totalt++;
-        if (val === cellMap[key]?.bokstav || ORD.find(ox => ox.svar[ox.dir==='a' ? c-ox.c : r-ox.r] === val && ox.id === o.id)) {
-          // check via answer directly
-        }
-      }
       if (val === o.svar[i]) {
         celleEl(r, c)?.classList.add('riktig');
-        if (!unike.has(key+'r')) { riktig++; unike.add(key+'r'); }
       } else {
         if (val) celleEl(r, c)?.classList.add('feil');
         ordRiktig = false;
@@ -773,7 +762,7 @@ function sjekkSvar() {
     if (ordRiktig) document.querySelector(`[data-id="${o.id}"] .ledetråd-tekst`)?.classList.add('løst');
   });
 
-  // Count unique correct cells properly
+  // Tell unike riktige celler
   const alleCeller = new Map();
   ORD.forEach(o => {
     for (let i = 0; i < o.svar.length; i++) {
@@ -782,7 +771,6 @@ function sjekkSvar() {
       alleCeller.set(`${r},${c}`, o.svar[i]);
     }
   });
-
   let korrekte = 0;
   alleCeller.forEach((bokstav, key) => {
     const [r, c] = key.split(',').map(Number);
