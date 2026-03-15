@@ -24,31 +24,11 @@
     }
 
     /* LOADING */
-    #partikkel-canvas {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    #museglow {
-      position: fixed;
-      width: 400px;
-      height: 400px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
-      pointer-events: none;
-      transform: translate(-50%, -50%);
-      z-index: 0;
-      transition: opacity 0.3s;
-      mix-blend-mode: overlay;
-    }
-
     #loader {
       position: fixed;
       inset: 0;
       z-index: 9999;
-      background: linear-gradient(135deg, #667eea, #764ba2);
+      background: linear-gradient(135deg, #0071e3, #0077ed);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -77,35 +57,16 @@
 
     #loader p {
       color: white;
-      font-family: 'Segoe UI', sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
       font-size: 1rem;
       opacity: 0.85;
     }
 
-
-    @keyframes gradientSkift {
-      0%   { background-position: 0% 50%; }
-      50%  { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
     body {
-      background: linear-gradient(-45deg, #667eea, #764ba2, #a855f7, #4f46e5, #667eea);
-      background-size: 300% 300%;
-      animation: gradientSkift 12s ease infinite;
-      font-family: 'Segoe UI', sans-serif;
+      background: #f5f5f7;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
       min-height: 100vh;
-    }
-
-    body::before {
-      content: '';
-      position: fixed;
-      inset: -30%;
-      background: radial-gradient(ellipse at 60% 40%, rgba(118, 75, 162, 0.6) 0%, rgba(102, 126, 234, 0.4) 50%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
-      will-change: transform;
-      transform: translateY(var(--parallax-y, 0px));
+      color: #1d1d1f;
     }
 
     .page, nav { position: relative; z-index: 1; }
@@ -117,111 +78,43 @@
       left: 0;
       right: 0;
       z-index: 100;
-      background: linear-gradient(90deg, rgba(102,126,234,0.25), rgba(118,75,162,0.25), rgba(168,85,247,0.2));
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(255,255,255,0.15);
-      box-shadow: 0 4px 24px rgba(102,126,234,0.15);
+      background: rgba(255,255,255,0.8);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid rgba(0,0,0,0.08);
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 32px;
-      height: 64px;
+      height: 52px;
     }
 
     .nav-logo {
-      color: white;
-      font-size: 1.2rem;
-      font-weight: 700;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.2);
-      position: relative;
+      color: #1d1d1f;
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
       cursor: default;
-    }
-
-    .nav-logo.glitch {
-      animation: glitch 0.4s steps(2) forwards;
-    }
-
-    @keyframes glitch {
-      0%   { text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff; transform: translate(0); }
-      20%  { text-shadow: -3px 0 #ff00ff, 3px 0 #00ffff; transform: translate(-2px, 1px); }
-      40%  { text-shadow: 3px 0 #ff00ff, -3px 0 #00ffff; transform: translate(2px, -1px); clip-path: inset(20% 0 30% 0); }
-      60%  { text-shadow: -2px 0 #ff00ff, 2px 0 #00ffff; transform: translate(-1px); clip-path: inset(50% 0 10% 0); }
-      80%  { text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff; transform: translate(1px, 1px); }
-      100% { text-shadow: 0 1px 4px rgba(0,0,0,0.2); transform: translate(0); clip-path: none; }
-    }
-
-    /* Cursor trail */
-    .trail-dot {
-      position: fixed;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9998;
-      animation: trail-fade 0.6s ease forwards;
-    }
-
-    @keyframes trail-fade {
-      0%   { transform: scale(1); opacity: 0.8; }
-      100% { transform: scale(0); opacity: 0; }
-    }
-
-    /* Easter egg overlay */
-    #claude-egg {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: rgba(10, 5, 30, 0.95);
-      backdrop-filter: blur(12px);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.4s;
-    }
-
-    #claude-egg.aktiv {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    #claude-egg h2 {
-      font-size: 2rem;
-      color: white;
-      text-align: center;
-      text-shadow: 0 0 30px rgba(167,139,250,0.9);
-      margin-bottom: 12px;
-      padding: 0 24px;
-    }
-
-    #claude-egg p {
-      color: rgba(255,255,255,0.6);
-      font-size: 1rem;
-      margin-bottom: 24px;
-    }
-
-    #claude-egg button {
-      background: linear-gradient(135deg, #667eea, #764ba2);
     }
 
     .nav-links {
       display: flex;
-      gap: 8px;
+      gap: 4px;
     }
 
     .nav-links a {
-      color: white;
+      color: #1d1d1f;
       text-decoration: none;
-      padding: 8px 18px;
-      border-radius: 20px;
-      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 980px;
+      font-weight: 400;
+      font-size: 0.9rem;
       transition: background 0.2s;
     }
 
     .nav-links a:hover,
     .nav-links a.active {
-      background: rgba(255, 255, 255, 0.25);
+      background: rgba(0,0,0,0.06);
     }
 
     .nav-right {
@@ -231,7 +124,7 @@
     }
 
     .nav-right span {
-      font-size: 1.1rem;
+      font-size: 1rem;
     }
 
     /* TEMA-BRYTER */
@@ -250,7 +143,7 @@
     .slider {
       position: absolute;
       inset: 0;
-      background: rgba(255, 255, 255, 0.3);
+      background: rgba(0,0,0,0.15);
       border-radius: 28px;
       cursor: pointer;
       transition: background 0.3s;
@@ -266,10 +159,11 @@
       background: white;
       border-radius: 50%;
       transition: transform 0.3s;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
     }
 
     .switch input:checked + .slider {
-      background: rgba(102, 126, 234, 0.6);
+      background: #0071e3;
     }
 
     .switch input:checked + .slider::before {
@@ -278,7 +172,7 @@
 
     /* SEKSJONER */
     .page {
-      padding-top: 64px;
+      padding-top: 52px;
     }
 
     section {
@@ -287,35 +181,31 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 80px 20px;
+      padding: 120px 20px;
+      background: #f5f5f7;
+    }
+
+    section:nth-child(even) { background: #ffffff; }
+
+    .hero-sub {
+      font-size: 1.5rem;
+      color: #6e6e73;
+      text-align: center;
+      max-width: 520px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      margin-top: -8px;
+      margin-bottom: 0;
     }
 
     .page-title {
-      color: white;
+      color: #1d1d1f;
       font-size: 5.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
       margin-bottom: 24px;
       text-align: center;
       min-height: 3.2rem;
-      text-shadow:
-        0 0 10px rgba(255,255,255,0.8),
-        0 0 30px rgba(167,139,250,0.8),
-        0 0 60px rgba(139,92,246,0.6);
-      animation: neon-puls 3s ease-in-out infinite;
-    }
-
-    @keyframes neon-puls {
-      0%, 100% {
-        text-shadow:
-          0 0 10px rgba(255,255,255,0.8),
-          0 0 30px rgba(167,139,250,0.8),
-          0 0 60px rgba(139,92,246,0.6);
-      }
-      50% {
-        text-shadow:
-          0 0 20px rgba(255,255,255,1),
-          0 0 50px rgba(167,139,250,1),
-          0 0 100px rgba(139,92,246,0.9);
-      }
     }
 
     .page-title::after {
@@ -339,22 +229,21 @@
       bottom: 32px;
       right: 28px;
       z-index: 200;
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      color: white;
+      background: rgba(0,0,0,0.07);
+      border: 1px solid rgba(0,0,0,0.1);
+      color: #1d1d1f;
       width: 44px;
       height: 44px;
       border-radius: 50%;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       opacity: 0;
       transform: translateY(16px);
-      transition: opacity 0.3s, transform 0.3s;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      transition: opacity 0.3s, transform 0.3s, background 0.2s;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
     }
 
     #topp-knapp.synlig {
@@ -363,45 +252,93 @@
     }
 
     #topp-knapp:hover {
-      background: rgba(255, 255, 255, 0.35);
+      background: rgba(0,0,0,0.12);
     }
 
     /* FOOTER */
     footer {
       text-align: center;
-      padding: 32px 16px;
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 0.9rem;
+      padding: 40px 16px;
+      color: #6e6e73;
+      font-size: 0.875rem;
+      border-top: 1px solid rgba(0,0,0,0.08);
     }
 
     footer a {
-      color: rgba(255, 255, 255, 0.85);
+      color: #0071e3;
       text-decoration: none;
-      font-weight: 600;
+      font-weight: 400;
       transition: color 0.2s;
     }
 
     footer a:hover {
-      color: white;
+      color: #0077ed;
+      text-decoration: underline;
+    }
+
+    .seksjon-innhold {
+      max-width: 980px;
+      width: 100%;
+      padding: 0 40px;
+    }
+
+    .seksjon-etikett {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: #6e6e73;
+      text-transform: uppercase;
+      margin-bottom: 8px;
     }
 
     .section-title {
-      color: white;
-      font-size: 2rem;
-      margin-bottom: 24px;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-      text-align: center;
+      color: #1d1d1f;
+      font-size: 3rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      margin-bottom: 32px;
+      text-align: left;
     }
+
+    /* Nyheter som liste */
+    .nyheter-liste { display: flex; flex-direction: column; width: 100%; }
+    .nyhet-item {
+      display: flex;
+      gap: 16px;
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      text-decoration: none;
+      color: inherit;
+      transition: opacity 0.2s;
+    }
+    .nyhet-item:first-child { border-top: 1px solid rgba(0,0,0,0.06); }
+    .nyhet-item:hover { opacity: 0.7; }
+    .nyhet-bilde {
+      width: 90px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+    .nyhet-bilde-tom {
+      width: 90px;
+      height: 90px;
+      border-radius: 10px;
+      flex-shrink: 0;
+      background: #f5f5f7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+    .nyhet-innhold { flex: 1; display: flex; flex-direction: column; gap: 4px; justify-content: center; }
 
     /* KORT */
     .card {
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.6);
-      border-radius: 16px;
+      background: #ffffff;
+      border-radius: 20px;
       padding: 48px 40px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255,255,255,0.8);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
       text-align: center;
       max-width: 460px;
       width: 90%;
@@ -411,7 +348,7 @@
     }
 
     p {
-      color: #555;
+      color: #6e6e73;
       font-size: 1.05rem;
       margin-bottom: 20px;
     }
@@ -428,28 +365,33 @@
 
     input[type="text"] {
       flex: 1;
-      padding: 12px 16px;
-      border: 2px solid #ddd;
+      padding: 11px 16px;
+      border: 1px solid #d2d2d7;
       border-radius: 10px;
       font-size: 1rem;
-      transition: border-color 0.3s;
+      font-family: inherit;
+      transition: border-color 0.2s, box-shadow 0.2s;
       outline: none;
+      color: #1d1d1f;
+      background: #ffffff;
     }
 
     input[type="text"]:focus {
-      border-color: #667eea;
+      border-color: #0071e3;
+      box-shadow: 0 0 0 3px rgba(0,113,227,0.15);
     }
 
     button {
-      background: linear-gradient(135deg, #667eea, #764ba2);
+      background: #0071e3;
       color: white;
       border: none;
-      padding: 12px 24px;
-      border-radius: 10px;
+      padding: 11px 20px;
+      border-radius: 980px;
       cursor: pointer;
-      font-size: 1rem;
-      font-weight: 600;
-      transition: transform 0.2s, box-shadow 0.2s;
+      font-size: 0.95rem;
+      font-weight: 400;
+      font-family: inherit;
+      transition: background 0.2s, transform 0.15s;
       white-space: nowrap;
       overflow: hidden;
       position: relative;
@@ -469,8 +411,8 @@
     }
 
     button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+      background: #0077ed;
+      transform: translateY(-1px);
     }
 
     button:active {
@@ -478,7 +420,7 @@
     }
 
     #svar {
-      color: #764ba2;
+      color: #0071e3;
       font-size: 1.3rem;
       min-height: 1.5em;
       margin-bottom: 0;
@@ -486,22 +428,62 @@
     }
 
     /* NAVNEFAKTA-SEKSJON */
-    .fakta-card {
+    .fakta-innhold {
       max-width: 560px;
+      width: 100%;
     }
 
+    .fakta-svar {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1d1d1f;
+      letter-spacing: -0.02em;
+      margin-top: 24px;
+      margin-bottom: 0;
+      min-height: 1.5em;
+    }
+
+    .fakta-tittel {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #6e6e73;
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+    }
+
+    .fakta-liste {
+      list-style: none;
+      padding: 0;
+    }
+
+    .fakta-liste li {
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      color: #1d1d1f;
+      font-size: 0.975rem;
+      line-height: 1.5;
+    }
+
+    .fakta-liste li:first-child { border-top: 1px solid rgba(0,0,0,0.06); }
+
+    body.dark .fakta-svar { color: #f5f5f7; }
+    body.dark .fakta-tittel { color: #86868b; }
+    body.dark .fakta-liste li { color: #e5e5e7; border-bottom-color: rgba(255,255,255,0.08); }
+    body.dark .fakta-liste li:first-child { border-top-color: rgba(255,255,255,0.08); }
+
     .navn-section {
-      margin-top: 20px;
+      margin-top: 24px;
     }
 
     .navn-section h3 {
-      color: #2c3e50;
+      color: #1d1d1f;
+      font-weight: 600;
       margin-top: 0;
       margin-bottom: 16px;
     }
 
     #navnFakta {
-      color: #555;
+      color: #6e6e73;
       font-size: 1rem;
       line-height: 1.8;
       text-align: left;
@@ -538,7 +520,8 @@
     }
 
     .tetris-card h3 {
-      color: #2c3e50;
+      color: #1d1d1f;
+      font-weight: 600;
       margin-bottom: 12px;
       font-size: 1.4rem;
     }
@@ -548,58 +531,151 @@
     }
 
     .tetris-btn {
-      background: linear-gradient(135deg, #a78bfa, #38f9d7);
-      font-size: 1.1rem;
+      background: #0071e3;
+      font-size: 1rem;
       padding: 14px 32px;
     }
 
     .tetris-btn:hover {
-      box-shadow: 0 4px 12px rgba(167, 139, 250, 0.4);
+      background: #0077ed;
+      box-shadow: 0 4px 16px rgba(0,113,227,0.3);
+    }
+
+    /* EASTER EGG OVERLAY */
+    #claude-egg {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s;
+    }
+
+    #claude-egg.aktiv {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    #claude-egg h2 {
+      font-size: 2rem;
+      color: white;
+      text-align: center;
+      margin-bottom: 12px;
+      padding: 0 24px;
+      font-weight: 600;
+    }
+
+    #claude-egg p {
+      color: rgba(255,255,255,0.6);
+      font-size: 1rem;
+      margin-bottom: 24px;
+    }
+
+    #claude-egg button {
+      background: #0071e3;
     }
 
     /* MØRKT TEMA */
     body.dark {
-      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      background: #000000;
+      color: #f5f5f7;
     }
 
     body.dark nav {
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(28,28,30,0.8);
+      border-bottom-color: rgba(255,255,255,0.08);
+    }
+
+    body.dark .nav-logo {
+      color: #f5f5f7;
+    }
+
+    body.dark .nav-links a {
+      color: #f5f5f7;
+    }
+
+    body.dark .nav-links a:hover,
+    body.dark .nav-links a.active {
+      background: rgba(255,255,255,0.1);
     }
 
     body.dark .card {
-      background: rgba(30, 30, 47, 0.75);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+      background: #1c1c1e;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
     }
 
     body.dark p {
-      color: #aaa;
+      color: #ababab;
+    }
+
+    body.dark section { background: #000000; }
+    body.dark section:nth-child(even) { background: #1c1c1e; }
+
+    body.dark .section-title {
+      color: #f5f5f7;
+    }
+
+    body.dark .seksjon-etikett { color: #86868b; }
+    body.dark .nyhet-item { border-bottom-color: rgba(255,255,255,0.08); }
+    body.dark .nyhet-item:first-child { border-top-color: rgba(255,255,255,0.08); }
+    body.dark .nyhet-bilde-tom { background: #2c2c2e; }
+
+    body.dark .page-title {
+      color: #f5f5f7;
     }
 
     body.dark .navn-section h3,
     body.dark .tetris-card h3 {
-      color: #e0e0e0;
+      color: #f5f5f7;
     }
 
     body.dark input[type="text"] {
-      background: #2a2a3d;
-      border-color: #444;
-      color: #e0e0e0;
+      background: #2c2c2e;
+      border-color: #3a3a3c;
+      color: #f5f5f7;
     }
 
     body.dark input[type="text"]:focus {
-      border-color: #667eea;
+      border-color: #0071e3;
+      box-shadow: 0 0 0 3px rgba(0,113,227,0.2);
     }
 
     body.dark #svar {
-      color: #a78bfa;
+      color: #409cff;
     }
 
-
     body.dark #navnFakta {
-      color: #ccc;
+      color: #ababab;
+    }
+
+    body.dark .slider {
+      background: rgba(255,255,255,0.2);
+    }
+
+    body.dark #topp-knapp {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.12);
+      color: #f5f5f7;
+    }
+
+    body.dark #topp-knapp:hover {
+      background: rgba(255,255,255,0.18);
+    }
+
+    body.dark footer {
+      color: #6e6e73;
+      border-top-color: rgba(255,255,255,0.08);
+    }
+
+    body.dark footer a {
+      color: #409cff;
     }
 
     /* HAMBURGER-MENY */
@@ -611,15 +687,24 @@
       background: none;
       border: none;
       padding: 4px;
+      border-radius: 8px;
+    }
+
+    .hamburger:hover {
+      background: rgba(0,0,0,0.05);
     }
 
     .hamburger span {
       display: block;
-      width: 24px;
+      width: 22px;
       height: 2px;
-      background: white;
+      background: #1d1d1f;
       border-radius: 2px;
       transition: transform 0.3s, opacity 0.3s;
+    }
+
+    body.dark .hamburger span {
+      background: #f5f5f7;
     }
 
     .hamburger.åpen span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
@@ -645,20 +730,32 @@
         align-items: center;
         gap: 8px;
         padding: 12px 16px;
-        border-top: 1px solid rgba(255,255,255,0.1);
+        border-top: 1px solid rgba(0,0,0,0.08);
         margin-top: 4px;
+      }
+
+      body.dark .nav-tema-mobil {
+        border-top-color: rgba(255,255,255,0.08);
       }
 
       .nav-links {
         display: none;
         position: absolute;
-        top: 64px;
+        top: 52px;
         left: 0;
         right: 0;
         flex-direction: column;
-        background: rgba(30, 20, 60, 0.97);
-        padding: 16px;
-        gap: 4px;
+        background: rgba(255,255,255,0.95);
+        backdrop-filter: saturate(180%) blur(20px);
+        -webkit-backdrop-filter: saturate(180%) blur(20px);
+        padding: 12px;
+        gap: 2px;
+        border-bottom: 1px solid rgba(0,0,0,0.08);
+      }
+
+      body.dark .nav-links {
+        background: rgba(28,28,30,0.97);
+        border-bottom-color: rgba(255,255,255,0.08);
       }
 
       .nav-links.åpen {
@@ -668,7 +765,7 @@
       .nav-links a {
         padding: 12px 16px;
         border-radius: 10px;
-        font-size: 1.1rem;
+        font-size: 1.05rem;
       }
 
       .card {
@@ -680,8 +777,10 @@
       }
 
       .section-title {
-        font-size: 1.6rem;
+        font-size: 2rem;
       }
+
+      .seksjon-innhold { padding: 0 20px; }
 
       .input-group {
         flex-direction: column;
@@ -702,10 +801,10 @@
       gap: 20px;
       margin-bottom: 24px;
       padding-bottom: 20px;
-      border-bottom: 1px solid rgba(0,0,0,0.08);
+      border-bottom: 1px solid rgba(0,0,0,0.07);
       position: relative;
       overflow: hidden;
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 16px;
       transition: background 0.6s;
     }
@@ -738,52 +837,53 @@
 
     .vær-info { flex: 1; }
 
-    .vær-by-navn { font-size: 0.9rem; color: #888; margin-bottom: 2px; font-weight: 600; letter-spacing: 0.5px; }
+    .vær-by-navn { font-size: 0.85rem; color: #6e6e73; margin-bottom: 2px; font-weight: 600; letter-spacing: 0.3px; }
 
-    .vær-temp { font-size: 3rem; font-weight: 700; color: #764ba2; line-height: 1; margin-bottom: 4px; }
+    .vær-temp { font-size: 3rem; font-weight: 700; color: #0071e3; line-height: 1; margin-bottom: 4px; }
 
-    .vær-beskrivelse { font-size: 1.05rem; color: #555; margin-bottom: 10px; }
+    .vær-beskrivelse { font-size: 1rem; color: #6e6e73; margin-bottom: 10px; }
 
-    .vær-detaljer { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 0.85rem; color: #666; }
+    .vær-detaljer { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 0.85rem; color: #6e6e73; }
 
     .vær-prognose { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; }
 
     .prognose-dag {
       flex: 1;
       min-width: 80px;
-      background: rgba(102, 126, 234, 0.06);
-      border: 1px solid rgba(102, 126, 234, 0.12);
+      background: rgba(0,113,227,0.05);
+      border: 1px solid rgba(0,113,227,0.1);
       border-radius: 12px;
       padding: 12px 8px;
       text-align: center;
       font-size: 0.8rem;
     }
 
-    .prognose-dag .dag-navn { font-weight: 700; color: #764ba2; margin-bottom: 4px; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .prognose-dag .dag-navn { font-weight: 700; color: #0071e3; margin-bottom: 4px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; }
     .prognose-dag .dag-ikon { font-size: 1.6rem; margin: 4px 0; }
-    .prognose-dag .dag-maks { font-weight: 700; color: #333; }
-    .prognose-dag .dag-min { color: #999; margin-top: 2px; }
+    .prognose-dag .dag-maks { font-weight: 700; color: #1d1d1f; }
+    .prognose-dag .dag-min { color: #a1a1a6; margin-top: 2px; }
 
-    .vær-feil { text-align: center; color: #e74c3c; padding: 12px; font-size: 0.95rem; }
+    .vær-feil { text-align: center; color: #ff3b30; padding: 12px; font-size: 0.95rem; }
     .vær-laster { display: flex; justify-content: center; padding: 24px; }
 
-
     .gps-btn {
-      background: rgba(102, 126, 234, 0.12);
-      color: #667eea;
+      background: rgba(0,113,227,0.08);
+      color: #0071e3;
       flex-shrink: 0;
-      padding: 12px 14px;
+      padding: 11px 14px;
     }
-    .gps-btn:hover { background: rgba(102, 126, 234, 0.25); box-shadow: none; }
+    .gps-btn:hover { background: rgba(0,113,227,0.15); }
 
-    body.dark .vær-nå { border-bottom-color: rgba(255,255,255,0.08); }
-    body.dark .vær-by-navn { color: #aaa; }
-    body.dark .vær-temp { color: #a78bfa; }
-    body.dark .vær-beskrivelse { color: #ccc; }
-    body.dark .vær-detaljer { color: #999; }
-    body.dark .prognose-dag { background: rgba(102,126,234,0.08); border-color: rgba(102,126,234,0.15); }
-    body.dark .prognose-dag .dag-maks { color: #e0e0e0; }
-    body.dark .prognose-dag .dag-min { color: #777; }
+    body.dark .vær-nå { border-bottom-color: rgba(255,255,255,0.07); }
+    body.dark .vær-by-navn { color: #a1a1a6; }
+    body.dark .vær-temp { color: #409cff; }
+    body.dark .vær-beskrivelse { color: #ababab; }
+    body.dark .vær-detaljer { color: #a1a1a6; }
+    body.dark .prognose-dag { background: rgba(0,113,227,0.08); border-color: rgba(0,113,227,0.15); }
+    body.dark .prognose-dag .dag-maks { color: #f5f5f7; }
+    body.dark .prognose-dag .dag-min { color: #636366; }
+    body.dark .prognose-dag .dag-navn { color: #409cff; }
+    body.dark .gps-btn { background: rgba(0,113,227,0.12); color: #409cff; }
 
     /* NYHETER */
     .nyheter-card { max-width: 720px; text-align: left; padding: 32px 28px; }
@@ -792,8 +892,8 @@
     .nyheter-tab {
       padding: 8px 16px;
       border-radius: 12px;
-      background: rgba(102,126,234,0.08);
-      border: 1.5px solid rgba(102,126,234,0.2);
+      background: white;
+      border: 1.5px solid rgba(0,0,0,0.1);
       cursor: pointer;
       transition: all 0.2s;
       display: flex;
@@ -801,15 +901,12 @@
       justify-content: center;
       min-width: 80px;
       opacity: 0.5;
-      filter: grayscale(0.4);
     }
     .nyheter-tab:hover, .nyheter-tab.aktiv {
       background: white;
-      border-color: rgba(102,126,234,0.3);
-      transform: none;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      border-color: #0071e3;
+      box-shadow: 0 2px 10px rgba(0,113,227,0.15);
       opacity: 1;
-      filter: none;
     }
     .nyheter-logo { height: 28px; width: auto; display: block; }
 
@@ -818,12 +915,12 @@
     .nyhet-item {
       display: flex;
       flex-direction: column;
-      border-radius: 12px;
+      border-radius: 14px;
       overflow: hidden;
-      border: 1px solid rgba(0,0,0,0.07);
+      border: 1px solid rgba(0,0,0,0.06);
       text-decoration: none;
       color: inherit;
-      background: rgba(255,255,255,0.6);
+      background: #f9f9fb;
       transition: transform 0.2s, box-shadow 0.2s;
     }
     .nyhet-item:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
@@ -837,7 +934,7 @@
     .nyhet-bilde-tom {
       width: 100%;
       height: 140px;
-      background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1));
+      background: linear-gradient(135deg, rgba(0,113,227,0.06), rgba(0,119,237,0.06));
       display: flex;
       align-items: center;
       justify-content: center;
@@ -845,14 +942,15 @@
     }
 
     .nyhet-innhold { padding: 12px 14px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
-    .nyhet-tittel { font-size: 0.9rem; font-weight: 600; color: #2c3e50; line-height: 1.4; }
-    .nyhet-ingress { font-size: 0.8rem; color: #777; line-height: 1.4; margin: 0; }
-    .nyhet-dato { font-size: 0.75rem; color: #aaa; margin-top: auto; }
-    body.dark .nyhet-ingress { color: #999; }
+    .nyhet-tittel { font-size: 0.9rem; font-weight: 600; color: #1d1d1f; line-height: 1.4; }
+    .nyhet-ingress { font-size: 0.8rem; color: #6e6e73; line-height: 1.4; margin: 0; }
+    .nyhet-dato { font-size: 0.75rem; color: #a1a1a6; margin-top: auto; }
 
-    body.dark .nyhet-item { background: rgba(30,30,47,0.6); border-color: rgba(255,255,255,0.06); }
-    body.dark .nyhet-tittel { color: #e0e0e0; }
-    body.dark .nyheter-tab { color: #a78bfa; border-color: rgba(167,139,250,0.2); background: rgba(167,139,250,0.08); }
+    body.dark .nyhet-item { background: #2c2c2e; border-color: rgba(255,255,255,0.06); }
+    body.dark .nyhet-tittel { color: #f5f5f7; }
+    body.dark .nyhet-ingress { color: #a1a1a6; }
+    body.dark .nyheter-tab { color: #409cff; border-color: rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); }
+    body.dark .nyheter-tab:hover, body.dark .nyheter-tab.aktiv { background: #2c2c2e; border-color: rgba(255,255,255,0.15); }
 
     /* KONFETTI */
     .confetti {
@@ -898,8 +996,6 @@
   </style>
 </head>
 <body>
-<canvas id="partikkel-canvas"></canvas>
-<div id="museglow"></div>
 <div id="claude-egg">
   <h2>🤖 Hei, Claude Code her!<br>Jeg bygde denne siden sammen med Simon!</h2>
   <p>Trykk hvor som helst for å lukke</p>
@@ -919,24 +1015,24 @@
       <a href="#nyheter" onclick="lukkMeny()">Nyheter</a>
       <a href="#tetris" onclick="lukkMeny()">Tetris</a>
       <div class="nav-tema-mobil">
-        <span>☀️</span>
+        <span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="3"/><line x1="8" y1="1" x2="8" y2="3"/><line x1="8" y1="13" x2="8" y2="15"/><line x1="1" y1="8" x2="3" y2="8"/><line x1="13" y1="8" x2="15" y2="8"/><line x1="2.93" y1="2.93" x2="4.34" y2="4.34"/><line x1="11.66" y1="11.66" x2="13.07" y2="13.07"/><line x1="13.07" y1="2.93" x2="11.66" y2="4.34"/><line x1="4.34" y1="11.66" x2="2.93" y2="13.07"/></svg></span>
         <label class="switch">
           <input type="checkbox" id="tema-mobil" onchange="toggleTheme(); document.querySelector('.switch input:not(#tema-mobil)').checked = this.checked">
           <span class="slider"></span>
         </label>
-        <span>🌙</span>
+        <span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 10.5A6 6 0 0 1 5.5 2.5a6 6 0 1 0 8 8z"/></svg></span>
       </div>
     </div>
     <button class="hamburger" id="hamburger" onclick="toggleMeny()">
       <span></span><span></span><span></span>
     </button>
     <div class="nav-right">
-      <span>☀️</span>
+      <span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="3"/><line x1="8" y1="1" x2="8" y2="3"/><line x1="8" y1="13" x2="8" y2="15"/><line x1="1" y1="8" x2="3" y2="8"/><line x1="13" y1="8" x2="15" y2="8"/><line x1="2.93" y1="2.93" x2="4.34" y2="4.34"/><line x1="11.66" y1="11.66" x2="13.07" y2="13.07"/><line x1="13.07" y1="2.93" x2="11.66" y2="4.34"/><line x1="4.34" y1="11.66" x2="2.93" y2="13.07"/></svg></span>
       <label class="switch">
         <input type="checkbox" onchange="toggleTheme()">
         <span class="slider"></span>
       </label>
-      <span>🌙</span>
+      <span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 10.5A6 6 0 0 1 5.5 2.5a6 6 0 1 0 8 8z"/></svg></span>
     </div>
   </nav>
 
@@ -951,23 +1047,27 @@
 
     <!-- NAVNEFAKTA -->
     <section id="navnefakta">
+      <div class="seksjon-innhold">
+      <p class="seksjon-etikett fade-in">Navnefakta</p>
       <h2 class="section-title fade-in">Fakta om navnet ditt</h2>
-      <div class="card fakta-card fade-in">
-        <p class="label">Hva heter du?</p>
+      <div class="fakta-innhold fade-in">
         <div class="input-group">
-          <input type="text" id="navnBoks" placeholder="Skriv navnet ditt her" onkeydown="if(event.key==='Enter') siHei()">
+          <input type="text" id="navnBoks" placeholder="Skriv navnet ditt her..." onkeydown="if(event.key==='Enter') siHei()">
           <button onclick="siHei()">Si hei!</button>
         </div>
-        <h2 id="svar"></h2>
+        <h2 id="svar" class="fakta-svar"></h2>
         <div class="navn-section">
-          <h3 id="faktaTittel"></h3>
-          <ul id="navnFakta" class="tom"></ul>
+          <h3 id="faktaTittel" class="fakta-tittel"></h3>
+          <ul id="navnFakta" class="tom fakta-liste"></ul>
         </div>
+      </div>
       </div>
     </section>
 
     <!-- VÆR -->
     <section id="vær">
+      <div class="seksjon-innhold">
+      <p class="seksjon-etikett fade-in">Vær</p>
       <h2 class="section-title fade-in">Været akkurat nå</h2>
       <div class="card vær-card fade-in">
         <div class="input-group">
@@ -976,7 +1076,7 @@
           <button class="gps-btn" onclick="hentVærGPS()" title="Bruk min posisjon">📍</button>
         </div>
         <div id="vær-laster" class="vær-laster skjult">
-          <div class="spinner" style="border-color:rgba(102,126,234,0.3);border-top-color:#667eea;width:32px;height:32px;border-width:3px;"></div>
+          <div class="spinner" style="border-color:rgba(0,113,227,0.2);border-top-color:#0071e3;width:32px;height:32px;border-width:3px;"></div>
         </div>
         <div id="vær-feil" class="vær-feil skjult">Fant ikke byen. Prøv igjen.</div>
         <div id="vær-resultat" class="vær-resultat skjult">
@@ -998,35 +1098,29 @@
           <div class="vær-prognose" id="vær-prognose"></div>
         </div>
       </div>
+      </div>
     </section>
 
     <!-- NYHETER -->
     <section id="nyheter">
-      <h2 class="section-title fade-in">Nyheter</h2>
-      <div class="card nyheter-card fade-in">
-        <div class="nyheter-tabs">
-          <button class="nyheter-tab aktiv" onclick="hentNyheter('nrk')">
-            <img src="https://static.nrk.no/core-icons/latest/nrk-logo.svg" alt="NRK" class="nyheter-logo" onerror="this.outerHTML='NRK'">
-          </button>
-          <button class="nyheter-tab" onclick="hentNyheter('vg')">
-            <img src="https://g.vgc.no/v2/logos/vg-logo.svg" alt="VG" class="nyheter-logo" onerror="this.outerHTML='VG'">
-          </button>
-        </div>
-        <div id="nyheter-laster" class="vær-laster">
-          <div class="spinner" style="border-color:rgba(102,126,234,0.3);border-top-color:#667eea;width:32px;height:32px;border-width:3px;"></div>
-        </div>
-        <div id="nyheter-feil" class="vær-feil skjult">Klarte ikke laste nyheter. Prøv igjen.</div>
-        <div id="nyheter-grid" class="nyheter-grid"></div>
+      <div class="seksjon-innhold">
+      <p class="seksjon-etikett fade-in">Nyheter</p>
+      <h2 class="section-title fade-in">VG</h2>
+      <div id="nyheter-laster" class="vær-laster fade-in">
+        <div class="spinner" style="border-color:rgba(0,113,227,0.2);border-top-color:#0071e3;width:32px;height:32px;border-width:3px;"></div>
+      </div>
+      <div id="nyheter-feil" class="vær-feil skjult">Klarte ikke laste nyheter. <button onclick="hentNyheter('vg')" style="padding:6px 14px;font-size:0.85rem;">Prøv igjen</button></div>
+      <div id="nyheter-grid" class="nyheter-liste"></div>
       </div>
     </section>
 
     <!-- TETRIS -->
     <section id="tetris">
-      <h2 class="section-title fade-in">Spill et spill!</h2>
-      <div class="card tetris-card fade-in">
-        <h3>Tetris</h3>
-        <p>Klar for en utfordring? Spill Simon sin versjon av det klassiske Tetris-spillet!</p>
-        <a href="tetris.html"><button class="tetris-btn">Spill Tetris!</button></a>
+      <div class="seksjon-innhold">
+      <p class="seksjon-etikett fade-in">Spill</p>
+      <h2 class="section-title fade-in">Tetris</h2>
+      <p style="color:#6e6e73;margin-bottom:28px;font-size:1.1rem;">Klar for en utfordring? Spill Simon sin versjon av det klassiske Tetris-spillet.</p>
+      <a href="tetris.html"><button class="tetris-btn">Spill nå</button></a>
       </div>
     </section>
 
@@ -1125,82 +1219,6 @@
       }
     });
 
-    // Glitch på nav-logo
-    const navLogo = document.querySelector(".nav-logo");
-    setInterval(() => {
-      if (Math.random() < 0.15) {
-        navLogo.classList.add("glitch");
-        navLogo.addEventListener("animationend", () => navLogo.classList.remove("glitch"), { once: true });
-      }
-    }, 3000);
-
-    // Cursor trail
-    const trailFarger = ["#a78bfa", "#818cf8", "#38bdf8", "#f472b6", "#34d399"];
-    document.addEventListener("mousemove", e => {
-      const dot = document.createElement("div");
-      dot.className = "trail-dot";
-      const size = 6 + Math.random() * 6;
-      dot.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - size/2}px;top:${e.clientY - size/2}px;background:${trailFarger[Math.floor(Math.random()*trailFarger.length)]}`;
-      document.body.appendChild(dot);
-      dot.addEventListener("animationend", () => dot.remove());
-    });
-
-    // Partikkel-bakgrunn
-    (function() {
-      const cv = document.getElementById("partikkel-canvas");
-      const cx = cv.getContext("2d");
-      let W, H, dots = [];
-
-      function resize() {
-        W = cv.width = window.innerWidth;
-        H = cv.height = window.innerHeight;
-      }
-
-      function lagDot() {
-        return {
-          x: Math.random() * W,
-          y: Math.random() * H,
-          r: 0.8 + Math.random() * 1.8,
-          vx: (Math.random() - 0.5) * 0.3,
-          vy: -0.1 - Math.random() * 0.3,
-          alpha: 0.2 + Math.random() * 0.5
-        };
-      }
-
-      resize();
-      for (let i = 0; i < 80; i++) dots.push(lagDot());
-      window.addEventListener("resize", resize);
-
-      (function loop() {
-        cx.clearRect(0, 0, W, H);
-        for (const d of dots) {
-          cx.beginPath();
-          cx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-          cx.fillStyle = `rgba(255,255,255,${d.alpha})`;
-          cx.fill();
-          d.x += d.vx;
-          d.y += d.vy;
-          if (d.y < -4) { d.y = H + 4; d.x = Math.random() * W; }
-          if (d.x < -4) d.x = W + 4;
-          if (d.x > W + 4) d.x = -4;
-        }
-        requestAnimationFrame(loop);
-      })();
-    })();
-
-    // Musepeker-glow
-    const museglow = document.getElementById("museglow");
-    document.addEventListener("mousemove", e => {
-      museglow.style.left = e.clientX + "px";
-      museglow.style.top = e.clientY + "px";
-    });
-
-    // Parallax-effekt
-    window.addEventListener("scroll", () => {
-      const y = window.scrollY * 0.25;
-      document.body.style.setProperty("--parallax-y", `${y}px`);
-    }, { passive: true });
-
     // Oppdater aktiv nav-lenke ved scrolling
     const sections = document.querySelectorAll("section");
     const navLinks = document.querySelectorAll(".nav-links a");
@@ -1242,7 +1260,7 @@
 
     function launchConfetti() {
       playConfettiSound();
-      const colors = ["#667eea", "#764ba2", "#f093fb", "#f5576c", "#4facfe", "#43e97b", "#ffd700"];
+      const colors = ["#0071e3", "#34aadc", "#30d158", "#ff9f0a", "#ff375f", "#bf5af2", "#ffd60a"];
       for (let i = 0; i < 60; i++) {
         const confetti = document.createElement("div");
         confetti.classList.add("confetti");
@@ -1263,7 +1281,7 @@
         const x = (e.clientX - rect.left) / rect.width - 0.5;
         const y = (e.clientY - rect.top) / rect.height - 0.5;
         card.style.transform = `perspective(800px) rotateY(${x * 12}deg) rotateX(${-y * 12}deg) scale(1.02)`;
-        card.style.boxShadow = `${-x * 20}px ${y * 20}px 40px rgba(0,0,0,0.2)`;
+        card.style.boxShadow = `${-x * 20}px ${y * 20}px 40px rgba(0,0,0,0.12)`;
       });
       card.addEventListener("mouseleave", () => {
         card.style.transform = "";
@@ -1490,16 +1508,12 @@ visVærResultat();
 
     // ── Nyheter ──
     const nyhetsSources = {
-      nrk: 'https://www.nrk.no/nyheter/siste.rss',
-      vg:  'https://www.vg.no/rss/feed/'
+      vg: 'https://www.vg.no/rss/feed/'
     };
-    let aktivKilde = 'nrk';
+    let aktivKilde = 'vg';
 
     async function hentNyheter(kilde) {
       aktivKilde = kilde || aktivKilde;
-      document.querySelectorAll('.nyheter-tab').forEach((t, i) => {
-        t.classList.toggle('aktiv', ['nrk','vg'][i] === aktivKilde);
-      });
       document.getElementById('nyheter-grid').innerHTML = '';
       document.getElementById('nyheter-feil').classList.add('skjult');
       document.getElementById('nyheter-laster').classList.remove('skjult');
@@ -1507,14 +1521,16 @@ visVærResultat();
         const rssUrl = nyhetsSources[aktivKilde];
         let xmlText = null;
         for (const proxy of [
-          `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}`,
-          `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(rssUrl)}`
+          { url: `https://corsproxy.io/?${encodeURIComponent(rssUrl)}`, json: false },
+          { url: `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}`, json: true },
+          { url: `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(rssUrl)}`, json: false }
         ]) {
           try {
-            const res = await fetch(proxy);
-            const data = await res.json();
-            xmlText = data.contents || data;
-            if (xmlText) break;
+            const res = await fetch(proxy.url);
+            if (!res.ok) continue;
+            xmlText = proxy.json ? (await res.json()).contents : await res.text();
+            if (xmlText?.includes('<item>')) break;
+            xmlText = null;
           } catch {}
         }
         if (!xmlText) throw new Error();
@@ -1535,12 +1551,11 @@ visVærResultat();
             || item.querySelector('enclosure')?.getAttribute('url') || '';
           const tidsAgo = dato ? tidsiden(new Date(dato)) : '';
           const bildeHtml = bilde
-            ? `<img class="nyhet-bilde" src="${bilde}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">\
-               <div class="nyhet-bilde-tom" style="display:none">📰</div>`
+            ? `<img class="nyhet-bilde" src="${bilde}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="nyhet-bilde-tom" style="display:none">📰</div>`
             : `<div class="nyhet-bilde-tom">📰</div>`;
           const råBeskr = item.querySelector('description')?.textContent || '';
-          const beskr = råBeskr.replace(/<[^>]+>/g, '').trim().slice(0, 120);
-          const ingress = beskr && beskr !== tittel ? `<div class="nyhet-ingress">${beskr}${råBeskr.length > 120 ? '…' : ''}</div>` : '';
+          const beskr = råBeskr.replace(/<[^>]+>/g, '').trim().slice(0, 100);
+          const ingress = beskr && beskr !== tittel ? `<div class="nyhet-ingress">${beskr}…</div>` : '';
           return `<a href="${lenke}" target="_blank" rel="noopener" class="nyhet-item">
             ${bildeHtml}
             <div class="nyhet-innhold">
@@ -1570,7 +1585,7 @@ visVærResultat();
     const nyhetObserver = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting) {
         hentNyheter('nrk');
-        nyhetInterval = setInterval(() => hentNyheter(), 5 * 60 * 1000);
+        nyhetInterval = setInterval(() => hentNyheter('vg'), 5 * 60 * 1000);
         nyhetObserver.disconnect();
       }
     }, { threshold: 0.1 });
