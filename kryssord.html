@@ -182,15 +182,50 @@
       to { transform: translateY(105vh) rotate(720deg); opacity: 0; }
     }
 
-    @media (max-width: 720px) {
-      :root { --cs: 38px; }
-      .layout { flex-direction: column; gap: 32px; }
-      h1 { font-size: 2.5rem; }
-      main { padding: 40px 20px 60px; }
-      nav { padding: 0 20px; }
+    /* PANEL-HÅNDTAK (skjult på desktop) */
+    .panel-håndtak {
+      display: none;
+      flex-direction: column; align-items: center; justify-content: center;
+      gap: 5px; height: 52px; cursor: pointer;
+      position: sticky; top: 0; background: #ffffff;
+      border-radius: 20px 20px 0 0; z-index: 1; user-select: none;
+      flex-shrink: 0;
     }
+    .panel-strek { width: 36px; height: 4px; background: rgba(0,0,0,0.12); border-radius: 2px; }
+    .panel-tittel { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: #6e6e73; }
+
+    @media (max-width: 720px) {
+      .layout { flex-direction: column; gap: 0; }
+      h1 { font-size: 2.5rem; }
+      main { padding: 40px 20px 80px; }
+      nav { padding: 0 20px; }
+
+      /* Temavelger: horisontal scroll */
+      .tema-velger { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; -webkit-overflow-scrolling: touch; }
+      .tema-velger::-webkit-scrollbar { display: none; }
+
+      /* Aktiv ledetråd: sticky under nav */
+      .aktiv-ledetråd {
+        position: sticky; top: 52px; z-index: 50;
+        margin: 0 -20px 14px;
+        border-radius: 0; border-left: none; border-right: none; border-top: none;
+      }
+
+      /* Ledetråd-panel: slides opp fra bunn */
+      .ledetråder {
+        position: fixed; bottom: 0; left: 0; right: 0;
+        background: #ffffff; border-radius: 20px 20px 0 0;
+        max-height: 65vh; overflow-y: auto;
+        transform: translateY(calc(100% - 52px));
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 200; box-shadow: 0 -4px 24px rgba(0,0,0,0.1);
+        padding: 0 20px 40px;
+      }
+      .ledetråder.åpen { transform: translateY(0); }
+      .panel-håndtak { display: flex; }
+    }
+
     @media (max-width: 400px) {
-      :root { --cs: 32px; }
       .celle input { font-size: 0.9rem; padding-top: 6px; }
       .celle-nr { font-size: 7px; }
     }
@@ -199,8 +234,8 @@
 <body>
 
 <nav>
+  <a href="index.html#hjem" class="nav-back">← Tilbake</a>
   <div class="nav-logo">Kryssord</div>
-  <a href="index.html" class="nav-back">← Tilbake</a>
 </nav>
 
 <main>
@@ -245,7 +280,11 @@
       <div id="melding"></div>
     </div>
 
-    <div class="ledetråder">
+    <div class="ledetråder" id="ledetråder">
+      <div class="panel-håndtak" onclick="togglePanel()">
+        <div class="panel-strek"></div>
+        <span class="panel-tittel" id="panel-tittel">Ledetråder</span>
+      </div>
       <div class="ledetråd-gruppe">
         <div class="ledetråd-tittel">Vannrett</div>
         <ul class="ledetråd-liste" id="vannrett"></ul>
@@ -390,11 +429,15 @@ function initTema(temaId) {
   aktivCelle = null;
   aktivOrdId = null;
   hintsIgjen = 3;
+  panelÅpen = false;
+  document.getElementById('ledetråder')?.classList.remove('åpen');
 
   byggGrid();
+  oppdaterCellStørrelse();
   byggLedetråder();
   visHighscore();
   oppdaterHintUI();
+  oppdaterPanelTittel();
 
   document.getElementById('melding').textContent = '';
   inputEl(ORD[0].r, ORD[0].c)?.focus();
@@ -592,7 +635,7 @@ function sjekkOrdEtterInput(r, c) {
     const tekst = li?.querySelector('.ledetråd-tekst');
     if (li && tekst && !tekst.classList.contains('løst')) {
       li.classList.add('løst-animasjon');
-      setTimeout(() => { li.classList.remove('løst-animasjon'); tekst.classList.add('løst'); }, 420);
+      setTimeout(() => { li.classList.remove('løst-animasjon'); tekst.classList.add('løst'); oppdaterPanelTittel(); }, 420);
     }
   });
 }
@@ -663,7 +706,20 @@ function nestOrd() {
   inputEl(neste.r, neste.c)?.focus();
 }
 
-function fjernFeedback(r, c) { celleEl(r, c)?.classList.remove('riktig', 'feil'); }
+function fjernFeedback(r, c) {
+  const celle = cellMap[`${r},${c}`];
+  if (!celle) return;
+  celle.ordIds.forEach(ordId => {
+    const o = ORD.find(o => o.id === ordId);
+    if (!o) return;
+    for (let i = 0; i < o.svar.length; i++) {
+      const or = o.dir === 'a' ? o.r : o.r + i;
+      const oc = o.dir === 'a' ? o.c + i : o.c;
+      celleEl(or, oc)?.classList.remove('riktig', 'feil');
+    }
+    document.querySelector(`[data-id="${ordId}"] .ledetråd-tekst`)?.classList.remove('løst');
+  });
+}
 
 // ─── LEDETRÅDER ───────────────────────────────────────────────────────────
 function byggLedetråder() {
@@ -681,6 +737,7 @@ function byggLi(o, listId) {
   li.addEventListener('click', () => {
     aktivOrdId = o.id; aktivCelle = [o.r, o.c];
     inputEl(o.r, o.c)?.focus(); oppdaterHighlight(); oppdaterLedetråd();
+    if (window.innerWidth <= 720) lukkPanel();
   });
   ul.appendChild(li);
 }
@@ -812,12 +869,53 @@ function avslørSvar() {
 function nullstill() {
   clearInterval(timerIntv);
   timerSek = 0; timerStartet = false; løst = false; hintsIgjen = 3;
+  lukkPanel();
   oppdaterTimerVis();
   oppdaterHintUI();
   document.querySelectorAll('.celle input').forEach(inp => inp.value = '');
   document.querySelectorAll('.celle').forEach(el => el.classList.remove('riktig', 'feil'));
   document.querySelectorAll('.ledetråd-tekst').forEach(el => el.classList.remove('løst'));
   document.getElementById('melding').textContent = '';
+}
+
+// ─── DYNAMISK CELLESTØRRELSE ──────────────────────────────────────────────
+function oppdaterCellStørrelse() {
+  if (window.innerWidth > 720) {
+    document.documentElement.style.removeProperty('--cs');
+    return;
+  }
+  const tilgjengelig = window.innerWidth - 40; // 20px padding each side
+  const gaps = (COLS - 1) * 2 + 4;            // cell gaps + grid border
+  const cs = Math.max(Math.floor((tilgjengelig - gaps) / COLS), 28);
+  document.documentElement.style.setProperty('--cs', cs + 'px');
+}
+window.addEventListener('resize', oppdaterCellStørrelse);
+
+// ─── BUNNPANEL ────────────────────────────────────────────────────────────
+let panelÅpen = false;
+function togglePanel() {
+  panelÅpen = !panelÅpen;
+  document.getElementById('ledetråder').classList.toggle('åpen', panelÅpen);
+  oppdaterPanelTittel();
+}
+function lukkPanel() {
+  panelÅpen = false;
+  document.getElementById('ledetråder').classList.remove('åpen');
+  oppdaterPanelTittel();
+}
+function oppdaterPanelTittel() {
+  const uløste = ORD.filter(o => {
+    for (let i = 0; i < o.svar.length; i++) {
+      const r = o.dir === 'a' ? o.r : o.r + i;
+      const c = o.dir === 'a' ? o.c + i : o.c;
+      if ((inputEl(r, c)?.value || '').toUpperCase() !== o.svar[i]) return true;
+    }
+    return false;
+  }).length;
+  const el = document.getElementById('panel-tittel');
+  if (el) el.textContent = panelÅpen
+    ? 'Lukk ledetråder'
+    : `Ledetråder${uløste > 0 ? ` · ${uløste} igjen` : ' · Ferdig!'}`;
 }
 
 // ─── START ────────────────────────────────────────────────────────────────

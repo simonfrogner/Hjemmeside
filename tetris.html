@@ -500,9 +500,23 @@
     .diff-btns { gap: 6px; }
     .diff-btn { font-size: 9px; padding: 7px 10px; }
   }
+
+  .nav-back {
+    position: fixed; top: 16px; left: 16px; z-index: 1000;
+    color: rgba(255,255,255,0.6); text-decoration: none;
+    font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 7px 14px; border-radius: 980px;
+    transition: background 0.2s, color 0.2s;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  .nav-back:hover { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.9); }
 </style>
 </head>
 <body>
+
+<a href="index.html#hjem" class="nav-back">← Tilbake</a>
 
 <div class="game-wrapper">
   <div class="side-panel">
