@@ -8,25 +8,32 @@ En personlig nettside vibe-kodet med [Claude Code](https://claude.ai/code).
 
 ## Funksjoner
 
+- **Hjem** — velkomstside med typewriter-effekt og konfetti ved navnegjetting
 - **Navnefakta** — skriv inn navnet ditt og få morsomme fakta
-- **Tetris** — spill det klassiske spillet direkte fra siden
-- **Mørkt tema** — bryter for å bytte mellom lyst og mørkt
-- **Animert bakgrunn** — gradient som langsomt skifter farge med flytende partikler
-- **Glassmorphism-kort** — frosted glass-effekt med 3D tilt ved hover
-- **Cursor trail** — fargerike prikker følger musepekeren
-- **Glitch-effekt** — nav-logoen glitcher tilfeldig
-- **Typewriter-effekt** — tittelen skrives inn bokstav for bokstav
-- **Neon glow** — pulserende lyseffekt på tittelen
-- **Konfetti** — spruter ved navnegjetting
-- **Easter egg** — prøv å skrive "claude" i navnefeltet 🤖
+- **Vær** — sanntidsvær basert på din posisjon med animerte væreffekter
+- **Nyheter** — siste nyheter fra VG, auto-oppdateres hvert 5. minutt
+- **Tetris** — lenke til det klassiske spillet
+- **Mørkt tema** — bryter med SF Symbols-ikoner for å bytte mellom lyst og mørkt
 - **Scroll-til-topp-knapp** — dukker opp når du scroller ned
-- **Deleknapp** — del siden med Web Share API
+- **Easter egg** — prøv å skrive "claude" i navnefeltet
 - **Mobilstøtte** — responsivt design med hamburgermeny
+
+## Design
+
+Inspirert av Apples designspråk:
+
+- Bakgrunn `#f5f5f7`, font `-apple-system`
+- Frosted glass-navigasjonsbar
+- Seksjonsetiketter og venstrestilte titler
+- Myke overganger og animasjoner
 
 ## Teknologi
 
 - Vanilla HTML / CSS / JavaScript
-- Canvas API (partikler, museglow)
+- [Open-Meteo API](https://open-meteo.com/) (vær, ingen API-nøkkel)
+- Nominatim (omvendt geokoding)
+- Canvas API (væranimasjoner)
+- VG RSS via CORS-proxy
 - Web Audio API (konfetti-lyd)
 - localStorage (tema)
 - GitHub Pages (hosting)
