@@ -956,6 +956,167 @@
     body.dark .nyheter-tab { color: #409cff; border-color: rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); }
     body.dark .nyheter-tab:hover, body.dark .nyheter-tab.aktiv { background: #2c2c2e; border-color: rgba(255,255,255,0.15); }
 
+    /* KLOKKE */
+    .klokke-layout {
+      display: flex;
+      align-items: center;
+      gap: 64px;
+    }
+
+    .klokke-svg {
+      width: 220px;
+      height: 220px;
+      flex-shrink: 0;
+    }
+
+    .klokke-ytterkant {
+      fill: none;
+      stroke: rgba(0,0,0,0.07);
+      stroke-width: 1;
+    }
+
+    .klokke-merk-time { stroke: #1d1d1f; }
+    .klokke-merk-min  { stroke: rgba(0,0,0,0.18); }
+
+    .klokke-time {
+      stroke: #1d1d1f;
+      stroke-width: 5;
+      stroke-linecap: round;
+      transform-origin: 100px 100px;
+    }
+
+    .klokke-minutt {
+      stroke: #1d1d1f;
+      stroke-width: 3;
+      stroke-linecap: round;
+      transform-origin: 100px 100px;
+    }
+
+    .klokke-sekund {
+      stroke: #0071e3;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      transform-origin: 100px 100px;
+    }
+
+    .klokke-sentrum    { fill: #1d1d1f; }
+    .klokke-sentrum-indre { fill: #0071e3; }
+
+    .klokke-tekst { display: flex; flex-direction: column; gap: 8px; }
+
+    .klokke-digital {
+      font-size: 4rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: #1d1d1f;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+
+    .klokke-dato {
+      font-size: 1.1rem;
+      color: #6e6e73;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+    }
+
+    body.dark .klokke-ytterkant     { stroke: rgba(255,255,255,0.1); }
+    body.dark .klokke-merk-time     { stroke: #f5f5f7; }
+    body.dark .klokke-merk-min      { stroke: rgba(255,255,255,0.2); }
+    body.dark .klokke-time          { stroke: #f5f5f7; }
+    body.dark .klokke-minutt        { stroke: #f5f5f7; }
+    body.dark .klokke-sekund        { stroke: #409cff; }
+    body.dark .klokke-sentrum       { fill: #f5f5f7; }
+    body.dark .klokke-sentrum-indre { fill: #409cff; }
+    body.dark .klokke-digital       { color: #f5f5f7; }
+    body.dark .klokke-dato          { color: #86868b; }
+
+    @media (max-width: 600px) {
+      .klokke-layout { flex-direction: column; gap: 28px; }
+      .klokke-svg { width: 180px; height: 180px; }
+      .klokke-digital { font-size: 2.8rem; }
+    }
+
+    /* SKRIVING */
+    .skriving-wrapper { max-width: 680px; width: 100%; }
+
+    .skriving-tekst {
+      font-size: 1.35rem;
+      line-height: 1.8;
+      letter-spacing: 0.01em;
+      color: #a1a1a6;
+      margin-bottom: 20px;
+      user-select: none;
+      min-height: 3em;
+    }
+
+    .char { transition: color 0.05s; }
+    .char.riktig { color: #1d1d1f; }
+    .char.feil   { color: #ff3b30; background: rgba(255,59,48,0.1); border-radius: 2px; }
+    .char.aktiv  { color: #1d1d1f; border-bottom: 2px solid #0071e3; }
+
+    .skriving-stats {
+      display: flex;
+      gap: 32px;
+      margin: 24px 0;
+    }
+
+    .stat-boks { display: flex; flex-direction: column; gap: 2px; }
+
+    .stat-verdi {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: #0071e3;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #a1a1a6;
+    }
+
+    .skriving-resultat {
+      margin-top: 20px;
+      padding: 24px 28px;
+      background: rgba(0,113,227,0.05);
+      border: 1px solid rgba(0,113,227,0.12);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .skriving-resultat.skjult { display: none; }
+
+    .resultat-wpm {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #0071e3;
+      white-space: nowrap;
+    }
+
+    .resultat-tekst {
+      flex: 1;
+      font-size: 0.95rem;
+      color: #6e6e73;
+      margin: 0;
+      min-width: 160px;
+    }
+
+    body.dark .char.riktig   { color: #f5f5f7; }
+    body.dark .char.feil     { color: #ff453a; background: rgba(255,69,58,0.12); }
+    body.dark .char.aktiv    { color: #f5f5f7; border-bottom-color: #409cff; }
+    body.dark .stat-verdi    { color: #409cff; }
+    body.dark .skriving-resultat { background: rgba(64,156,255,0.06); border-color: rgba(64,156,255,0.15); }
+    body.dark .resultat-wpm  { color: #409cff; }
+
     /* KONFETTI */
     .confetti {
       position: fixed;
@@ -1017,6 +1178,8 @@
       <a href="#navnefakta" onclick="lukkMeny()">Navnefakta</a>
       <a href="#vær" onclick="lukkMeny()">Vær</a>
       <a href="#nyheter" onclick="lukkMeny()">Nyheter</a>
+      <a href="#klokke" onclick="lukkMeny()">Klokke</a>
+      <a href="#skriving" onclick="lukkMeny()">Skriving</a>
       <a href="#tetris" onclick="lukkMeny()">Tetris</a>
       <div class="nav-tema-mobil">
         <span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="3"/><line x1="8" y1="1" x2="8" y2="3"/><line x1="8" y1="13" x2="8" y2="15"/><line x1="1" y1="8" x2="3" y2="8"/><line x1="13" y1="8" x2="15" y2="8"/><line x1="2.93" y1="2.93" x2="4.34" y2="4.34"/><line x1="11.66" y1="11.66" x2="13.07" y2="13.07"/><line x1="13.07" y1="2.93" x2="11.66" y2="4.34"/><line x1="4.34" y1="11.66" x2="2.93" y2="13.07"/></svg></span>
@@ -1115,6 +1278,55 @@
       </div>
       <div id="nyheter-feil" class="vær-feil skjult">Klarte ikke laste nyheter. <button onclick="hentNyheter('vg')" style="padding:6px 14px;font-size:0.85rem;">Prøv igjen</button></div>
       <div id="nyheter-grid" class="nyheter-liste"></div>
+      </div>
+    </section>
+
+    <!-- KLOKKE -->
+    <section id="klokke">
+      <div class="seksjon-innhold">
+        <p class="seksjon-etikett fade-in">Tid</p>
+        <h2 class="section-title fade-in">Akkurat nå</h2>
+        <div class="klokke-layout fade-in">
+          <svg class="klokke-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <circle class="klokke-ytterkant" cx="100" cy="100" r="96"/>
+            <g id="klokke-merker"></g>
+            <line id="klokke-time"   class="klokke-time"   x1="100" y1="108" x2="100" y2="50"/>
+            <line id="klokke-minutt" class="klokke-minutt" x1="100" y1="112" x2="100" y2="32"/>
+            <line id="klokke-sekund-hale" class="klokke-sekund" x1="100" y1="100" x2="100" y2="122"/>
+            <line id="klokke-sekund"      class="klokke-sekund" x1="100" y1="100" x2="100" y2="24"/>
+            <circle class="klokke-sentrum"       cx="100" cy="100" r="5"/>
+            <circle class="klokke-sentrum-indre" cx="100" cy="100" r="2.5"/>
+          </svg>
+          <div class="klokke-tekst">
+            <div class="klokke-digital" id="klokke-digital"></div>
+            <div class="klokke-dato"    id="klokke-dato"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKRIVING -->
+    <section id="skriving">
+      <div class="seksjon-innhold">
+        <p class="seksjon-etikett fade-in">Skriving</p>
+        <h2 class="section-title fade-in">Hvor raskt skriver du?</h2>
+        <div class="skriving-wrapper fade-in">
+          <div class="skriving-tekst" id="skriving-tekst"></div>
+          <div class="input-group">
+            <input type="text" id="skriving-input" placeholder="Begynn å skrive her…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" oninput="oppdaterSkriving()">
+            <button onclick="nySkriveTekst()">Ny setning</button>
+          </div>
+          <div class="skriving-stats">
+            <div class="stat-boks"><div class="stat-verdi" id="stat-wpm">—</div><div class="stat-label">WPM</div></div>
+            <div class="stat-boks"><div class="stat-verdi" id="stat-nøyaktighet">—</div><div class="stat-label">Nøyaktighet</div></div>
+            <div class="stat-boks"><div class="stat-verdi" id="stat-tid">—</div><div class="stat-label">Tid</div></div>
+          </div>
+          <div class="skriving-resultat skjult" id="skriving-resultat">
+            <div class="resultat-wpm" id="resultat-wpm"></div>
+            <p class="resultat-tekst" id="resultat-tekst"></p>
+            <button onclick="nySkriveTekst()">Prøv igjen</button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1616,6 +1828,129 @@ visVærResultat();
         });
       }
     }
+
+    // ── Analog klokke ──
+    (function() {
+      const merkerGruppe = document.getElementById('klokke-merker');
+      for (let i = 0; i < 60; i++) {
+        const angle = i * 6 * Math.PI / 180;
+        const erHovedtime = i % 15 === 0;
+        const erTime = i % 5 === 0;
+        const r1 = erHovedtime ? 78 : erTime ? 83 : 90;
+        const r2 = 94;
+        const sw = erHovedtime ? 3 : erTime ? 2 : 1;
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', 100 + r1 * Math.sin(angle));
+        line.setAttribute('y1', 100 - r1 * Math.cos(angle));
+        line.setAttribute('x2', 100 + r2 * Math.sin(angle));
+        line.setAttribute('y2', 100 - r2 * Math.cos(angle));
+        line.setAttribute('stroke-width', sw);
+        line.setAttribute('stroke-linecap', 'round');
+        line.setAttribute('class', erTime ? 'klokke-merk-time' : 'klokke-merk-min');
+        merkerGruppe.appendChild(line);
+      }
+
+      const timeViser   = document.getElementById('klokke-time');
+      const minViser    = document.getElementById('klokke-minutt');
+      const sekViser    = document.getElementById('klokke-sekund');
+      const sekHale     = document.getElementById('klokke-sekund-hale');
+      const digitalEl   = document.getElementById('klokke-digital');
+      const datoEl      = document.getElementById('klokke-dato');
+      const dager   = ['Søndag','Mandag','Tirsdag','Onsdag','Torsdag','Fredag','Lørdag'];
+      const måneder = ['januar','februar','mars','april','mai','juni','juli','august','september','oktober','november','desember'];
+      const pad = n => String(Math.floor(n)).padStart(2, '0');
+
+      function oppdaterKlokke() {
+        const nå  = new Date();
+        const ms  = nå.getMilliseconds();
+        const s   = nå.getSeconds() + ms / 1000;
+        const m   = nå.getMinutes() + s / 60;
+        const h   = (nå.getHours() % 12) + m / 60;
+        timeViser.style.transform = `rotate(${h * 30}deg)`;
+        minViser.style.transform  = `rotate(${m * 6}deg)`;
+        sekViser.style.transform  = `rotate(${s * 6}deg)`;
+        sekHale.style.transform   = `rotate(${s * 6}deg)`;
+        digitalEl.textContent = `${pad(nå.getHours())}:${pad(nå.getMinutes())}:${pad(nå.getSeconds())}`;
+        datoEl.textContent = `${dager[nå.getDay()]}, ${nå.getDate()}. ${måneder[nå.getMonth()]} ${nå.getFullYear()}`;
+        requestAnimationFrame(oppdaterKlokke);
+      }
+      oppdaterKlokke();
+    })();
+
+    // ── Typing speed test ──
+    const skriveSentenser = [
+      "Livet er for kort til å drikke dårlig kaffe.",
+      "Den som ikke risikerer noe, risikerer alt.",
+      "En god venn er som en god bok — sjelden og verdifull.",
+      "Norges natur er blant den vakreste i hele verden.",
+      "Solen skinner alltid etter regnet, bare man venter lenge nok.",
+      "Det er ikke hvor fort du går, men at du ikke gir opp.",
+      "Kreativitet er intelligens som har det gøy.",
+      "Kunnskap er makt, men visdom er å vite når man skal bruke den."
+    ];
+
+    let skriveTekst = "", skriveStart = null, skriveTimer = null;
+
+    function nySkriveTekst() {
+      const forrige = skriveTekst;
+      do { skriveTekst = skriveSentenser[Math.floor(Math.random() * skriveSentenser.length)]; }
+      while (skriveTekst === forrige && skriveSentenser.length > 1);
+      skriveStart = null;
+      clearInterval(skriveTimer);
+      const input = document.getElementById('skriving-input');
+      input.value = '';
+      input.disabled = false;
+      input.focus();
+      document.getElementById('stat-wpm').textContent = '—';
+      document.getElementById('stat-nøyaktighet').textContent = '—';
+      document.getElementById('stat-tid').textContent = '—';
+      document.getElementById('skriving-resultat').classList.add('skjult');
+      document.getElementById('skriving-tekst').innerHTML =
+        skriveTekst.split('').map(c => `<span class="char">${c === ' ' ? '&nbsp;' : c}</span>`).join('');
+    }
+
+    function oppdaterSkriving() {
+      const input = document.getElementById('skriving-input');
+      const typed = input.value;
+      if (!skriveStart && typed.length > 0) {
+        skriveStart = Date.now();
+        skriveTimer = setInterval(() => {
+          const s = (Date.now() - skriveStart) / 1000;
+          const wpm = Math.round((document.getElementById('skriving-input').value.length / 5) / (s / 60)) || 0;
+          document.getElementById('stat-tid').textContent = s.toFixed(1) + 's';
+          document.getElementById('stat-wpm').textContent = wpm;
+        }, 100);
+      }
+      let riktig = 0;
+      document.querySelectorAll('#skriving-tekst .char').forEach((span, i) => {
+        if (i < typed.length) {
+          const ok = typed[i] === skriveTekst[i];
+          span.className = 'char ' + (ok ? 'riktig' : 'feil');
+          if (ok) riktig++;
+        } else {
+          span.className = 'char' + (i === typed.length ? ' aktiv' : '');
+        }
+      });
+      const nøyaktighet = typed.length > 0 ? Math.round((riktig / typed.length) * 100) : 100;
+      document.getElementById('stat-nøyaktighet').textContent = nøyaktighet + '%';
+      if (typed === skriveTekst) {
+        clearInterval(skriveTimer);
+        const s = (Date.now() - skriveStart) / 1000;
+        const wpm = Math.round((skriveTekst.length / 5) / (s / 60));
+        document.getElementById('stat-wpm').textContent = wpm;
+        document.getElementById('stat-tid').textContent = s.toFixed(1) + 's';
+        input.disabled = true;
+        document.getElementById('resultat-wpm').textContent = wpm + ' WPM';
+        const kommentar = wpm >= 80 ? 'Lynrask! Skrive-mester 🏆'
+          : wpm >= 60 ? 'Veldig bra! Over snittet 🎉'
+          : wpm >= 40 ? 'Bra jobbet! Gjennomsnittlig 👍'
+          : 'God start! Fortsett å øve 💪';
+        document.getElementById('resultat-tekst').textContent = `${kommentar} · ${nøyaktighet}% nøyaktighet · ${s.toFixed(1)}s`;
+        document.getElementById('skriving-resultat').classList.remove('skjult');
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => { nySkriveTekst(); });
 
     // Scroll-til-topp-knapp
     const toppKnapp = document.getElementById("topp-knapp");
