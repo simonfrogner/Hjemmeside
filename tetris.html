@@ -949,7 +949,7 @@ function clearLines() {
   SFX.lineClear(full.length);
 
   setTimeout(() => {
-    for (const r of full) {
+    for (const r of [...full].reverse()) {
       board.splice(r, 1);
       board.unshift(Array(COLS).fill(null));
     }

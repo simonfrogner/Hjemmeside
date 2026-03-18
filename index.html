@@ -1573,7 +1573,7 @@
           const data = await res.json();
           const sted = data.address?.city || data.address?.town || data.address?.village || "Din posisjon";
           const land = data.address?.country || "";
-          await hentVærData(latitude, longitude, `${sted}, ${land}`);
+          await hentVærData(latitude, longitude, land ? `${sted}, ${land}` : sted);
         } catch { await hentVærData(latitude, longitude, "Din posisjon"); }
       }, () => visVærFeil("Klarte ikke hente posisjon."));
     }
@@ -1833,7 +1833,8 @@ visVærResultat();
     function visNyheter(items) {
       document.getElementById('nyheter-laster').classList.add('skjult');
       document.getElementById('nyheter-grid').innerHTML = items.map(({ tittel, lenke, dato, bilde, beskr }) => {
-        const tidsAgo = dato ? tidsiden(new Date(dato)) : '';
+        const parsed = dato ? new Date(dato) : null;
+        const tidsAgo = parsed && !isNaN(parsed) ? tidsiden(parsed) : '';
         const bildeHtml = bilde
           ? `<img class="nyhet-bilde" src="${bilde}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="nyhet-bilde-tom" style="display:none">📰</div>`
           : `<div class="nyhet-bilde-tom">📰</div>`;
@@ -1862,7 +1863,7 @@ visVærResultat();
     let nyhetInterval = null;
     const nyhetObserver = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting) {
-        hentNyheter('vg');
+        hentNyheter();
         nyhetInterval = setInterval(() => hentNyheter(), 5 * 60 * 1000);
         nyhetObserver.disconnect();
       }
