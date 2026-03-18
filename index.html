@@ -490,6 +490,8 @@
       text-align: center;
     }
 
+    .ssb-laster { color: #6e6e73; font-style: italic; opacity: 1 !important; animation: none !important; }
+
     #navnFakta li {
       opacity: 0;
       transform: translateY(12px);
@@ -1355,8 +1357,8 @@
   </div>
 
   <script>
-    function siHei() {
-      let navn = document.getElementById("navnBoks").value.trim();
+    async function siHei() {
+      const navn = document.getElementById("navnBoks").value.trim();
       if (navn === "") {
         document.getElementById("svar").innerText = "Vennligst skriv inn navnet ditt.";
       } else if (navn.toLowerCase() === "claude") {
@@ -1364,7 +1366,7 @@
       } else {
         document.getElementById("svar").innerText = "Heisann, " + navn + "! Så hyggelig å se deg her! 🎉";
         launchConfetti();
-        visFakta();
+        await visFakta();
       }
     }
 
@@ -1402,16 +1404,43 @@
       (n) => `🎉 Fun fact: Bokstavverdiene i «${n}» summerer til ${n.toLowerCase().split("").reduce((s,c) => s + (c.charCodeAt(0) - 96), 0)} — hvert tall er like unikt som deg!`
     ];
 
-    function visFakta() {
+    async function visFakta() {
       const navn = document.getElementById("navnBoks").value.trim();
-      if (navn === "") return;
+      if (!navn) return;
       const liste = document.getElementById("navnFakta");
       const tittel = document.getElementById("faktaTittel");
-      const fakta = navnDatabase[navn.toLowerCase()];
-      const resultater = fakta ? fakta : generiskeFakta.map(f => f(navn));
       tittel.innerText = `Fakta om «${navn}»`;
       liste.classList.remove("tom");
-      liste.innerHTML = resultater.map((f, i) => `<li style="animation-delay:${i * 0.12}s">${f}</li>`).join("");
+      liste.innerHTML = '<li class="ssb-laster">Henter data fra SSB…</li>';
+
+      let ssbFakt = null;
+      try { ssbFakt = await hentSSBNavn(navn); } catch {}
+
+      const statiske = navnDatabase[navn.toLowerCase()] || generiskeFakta.map(f => f(navn));
+      const alle = ssbFakt ? [ssbFakt, ...statiske] : statiske;
+      liste.innerHTML = alle.map((f, i) => `<li style="animation-delay:${i * 0.12}s">${f}</li>`).join("");
+    }
+
+    async function hentSSBNavn(navn) {
+      const query = {
+        query: [
+          { code: "Fornavn", selection: { filter: "item", values: [navn.toUpperCase()] } },
+          { code: "Tid",     selection: { filter: "top",  values: ["1"] } }
+        ],
+        response: { format: "json-stat2" }
+      };
+      const res = await fetch("https://data.ssb.no/api/v0/no/table/10467/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(query),
+        signal: AbortSignal.timeout(6000)
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      const antall = data.value?.[0];
+      if (!antall) return null;
+      const år = Object.keys(data.dimension?.Tid?.category?.label || {})[0] || "";
+      return `📊 ${antall.toLocaleString("nb-NO")} nordmenn heter «${navn}»${år ? ` (SSB, ${år})` : ""}.`;
     }
 
     function toggleMeny() {
