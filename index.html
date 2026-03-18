@@ -1196,15 +1196,15 @@
   <nav>
     <div class="nav-logo">Vibe-koding med Claude</div>
     <div class="nav-links" id="navLinks">
-      <a href="#hjem" class="active" onclick="lukkMeny()" title="Hjem"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7.5L9 2l7 5.5V16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7.5Z"/><path d="M6.5 17V11h5v6"/></svg></a>
-      <a href="#navnefakta" onclick="lukkMeny()">Navnefakta</a>
-      <a href="#vær" onclick="lukkMeny()">Vær</a>
-      <a href="#nyheter" onclick="lukkMeny()">Nyheter</a>
-      <a href="#klokke" onclick="lukkMeny()">Klokke</a>
-      <a href="#skriving" onclick="lukkMeny()">Skriving</a>
-      <a href="#kryssord" onclick="lukkMeny()">Kryssord</a>
-      <a href="#tetris" onclick="lukkMeny()">Tetris</a>
-      <a href="#snake" onclick="lukkMeny()">Snake</a>
+      <a href="#hjem" class="active" title="Hjem"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7.5L9 2l7 5.5V16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7.5Z"/><path d="M6.5 17V11h5v6"/></svg></a>
+      <a href="#navnefakta">Navnefakta</a>
+      <a href="#vær">Vær</a>
+      <a href="#nyheter">Nyheter</a>
+      <a href="#klokke">Klokke</a>
+      <a href="#skriving">Skriving</a>
+      <a href="#kryssord">Kryssord</a>
+      <a href="#tetris">Tetris</a>
+      <a href="#snake">Snake</a>
       <div class="nav-tema-mobil">
         <span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="3"/><line x1="8" y1="1" x2="8" y2="3"/><line x1="8" y1="13" x2="8" y2="15"/><line x1="1" y1="8" x2="3" y2="8"/><line x1="13" y1="8" x2="15" y2="8"/><line x1="2.93" y1="2.93" x2="4.34" y2="4.34"/><line x1="11.66" y1="11.66" x2="13.07" y2="13.07"/><line x1="13.07" y1="2.93" x2="11.66" y2="4.34"/><line x1="4.34" y1="11.66" x2="2.93" y2="13.07"/></svg></span>
         <label class="switch">
@@ -1572,6 +1572,15 @@
 
     window.addEventListener("DOMContentLoaded", () => {
       window.scrollTo(0, 0);
+
+      // Intercept nav clicks — scroll without adding hash to URL
+      document.getElementById('navLinks').addEventListener('click', e => {
+        const a = e.target.closest('a[href^="#"]');
+        if (!a) return;
+        e.preventDefault();
+        lukkMeny();
+        document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
+      });
 
       const lagretTema = localStorage.getItem("tema");
       if (lagretTema === "dark") {
@@ -2164,6 +2173,7 @@ visVærResultat();
   <footer>
     <p>Laget av <a href="https://github.com/simonfrogner" target="_blank">Simon Sæterlid Frogner</a> &nbsp;·&nbsp; © 2026</p>
     <button onclick="delSide()" style="margin-top:12px;padding:8px 20px;font-size:0.85rem;">🔗 Del siden</button>
+    <p style="margin-top:16px;font-size:0.72rem;color:#a1a1a6;letter-spacing:0.04em;">v1.0 &nbsp;·&nbsp; mars 2026</p>
   </footer>
 
 </body>
