@@ -2100,7 +2100,7 @@ visVærResultat();
       const input = document.getElementById('skriving-input');
       input.value = '';
       input.disabled = false;
-      input.focus();
+      input.focus({ preventScroll: true });
       document.getElementById('stat-wpm').textContent = '—';
       document.getElementById('stat-nøyaktighet').textContent = '—';
       document.getElementById('stat-tid').textContent = '—';
