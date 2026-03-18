@@ -1422,25 +1422,44 @@
     }
 
     async function hentSSBNavn(navn) {
-      const query = {
-        query: [
-          { code: "Fornavn", selection: { filter: "item", values: [navn.toUpperCase()] } },
-          { code: "Tid",     selection: { filter: "top",  values: ["1"] } }
-        ],
-        response: { format: "json-stat2" }
-      };
-      const res = await fetch("https://data.ssb.no/api/v0/no/table/10467/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(query),
-        signal: AbortSignal.timeout(6000)
-      });
-      if (!res.ok) return null;
-      const data = await res.json();
-      const antall = data.value?.[0];
-      if (!antall) return null;
-      const år = Object.keys(data.dimension?.Tid?.category?.label || {})[0] || "";
-      return `📊 ${antall.toLocaleString("nb-NO")} nordmenn heter «${navn}»${år ? ` (SSB, ${år})` : ""}.`;
+      const u = navn.toUpperCase();
+
+      async function hentForKode(kode) {
+        const res = await fetch("https://data.ssb.no/api/v0/no/table/10467/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            query: [
+              { code: "Fornavn",      selection: { filter: "item", values: [kode] } },
+              { code: "ContentsCode", selection: { filter: "item", values: ["Personer"] } },
+              { code: "Tid",          selection: { filter: "all",  values: ["*"] } }
+            ],
+            response: { format: "json-stat2" }
+          }),
+          signal: AbortSignal.timeout(8000)
+        });
+        return res.ok ? res.json() : null;
+      }
+
+      const [gutt, jente] = await Promise.all([
+        hentForKode("2" + u).catch(() => null),
+        hentForKode("1" + u).catch(() => null)
+      ]);
+
+      let total = 0, peakÅr = null, peakAntall = 0;
+      for (const data of [gutt, jente]) {
+        if (!data?.value) continue;
+        const tidKeys = Object.keys(data.dimension.Tid.category.index)
+          .sort((a, b) => data.dimension.Tid.category.index[a] - data.dimension.Tid.category.index[b]);
+        data.value.forEach((v, i) => {
+          if (v == null) return;
+          total += v;
+          if (v > peakAntall) { peakAntall = v; peakÅr = tidKeys[i]; }
+        });
+      }
+
+      if (total === 0) return null;
+      return `📊 Totalt ${total.toLocaleString("nb-NO")} babyer har fått navnet «${navn}» i Norge siden 1880${peakÅr ? ` — mest populært i ${peakÅr} (${peakAntall} babyer)` : ""}.`;
     }
 
     function toggleMeny() {
