@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="no">
 <head>
+  <!-- Sett scrollRestoration så tidlig som mulig — før Safari leser historiestaten -->
+  <script>history.scrollRestoration = 'manual'; window.scrollTo(0, 0);</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Simon sin stilige nettside</title>
@@ -1180,6 +1182,43 @@
         opacity: 0;
       }
     }
+  /* ── KONTAKTSKJEMA ───────────────────────────────────────────────── */
+  .kontakt-skjema { display: flex; flex-direction: column; gap: 14px; max-width: 480px; }
+  .kontakt-skjema input,
+  .kontakt-skjema textarea {
+    width: 100%; padding: 14px 16px;
+    background: white; color: #1d1d1f;
+    border: 1.5px solid rgba(0,0,0,0.1); border-radius: 14px;
+    font-family: inherit; font-size: 0.95rem;
+    transition: border-color 0.2s;
+    resize: none;
+  }
+  .kontakt-skjema input:focus,
+  .kontakt-skjema textarea:focus { outline: none; border-color: #0071e3; }
+  .kontakt-skjema textarea { min-height: 130px; }
+  .kontakt-send-btn {
+    align-self: flex-start; padding: 12px 28px;
+    background: #0071e3; color: white; border: none;
+    border-radius: 980px; font-family: inherit;
+    font-size: 0.9rem; font-weight: 600; cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .kontakt-send-btn:hover  { background: #0077ed; }
+  .kontakt-send-btn:active { transform: scale(0.97); }
+  .kontakt-send-btn:disabled { background: #a1a1a6; cursor: default; }
+  .kontakt-status {
+    font-size: 0.88rem; font-weight: 500; min-height: 20px;
+    transition: color 0.2s;
+  }
+  .kontakt-status.ok    { color: #34c759; }
+  .kontakt-status.feil  { color: #ff3b30; }
+  body.dark .kontakt-skjema input,
+  body.dark .kontakt-skjema textarea {
+    background: #1c1c1e; color: #f5f5f7;
+    border-color: rgba(255,255,255,0.1);
+  }
+  body.dark .kontakt-skjema input:focus,
+  body.dark .kontakt-skjema textarea:focus { border-color: #2997ff; }
   </style>
 </head>
 <body>
@@ -1205,6 +1244,7 @@
       <a href="#kryssord">Kryssord</a>
       <a href="#tetris">Tetris</a>
       <a href="#snake">Snake</a>
+      <a href="#kontakt">Kontakt</a>
       <div class="nav-tema-mobil">
         <span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="3"/><line x1="8" y1="1" x2="8" y2="3"/><line x1="8" y1="13" x2="8" y2="15"/><line x1="1" y1="8" x2="3" y2="8"/><line x1="13" y1="8" x2="15" y2="8"/><line x1="2.93" y1="2.93" x2="4.34" y2="4.34"/><line x1="11.66" y1="11.66" x2="13.07" y2="13.07"/><line x1="13.07" y1="2.93" x2="11.66" y2="4.34"/><line x1="4.34" y1="11.66" x2="2.93" y2="13.07"/></svg></span>
         <label class="switch">
@@ -1381,6 +1421,21 @@
       <h2 class="section-title fade-in">Snake</h2>
       <p class="section-intro">Klassisk Nokia-spill. Spis maten, voks, og unngå å krasje.</p>
       <a href="snake.html"><button class="tetris-btn">Spill nå</button></a>
+      </div>
+    </section>
+
+    <section id="kontakt">
+      <div class="seksjon-innhold">
+        <p class="seksjon-etikett fade-in">Kontakt</p>
+        <h2 class="section-title fade-in">Si hei</h2>
+        <p class="section-intro">Send meg en melding — jeg svarer så fort jeg kan.</p>
+        <form class="kontakt-skjema" id="kontaktSkjema" onsubmit="sendKontakt(event)">
+          <input  type="text"  id="k-navn"    placeholder="Navn"         autocomplete="name"  required>
+          <input  type="email" id="k-epost"   placeholder="E-post"       autocomplete="email" required>
+          <textarea            id="k-melding" placeholder="Melding …"    required></textarea>
+          <button type="submit" class="kontakt-send-btn" id="k-btn">Send melding</button>
+          <p class="kontakt-status" id="k-status"></p>
+        </form>
       </div>
     </section>
 
@@ -1567,7 +1622,8 @@
 
     window.addEventListener('pageshow', () => {
       if (location.hash) history.replaceState(null, '', location.pathname);
-      window.scrollTo(0, 0);
+      // Dobbel rAF: sikrer at vi scroller etter Safari sin scroll-restore
+      requestAnimationFrame(() => requestAnimationFrame(() => window.scrollTo(0, 0)));
     });
 
     window.addEventListener("DOMContentLoaded", () => {
@@ -2167,6 +2223,56 @@ visVærResultat();
       }
     }
     setTimeout(skrivTekst, 600);
+
+  // ── KONTAKTSKJEMA ──────────────────────────────────────────────────────────
+  // BACKEND_URL peker på Express-serveren din (lokalt under utvikling,
+  // Render.com-URL i produksjon).
+  const BACKEND_URL = 'http://localhost:3000'; // ← bytt til Render-URL ved deploy
+
+  async function sendKontakt(e) {
+    e.preventDefault(); // Hindre at siden lastes på nytt (standard skjema-oppførsel)
+
+    const btn    = document.getElementById('k-btn');
+    const status = document.getElementById('k-status');
+
+    // Hent verdiene fra skjemaet
+    const payload = {
+      name:    document.getElementById('k-navn').value.trim(),
+      email:   document.getElementById('k-epost').value.trim(),
+      message: document.getElementById('k-melding').value.trim(),
+    };
+
+    // Vis lasting
+    btn.disabled     = true;
+    btn.textContent  = 'Sender…';
+    status.className = 'kontakt-status';
+    status.textContent = '';
+
+    try {
+      // Send en HTTP POST-forespørsel til backend med JSON-data
+      const svar = await fetch(`${BACKEND_URL}/contact`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' }, // Fortell serveren at vi sender JSON
+        body:    JSON.stringify(payload),                 // Gjør objektet om til JSON-tekst
+      });
+
+      const data = await svar.json(); // Les JSON-svaret fra serveren
+
+      if (svar.ok) {
+        status.className   = 'kontakt-status ok';
+        status.textContent = '✓ Meldingen er sendt!';
+        e.target.reset();
+      } else {
+        throw new Error(data.error || 'Ukjent feil');
+      }
+    } catch (feil) {
+      status.className   = 'kontakt-status feil';
+      status.textContent = `Noe gikk galt: ${feil.message}`;
+    } finally {
+      btn.disabled    = false;
+      btn.textContent = 'Send melding';
+    }
+  }
 
   </script>
 
