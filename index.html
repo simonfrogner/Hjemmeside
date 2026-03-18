@@ -480,9 +480,19 @@
       padding: 0;
     }
 
-    #navnFakta li::before {
-      content: "✨ ";
+    #navnFakta li {
+      display: flex;
+      align-items: flex-start;
     }
+    #navnFakta li::before {
+      content: "";
+      width: 5px; height: 5px; min-width: 5px;
+      border-radius: 50%;
+      background: #0071e3;
+      margin-top: 9px; margin-right: 10px;
+    }
+    #navnFakta li.ssb-fakt::before { display: none; }
+    .fakt-ikon { flex-shrink: 0; margin-right: 10px; margin-top: 2px; }
 
     #navnFakta.tom {
       color: #aaa;
@@ -1413,12 +1423,15 @@
       liste.classList.remove("tom");
       liste.innerHTML = '<li class="ssb-laster">Henter data fra SSB…</li>';
 
-      let ssbFakt = null;
-      try { ssbFakt = await hentSSBNavn(navn); } catch {}
+      let ssbFakta = [];
+      try { ssbFakta = await hentSSBNavn(navn) || []; } catch {}
 
       const statiske = navnDatabase[navn.toLowerCase()] || generiskeFakta.map(f => f(navn));
-      const alle = ssbFakt ? [ssbFakt, ...statiske] : statiske;
-      liste.innerHTML = alle.map((f, i) => `<li style="animation-delay:${i * 0.12}s">${f}</li>`).join("");
+      const alle = [
+        ...ssbFakta.map(f => ({ ...f, ssb: true })),
+        ...statiske.map(t => ({ tekst: t, ssb: false }))
+      ];
+      liste.innerHTML = alle.map((f, i) => `<li${f.ssb ? ' class="ssb-fakt"' : ''} style="animation-delay:${i * 0.12}s">${f.ssb && f.ikon ? `<span class="fakt-ikon">${ikonSVG(f.ikon)}</span>` : ''}<span>${f.tekst}</span></li>`).join("");
     }
 
     async function hentSSBNavn(navn) {
@@ -1446,20 +1459,61 @@
         hentForKode("1" + u).catch(() => null)
       ]);
 
-      let total = 0, peakÅr = null, peakAntall = 0;
+      // Bygg år → antall map fra begge kjønn
+      const perÅr = new Map();
       for (const data of [gutt, jente]) {
         if (!data?.value) continue;
         const tidKeys = Object.keys(data.dimension.Tid.category.index)
           .sort((a, b) => data.dimension.Tid.category.index[a] - data.dimension.Tid.category.index[b]);
         data.value.forEach((v, i) => {
-          if (v == null) return;
-          total += v;
-          if (v > peakAntall) { peakAntall = v; peakÅr = tidKeys[i]; }
+          if (v) perÅr.set(tidKeys[i], (perÅr.get(tidKeys[i]) || 0) + v);
         });
       }
+      if (perÅr.size === 0) return [];
 
-      if (total === 0) return null;
-      return `📊 Totalt ${total.toLocaleString("nb-NO")} babyer har fått navnet «${navn}» i Norge siden 1880${peakÅr ? ` — mest populært i ${peakÅr} (${peakAntall} babyer)` : ""}.`;
+      const årstall = [...perÅr.keys()].sort();
+      const total = [...perÅr.values()].reduce((a, b) => a + b, 0);
+
+      let peakÅr = null, peakAntall = 0;
+      perÅr.forEach((v, å) => { if (v > peakAntall) { peakAntall = v; peakÅr = å; } });
+
+      const førsteÅr = årstall[0];
+      const sisteÅr  = årstall[årstall.length - 1];
+      const sisteAntall = perÅr.get(sisteÅr) || 0;
+
+      const snitt = (arr) => arr.reduce((s, å) => s + (perÅr.get(å) || 0), 0) / (arr.length || 1);
+      const siste10  = årstall.slice(-10);
+      const forrige10 = årstall.slice(-20, -10);
+      const endringPst = forrige10.length > 0 && snitt(forrige10) > 0
+        ? Math.round(((snitt(siste10) - snitt(forrige10)) / snitt(forrige10)) * 100)
+        : null;
+
+      const fakta = [];
+      fakta.push({ ikon: 'statistikk', tekst: `Totalt ${total.toLocaleString("nb-NO")} babyer har fått navnet «${navn}» i Norge siden ${førsteÅr}.` });
+      if (peakÅr) fakta.push({ ikon: 'topp', tekst: `Mest populært i ${peakÅr} — da fikk ${peakAntall} babyer dette navnet.` });
+      fakta.push({ ikon: 'dato', tekst: `I ${sisteÅr} fikk ${sisteAntall} babyer navnet «${navn}».` });
+      if (endringPst !== null) {
+        if (endringPst > 20)       fakta.push({ ikon: 'opp',    tekst: `Populariteten er stigende — opp ${endringPst}% de siste 10 årene.` });
+        else if (endringPst < -20) fakta.push({ ikon: 'ned',    tekst: `Populariteten er synkende — ned ${Math.abs(endringPst)}% de siste 10 årene.` });
+        else                       fakta.push({ ikon: 'stabil', tekst: `Populariteten har vært relativt stabil de siste 20 årene.` });
+      }
+      if (parseInt(førsteÅr) > 1950) fakta.push({ ikon: 'historikk', tekst: `Første gang registrert i Norge i ${førsteÅr}.` });
+
+      return fakta;
+    }
+
+    function ikonSVG(type) {
+      const lc = 'stroke-linecap="round" stroke-linejoin="round"';
+      switch (type) {
+        case 'statistikk': return `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="9.5" width="3" height="5" rx="1" fill="#0071e3"/><rect x="6.5" y="6" width="3" height="8.5" rx="1" fill="#0071e3"/><rect x="11.5" y="2" width="3" height="12.5" rx="1" fill="#0071e3"/></svg>`;
+        case 'topp':       return `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L9.8 6.2H14.2L10.7 8.8L12 13L8 10.5L4 13L5.3 8.8L1.8 6.2H6.2L8 2Z" fill="#ff9500"/></svg>`;
+        case 'dato':       return `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3.5" width="12" height="11" rx="2" stroke="#6e6e73" stroke-width="1.4"/><path d="M2 7.5h12" stroke="#6e6e73" stroke-width="1.4"/><path d="M5.5 2v3M10.5 2v3" stroke="#6e6e73" stroke-width="1.4" ${lc}/></svg>`;
+        case 'opp':        return `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 13V3M4 7l4-4 4 4" stroke="#34c759" stroke-width="1.7" ${lc}/></svg>`;
+        case 'ned':        return `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M4 9l4 4 4-4" stroke="#ff3b30" stroke-width="1.7" ${lc}/></svg>`;
+        case 'stabil':     return `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M10 5.5L12.5 8 10 10.5" stroke="#6e6e73" stroke-width="1.5" ${lc}/></svg>`;
+        case 'historikk':  return `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="#6e6e73" stroke-width="1.4"/><path d="M8 5.5V8.5L10 10" stroke="#6e6e73" stroke-width="1.4" ${lc}/></svg>`;
+        default: return '';
+      }
     }
 
     function toggleMeny() {
