@@ -8,15 +8,15 @@ En personlig nettside vibe-kodet med [Claude Code](https://claude.ai/code).
 
 ## Funksjoner
 
-- **Hjem** — velkomstside med typewriter-effekt og konfetti ved navnegjetting
-- **Navnefakta** — skriv inn navnet ditt og få morsomme fakta
-- **Vær** — sanntidsvær basert på din posisjon med animerte væreffekter
+- **Hjem** — velkomstside med typewriter-effekt og radial spotlight-bakgrunn
+- **Navnefakta** — skriv inn navnet ditt og få live data fra SSB (antall, toppår, trend) samt morsomme fakta
+- **Vær** — sanntidsvær basert på din posisjon eller by, med animerte væreffekter og 7-dagers prognose
 - **Nyheter** — siste nyheter fra VG, auto-oppdateres hvert 5. minutt med lokal cache ved feil
 - **Klokke** — analog og digital klokke med dato
-- **Skriving** — skrivetesthurtigtest med WPM og nøyaktighetsstatistikk
-- **Tetris** — klassisk Tetris med neon-design, musikk og highscore
-- **Kryssord** — norsk kryssord med hint-system, tema-velger og highscore
-- **Snake** — klassisk Nokia-spill med stigende vanskelighetsgrad og highscore
+- **Skriving** — skrivehurtigtest med WPM og nøyaktighetsstatistikk
+- **Kryssord** — norsk kryssord med hint-system, ordavsløring, auto-deteksjon av seier, statistikk og nedtrekksmeny for temavalg
+- **Tetris** — klassisk Tetris med neon-design, musikk, nivåstigning og highscore
+- **Snake** — klassisk Nokia-spill med LCD-farger, pause, 8-bit lyd, wrap-around modus og top 3 highscore
 - **Mørkt tema** — bryter med SF Symbols-ikoner for å bytte mellom lyst og mørkt
 - **Scroll-til-topp-knapp** — dukker opp når du scroller ned
 - **Easter egg** — prøv å skrive «claude» i navnefeltet
@@ -27,7 +27,8 @@ En personlig nettside vibe-kodet med [Claude Code](https://claude.ai/code).
 Inspirert av Apples designspråk:
 
 - Bakgrunn `#f5f5f7`, font `-apple-system`
-- Frosted glass-navigasjonsbar
+- Frosted glass-navigasjonsbar med hjem-ikon
+- Radial spotlight-bakgrunn med unik farge per seksjon
 - Seksjonsetiketter og venstrestilte titler
 - Myke overganger og animasjoner
 
@@ -35,11 +36,12 @@ Inspirert av Apples designspråk:
 
 - Vanilla HTML / CSS / JavaScript
 - [Open-Meteo API](https://open-meteo.com/) (vær, ingen API-nøkkel)
+- [SSB PxWeb API](https://data.ssb.no/) (navnestatistikk, ingen API-nøkkel)
 - Nominatim (omvendt geokoding)
-- Canvas API (væranimasjoner)
+- Canvas API (væranimasjoner, Snake-spill)
 - VG RSS via CORS-proxy med localStorage-cache
-- Web Audio API (konfetti-lyd og Tetris-musikk)
-- localStorage (tema og highscores)
+- Web Audio API (konfetti-lyd, Tetris-musikk og Snake-lydeffekter)
+- localStorage (tema, highscores og statistikk)
 - GitHub Pages (hosting)
 
 ---
