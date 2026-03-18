@@ -1439,7 +1439,11 @@
     });
 
     // Gjenopprett lagret tema ved lasting
+    history.scrollRestoration = 'manual';
+
     window.addEventListener("DOMContentLoaded", () => {
+      document.getElementById('hjem')?.scrollIntoView();
+
       const lagretTema = localStorage.getItem("tema");
       if (lagretTema === "dark") {
         document.body.classList.add("dark");
