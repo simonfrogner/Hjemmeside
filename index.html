@@ -52,6 +52,11 @@
       border-radius: 50%;
       animation: snurr 0.8s linear infinite;
     }
+    .spinner-sm {
+      width: 32px; height: 32px;
+      border: 3px solid rgba(0,113,227,0.2);
+      border-top-color: #0071e3;
+    }
 
     @keyframes snurr {
       to { transform: rotate(360deg); }
@@ -191,16 +196,22 @@
     section:first-child { border-top: none; }
     section:nth-child(even) { background: #f5f5f7; }
 
-    /* ── SECTION SPOTLIGHTS ──────────────────────────────────────────────── */
-    #hjem       { background: radial-gradient(ellipse 70% 60% at 50% 48%, rgba(0,113,227,0.10)  0%, transparent 70%), #ffffff; }
-    #navnefakta { background: radial-gradient(ellipse 70% 60% at 50% 48%, rgba(147,51,234,0.08) 0%, transparent 70%), #f5f5f7; }
-    #vær        { background: radial-gradient(ellipse 70% 60% at 50% 48%, rgba(0,190,255,0.09)  0%, transparent 70%), #ffffff; }
-    #nyheter    { background: radial-gradient(ellipse 70% 60% at 50% 48%, rgba(255,149,0,0.08)  0%, transparent 70%), #f5f5f7; }
-    #klokke     { background: radial-gradient(ellipse 70% 60% at 50% 48%, rgba(255,204,0,0.08)  0%, transparent 70%), #ffffff; }
-    #skriving   { background: radial-gradient(ellipse 70% 60% at 50% 48%, rgba(52,199,89,0.08)  0%, transparent 70%), #f5f5f7; }
-    #kryssord   { background: radial-gradient(ellipse 70% 60% at 50% 48%, rgba(0,163,200,0.09)  0%, transparent 70%), #ffffff; }
-    #tetris     { background: radial-gradient(ellipse 70% 60% at 50% 48%, rgba(88,86,214,0.08)  0%, transparent 70%), #f5f5f7; }
-    #snake      { background: radial-gradient(ellipse 70% 60% at 50% 48%, rgba(100,210,80,0.08)  0%, transparent 70%), #ffffff; }
+    /* ── SECTION SPOTLIGHTS — delt via CSS custom property --sg (spotlight-farge) ── */
+    #hjem,#vær,#klokke,#kryssord,#snake { --sb: #ffffff; }
+    #navnefakta,#nyheter,#skriving,#tetris { --sb: #f5f5f7; }
+    #hjem,#vær,#klokke,#kryssord,#snake,
+    #navnefakta,#nyheter,#skriving,#tetris {
+      background: radial-gradient(ellipse 70% 60% at 50% 48%, var(--sg,transparent) 0%, transparent 70%), var(--sb);
+    }
+    #hjem       { --sg: rgba(0,113,227,0.10); }
+    #navnefakta { --sg: rgba(147,51,234,0.08); }
+    #vær        { --sg: rgba(0,190,255,0.09); }
+    #nyheter    { --sg: rgba(255,149,0,0.08); }
+    #klokke     { --sg: rgba(255,204,0,0.08); }
+    #skriving   { --sg: rgba(52,199,89,0.08); }
+    #kryssord   { --sg: rgba(0,163,200,0.09); }
+    #tetris     { --sg: rgba(88,86,214,0.08); }
+    #snake      { --sg: rgba(100,210,80,0.08); }
 
     .page-title {
       color: #1d1d1f;
@@ -279,6 +290,8 @@
       color: #0077ed;
       text-decoration: underline;
     }
+    .footer-del-btn { margin-top: 12px; padding: 8px 20px; font-size: 0.85rem; }
+    .footer-versjon { margin-top: 16px; font-size: 0.72rem; color: #a1a1a6; letter-spacing: 0.04em; }
 
     .seksjon-innhold {
       max-width: 980px;
@@ -305,38 +318,6 @@
       line-height: 1.05;
     }
 
-    /* Nyheter som liste */
-    .nyheter-liste { display: flex; flex-direction: column; width: 100%; }
-    .nyhet-item {
-      display: flex;
-      gap: 16px;
-      padding: 18px 0;
-      border-bottom: 1px solid rgba(0,0,0,0.06);
-      text-decoration: none;
-      color: inherit;
-      transition: opacity 0.2s;
-    }
-    .nyhet-item:first-child { border-top: 1px solid rgba(0,0,0,0.06); }
-    .nyhet-item:hover { opacity: 0.7; }
-    .nyhet-bilde {
-      width: 90px;
-      height: 90px;
-      object-fit: cover;
-      border-radius: 10px;
-      flex-shrink: 0;
-    }
-    .nyhet-bilde-tom {
-      width: 90px;
-      height: 90px;
-      border-radius: 10px;
-      flex-shrink: 0;
-      background: #f5f5f7;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-    }
-    .nyhet-innhold { flex: 1; display: flex; flex-direction: column; gap: 4px; justify-content: center; }
 
     /* KORT */
     .card {
@@ -633,15 +614,17 @@
 
     body.dark section { background: #1c1c1e; border-top-color: rgba(255,255,255,0.06); }
     body.dark section:nth-child(even) { background: #000000; }
-    body.dark #hjem       { background: radial-gradient(ellipse 70% 60% at 50% 48%, rgba(41,151,255,0.15)  0%, transparent 70%), #1c1c1e; }
-    body.dark #navnefakta { background: radial-gradient(ellipse 70% 60% at 50% 48%, rgba(147,51,234,0.15)  0%, transparent 70%), #000000; }
-    body.dark #vær        { background: radial-gradient(ellipse 70% 60% at 50% 48%, rgba(0,190,255,0.14)   0%, transparent 70%), #1c1c1e; }
-    body.dark #nyheter    { background: radial-gradient(ellipse 70% 60% at 50% 48%, rgba(255,149,0,0.14)   0%, transparent 70%), #000000; }
-    body.dark #klokke     { background: radial-gradient(ellipse 70% 60% at 50% 48%, rgba(255,204,0,0.13)   0%, transparent 70%), #1c1c1e; }
-    body.dark #skriving   { background: radial-gradient(ellipse 70% 60% at 50% 48%, rgba(52,199,89,0.14)   0%, transparent 70%), #000000; }
-    body.dark #kryssord   { background: radial-gradient(ellipse 70% 60% at 50% 48%, rgba(0,163,200,0.14)   0%, transparent 70%), #1c1c1e; }
-    body.dark #tetris     { background: radial-gradient(ellipse 70% 60% at 50% 48%, rgba(88,86,214,0.15)   0%, transparent 70%), #000000; }
-    body.dark #snake      { background: radial-gradient(ellipse 70% 60% at 50% 48%, rgba(100,210,80,0.14)  0%, transparent 70%), #1c1c1e; }
+    body.dark #hjem,body.dark #vær,body.dark #klokke,body.dark #kryssord,body.dark #snake { --sb: #1c1c1e; }
+    body.dark #navnefakta,body.dark #nyheter,body.dark #skriving,body.dark #tetris { --sb: #000000; }
+    body.dark #hjem       { --sg: rgba(41,151,255,0.15); }
+    body.dark #navnefakta { --sg: rgba(147,51,234,0.15); }
+    body.dark #vær        { --sg: rgba(0,190,255,0.14); }
+    body.dark #nyheter    { --sg: rgba(255,149,0,0.14); }
+    body.dark #klokke     { --sg: rgba(255,204,0,0.13); }
+    body.dark #skriving   { --sg: rgba(52,199,89,0.14); }
+    body.dark #kryssord   { --sg: rgba(0,163,200,0.14); }
+    body.dark #tetris     { --sg: rgba(88,86,214,0.15); }
+    body.dark #snake      { --sg: rgba(100,210,80,0.14); }
 
     body.dark .section-title {
       color: #f5f5f7;
@@ -1182,6 +1165,43 @@
         opacity: 0;
       }
     }
+  /* ── KATEGORIKORT (hjem) ─────────────────────────────────────────── */
+  .hero-sub { color: #6e6e73; font-size: 1.1rem; margin: 12px 0 36px; }
+  .kategori-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; max-width: 680px; }
+  .kategori-kort {
+    background: white; border-radius: 20px; padding: 28px 22px;
+    text-decoration: none; border: 1px solid rgba(0,0,0,0.07);
+    display: flex; flex-direction: column; gap: 6px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .kategori-kort:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(0,0,0,0.10); }
+  .kk-ikon {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center; margin-bottom: 8px;
+  }
+  .kk-ikon.info    { background: #e8f4ff; color: #0071e3; }
+  .kk-ikon.verktøy { background: #f0f0ff; color: #5e5ce6; }
+  .kk-ikon.spill   { background: #fff0f0; color: #ff3b30; }
+  .kk-tittel { font-size: 1rem; font-weight: 700; color: #1d1d1f; }
+  .kk-sub    { font-size: 0.8rem; color: #6e6e73; }
+  @media (max-width: 620px) {
+    .kategori-grid { grid-template-columns: 1fr; gap: 12px; }
+    .kategori-kort { padding: 20px 18px; flex-direction: row; align-items: center; gap: 16px; }
+    .kk-ikon { margin-bottom: 0; flex-shrink: 0; }
+  }
+  /* ── GRUPPE-HEADER ────────────────────────────────────────────────── */
+  .gruppe-header { padding: 16px max(20px, calc(50vw - 340px)) 0; }
+  .gruppe-label {
+    font-size: 0.65rem; font-weight: 800; letter-spacing: 0.12em;
+    text-transform: uppercase; color: #a1a1a6;
+    border-top: 1px solid rgba(0,0,0,0.07); padding-top: 16px;
+  }
+  body.dark .kategori-kort { background: #1c1c1e; border-color: rgba(255,255,255,0.07); }
+  body.dark .kk-tittel { color: #f5f5f7; }
+  body.dark .kk-ikon.info    { background: rgba(0,113,227,0.15); }
+  body.dark .kk-ikon.verktøy { background: rgba(94,92,230,0.15); }
+  body.dark .kk-ikon.spill   { background: rgba(255,59,48,0.15); }
+  body.dark .gruppe-label    { color: #636366; border-color: rgba(255,255,255,0.08); }
   /* ── KONTAKTSKJEMA ───────────────────────────────────────────────── */
   .kontakt-skjema { display: flex; flex-direction: column; gap: 14px; max-width: 480px; }
   .kontakt-skjema input,
@@ -1235,16 +1255,11 @@
   <nav>
     <div class="nav-logo">Vibe-koding med Claude</div>
     <div class="nav-links" id="navLinks">
-      <a href="#hjem" class="active" title="Hjem"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7.5L9 2l7 5.5V16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7.5Z"/><path d="M6.5 17V11h5v6"/></svg></a>
-      <a href="#navnefakta">Navnefakta</a>
-      <a href="#vær">Vær</a>
-      <a href="#nyheter">Nyheter</a>
-      <a href="#klokke">Klokke</a>
-      <a href="#skriving">Skriving</a>
-      <a href="#kryssord">Kryssord</a>
-      <a href="#tetris">Tetris</a>
-      <a href="#snake">Snake</a>
-      <a href="#kontakt">Kontakt</a>
+      <a href="#hjem" class="active" style="display:flex;align-items:center;gap:5px;"><svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7.5L9 2l7 5.5V16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7.5Z"/><path d="M6.5 17V11h5v6"/></svg>Hjem</a>
+      <a href="#info">Info</a>
+      <a href="#verktøy">Verktøy</a>
+      <a href="#spill">Spill</a>
+      <a href="#kontakt" style="display:flex;align-items:center;gap:5px;"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="14" height="10" rx="2"/><path d="M1 5l7 5 7-5"/></svg>Kontakt</a>
       <div class="nav-tema-mobil">
         <span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="3"/><line x1="8" y1="1" x2="8" y2="3"/><line x1="8" y1="13" x2="8" y2="15"/><line x1="1" y1="8" x2="3" y2="8"/><line x1="13" y1="8" x2="15" y2="8"/><line x1="2.93" y1="2.93" x2="4.34" y2="4.34"/><line x1="11.66" y1="11.66" x2="13.07" y2="13.07"/><line x1="13.07" y1="2.93" x2="11.66" y2="4.34"/><line x1="4.34" y1="11.66" x2="2.93" y2="13.07"/></svg></span>
         <label class="switch">
@@ -1274,26 +1289,28 @@
     <!-- HJEM -->
     <section id="hjem">
       <h1 class="page-title fade-in">Hei og velkommen!</h1>
+      <p class="hero-sub fade-in">Utforsk nyheter, verktøy og spill.</p>
+      <div class="kategori-grid fade-in">
+        <a href="#info" class="kategori-kort">
+          <div class="kk-ikon info"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="18" height="16" rx="2"/><line x1="6" y1="8" x2="16" y2="8"/><line x1="6" y1="12" x2="16" y2="12"/><line x1="6" y1="16" x2="11" y2="16"/></svg></div>
+          <div class="kk-tittel">Info</div>
+          <div class="kk-sub">Vær og nyheter</div>
+        </a>
+        <a href="#verktøy" class="kategori-kort">
+          <div class="kk-ikon verktøy"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="3"/><path d="M19.07 6.93A8 8 0 0 1 19.07 15.07M2.93 15.07A8 8 0 0 1 2.93 6.93M11 3v2M11 17v2M3 11H1M21 11h-2"/></svg></div>
+          <div class="kk-tittel">Verktøy</div>
+          <div class="kk-sub">Klokke, skriving og navnefakta</div>
+        </a>
+        <a href="#spill" class="kategori-kort">
+          <div class="kk-ikon spill"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="18" height="12" rx="4"/><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><circle cx="15" cy="11" r="1" fill="currentColor" stroke="none"/><circle cx="13" cy="13" r="1" fill="currentColor" stroke="none"/></svg></div>
+          <div class="kk-tittel">Spill</div>
+          <div class="kk-sub">Kryssord, Tetris og Snake</div>
+        </a>
+      </div>
     </section>
 
-    <!-- NAVNEFAKTA -->
-    <section id="navnefakta">
-      <div class="seksjon-innhold">
-      <p class="seksjon-etikett fade-in">Navnefakta</p>
-      <h2 class="section-title fade-in">Fakta om navnet ditt</h2>
-      <div class="fakta-innhold fade-in">
-        <div class="input-group">
-          <input type="text" id="navnBoks" placeholder="Skriv navnet ditt her..." onkeydown="if(event.key==='Enter') siHei()">
-          <button onclick="siHei()">Si hei!</button>
-        </div>
-        <h2 id="svar" class="fakta-svar"></h2>
-        <div class="navn-section">
-          <h3 id="faktaTittel" class="fakta-tittel"></h3>
-          <ul id="navnFakta" class="tom fakta-liste"></ul>
-        </div>
-      </div>
-      </div>
-    </section>
+    <!-- INFO-GRUPPE -->
+    <div id="info" class="gruppe-header"><p class="gruppe-label">Info</p></div>
 
     <!-- VÆR -->
     <section id="vær">
@@ -1307,7 +1324,7 @@
           <button class="gps-btn" onclick="hentVærGPS()" title="Bruk min posisjon">📍</button>
         </div>
         <div id="vær-laster" class="vær-laster skjult">
-          <div class="spinner" style="border-color:rgba(0,113,227,0.2);border-top-color:#0071e3;width:32px;height:32px;border-width:3px;"></div>
+          <div class="spinner spinner-sm"></div>
         </div>
         <div id="vær-feil" class="vær-feil skjult">Fant ikke byen. Prøv igjen.</div>
         <div id="vær-resultat" class="vær-resultat skjult">
@@ -1338,12 +1355,15 @@
       <p class="seksjon-etikett fade-in">Nyheter</p>
       <h2 class="section-title fade-in">VG</h2>
       <div id="nyheter-laster" class="vær-laster fade-in">
-        <div class="spinner" style="border-color:rgba(0,113,227,0.2);border-top-color:#0071e3;width:32px;height:32px;border-width:3px;"></div>
+        <div class="spinner spinner-sm"></div>
       </div>
       <div id="nyheter-feil" class="vær-feil skjult">Klarte ikke laste nyheter. <button onclick="hentNyheter()" style="padding:6px 14px;font-size:0.85rem;">Prøv igjen</button></div>
       <div id="nyheter-grid" class="nyheter-liste"></div>
       </div>
     </section>
+
+    <!-- VERKTØY-GRUPPE -->
+    <div id="verktøy" class="gruppe-header"><p class="gruppe-label">Verktøy</p></div>
 
     <!-- KLOKKE -->
     <section id="klokke">
@@ -1394,6 +1414,28 @@
       </div>
     </section>
 
+    <!-- VERKTØY: NAVNEFAKTA -->
+    <section id="navnefakta">
+      <div class="seksjon-innhold">
+      <p class="seksjon-etikett fade-in">Navnefakta</p>
+      <h2 class="section-title fade-in">Fakta om navnet ditt</h2>
+      <div class="fakta-innhold fade-in">
+        <div class="input-group">
+          <input type="text" id="navnBoks" placeholder="Skriv navnet ditt her..." onkeydown="if(event.key==='Enter') siHei()">
+          <button onclick="siHei()">Si hei!</button>
+        </div>
+        <h2 id="svar" class="fakta-svar"></h2>
+        <div class="navn-section">
+          <h3 id="faktaTittel" class="fakta-tittel"></h3>
+          <ul id="navnFakta" class="tom fakta-liste"></ul>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <!-- SPILL-GRUPPE -->
+    <div id="spill" class="gruppe-header"><p class="gruppe-label">Spill</p></div>
+
     <!-- KRYSSORD -->
     <section id="kryssord">
       <div class="seksjon-innhold">
@@ -1442,6 +1484,9 @@
   </div>
 
   <script>
+    // ── NAVNEFAKTA ────────────────────────────────────────────────────────────
+    // Håndterer navn-input, viser hilsen og henter fakta fra SSB + lokal database.
+
     async function siHei() {
       const navn = document.getElementById("navnBoks").value.trim();
       if (navn === "") {
@@ -1470,6 +1515,7 @@
       if (e.target === document.getElementById("claude-egg")) lukkEgg();
     });
 
+    // Statisk database med fakta for kjente navn
     const navnDatabase = {
       "simon": ["Simon kommer fra hebraisk og betyr «den som hører».", "Simon var et av de vanligste navnene blant apostlene i Bibelen.", "Simon er populært i Skandinavia, Storbritannia og Sør-Europa.", "Kjente Simoner inkluderer Simon Bolivar, frigjøringshelten fra Sør-Amerika.", "🎉 Fun fact: Folk med navnet Simon beskrives ofte som nysgjerrige og gode lyttere — akkurat som navnet antyder!"],
       "emma": ["Emma er et germansk navn som betyr «hel» eller «universell».", "Emma har vært et av de mest populære jentenavnene i Norge i mange år.", "Emma Bovary og Emma Woodhouse er to av litteraturens mest kjente Emma-er.", "Navnet ble popularisert av dronning Emma av Normandie på 1000-tallet.", "🎉 Fun fact: Emma har ligget på topp 10-listen over populære navn i Norge nesten hvert eneste år siden 2000!"],
@@ -1481,6 +1527,7 @@
       "ida": ["Ida er et gammelnordisk navn som betyr «arbeid» og «aktivitet».", "Ida er også et fjell på Kreta i gresk mytologi, der Zeus ble oppdratt.", "Ida Lupino var Hollywoods første store kvinnelige filmregissør.", "Navnet er enkelt, vakkert og har vært populært i Norden i over 100 år.", "🎉 Fun fact: Ida er et av verdens korteste navn med tre bokstaver — men det er likevel gjenkjennelig i nesten alle språk!"]
     };
 
+    // Generiske fakta-maler som brukes for navn som ikke finnes i databasen
     const generiskeFakta = [
       (n) => `${n} har ${n.length} bokstaver — ${n.length <= 4 ? "et kort og slagkraftig navn!" : n.length <= 6 ? "en perfekt lengde!" : "et langt og minneverdig navn!"}`,
       (n) => `Første bokstav er «${n[0].toUpperCase()}» — ${['A','E','I','O','U','Y','Æ','Ø','Å'].includes(n[0].toUpperCase()) ? "en vokal, som gir navnet en åpen og varm lyd." : "en konsonant, som gir navnet en sterk og tydelig start."}`,
@@ -1489,6 +1536,7 @@
       (n) => `🎉 Fun fact: Bokstavverdiene i «${n}» summerer til ${n.toLowerCase().split("").reduce((s,c) => s + (c.charCodeAt(0) - 96), 0)} — hvert tall er like unikt som deg!`
     ];
 
+    // Kombinerer SSB-data og statiske fakta og viser dem som animert liste
     async function visFakta() {
       const navn = document.getElementById("navnBoks").value.trim();
       if (!navn) return;
@@ -1509,6 +1557,9 @@
       liste.innerHTML = alle.map((f, i) => `<li${f.ssb ? ' class="ssb-fakt"' : ''} style="animation-delay:${i * 0.12}s">${f.ssb && f.ikon ? `<span class="fakt-ikon">${ikonSVG(f.ikon)}</span>` : ''}<span>${f.tekst}</span></li>`).join("");
     }
 
+    // Henter navnestatistikk fra SSB sitt PxWeb API.
+    // Prøver begge kjønn (kode "1" = kvinner, "2" = menn) og slår dem sammen.
+    // Returnerer en liste med faktaobjekter: { ikon, tekst }
     async function hentSSBNavn(navn) {
       const u = navn.toUpperCase();
 
@@ -1577,6 +1628,7 @@
       return fakta;
     }
 
+    // Returnerer inline SVG-ikon basert på type (brukes ved siden av SSB-fakta)
     function ikonSVG(type) {
       const lc = 'stroke-linecap="round" stroke-linejoin="round"';
       switch (type) {
@@ -1591,22 +1643,24 @@
       }
     }
 
-    function toggleMeny() {
-      document.getElementById("hamburger").classList.toggle("åpen");
-      document.getElementById("navLinks").classList.toggle("åpen");
-    }
+    // ── NAVIGASJON ────────────────────────────────────────────────────────────
 
-    function lukkMeny() {
-      document.getElementById("hamburger").classList.remove("åpen");
-      document.getElementById("navLinks").classList.remove("åpen");
+    // Åpner/lukker hamburger-menyen på mobil. Kall uten argument for toggle, false for lukk.
+    function toggleMeny(force) {
+      ['hamburger','navLinks'].forEach(id =>
+        document.getElementById(id).classList.toggle('åpen', force));
     }
+    const lukkMeny = () => toggleMeny(false);
 
+    // Bytter mellom lyst og mørkt tema og lagrer valget i localStorage
     function toggleTheme() {
       document.body.classList.toggle("dark");
       const mørkt = document.body.classList.contains("dark");
       localStorage.setItem("tema", mørkt ? "dark" : "light");
       document.querySelectorAll(".switch input").forEach(i => i.checked = mørkt);
     }
+
+    // ── SIDEINITIALISERING ───────────────────────────────────────────────────
 
     // Skjul loader når siden er klar
     window.addEventListener("load", () => {
@@ -1615,8 +1669,7 @@
       setTimeout(() => loader.remove(), 500);
     });
 
-    // Gjenopprett lagret tema ved lasting
-    history.scrollRestoration = 'manual';
+    // scrollRestoration er allerede satt i <head> — fjerner hash hvis den har sneket seg inn
     if (location.hash) history.replaceState(null, '', location.pathname);
     window.scrollTo(0, 0);
 
@@ -1629,7 +1682,8 @@
     window.addEventListener("DOMContentLoaded", () => {
       window.scrollTo(0, 0);
 
-      // Intercept nav clicks — scroll without adding hash to URL
+      // Intercept nav-klikk: scroll til seksjon uten å legge til hash i URL-en.
+      // Forhindrer at Safari husker hash og scroller dit ved neste refresh.
       document.getElementById('navLinks').addEventListener('click', e => {
         const a = e.target.closest('a[href^="#"]');
         if (!a) return;
@@ -1647,20 +1701,32 @@
     });
 
     // Oppdater aktiv nav-lenke og scroll-til-topp ved scrolling
+    // Maper enkelt-seksjoner til riktig gruppelenke i nav
+    const gruppeMap = {
+      hjem: '#hjem',
+      vær: '#info',      nyheter: '#info',
+      klokke: '#verktøy', skriving: '#verktøy', navnefakta: '#verktøy',
+      kryssord: '#spill', tetris: '#spill', snake: '#spill',
+      kontakt: '#kontakt',
+    };
     const sections = document.querySelectorAll("section");
     const navLinks = document.querySelectorAll(".nav-links a");
     window.addEventListener("scroll", () => {
       toppKnapp.classList.toggle("synlig", window.scrollY > 300);
-      let current = "";
+      let current = "hjem";
       sections.forEach(s => {
         if (window.scrollY >= s.offsetTop - 100) current = s.id;
       });
+      const aktivHref = gruppeMap[current] || '#' + current;
       navLinks.forEach(a => {
-        a.classList.toggle("active", a.getAttribute("href") === "#" + current);
+        a.classList.toggle("active", a.getAttribute("href") === aktivHref);
       });
     }, { passive: true });
 
-    // Fade-in ved scroll med stagger
+    // ── ANIMASJONER ──────────────────────────────────────────────────────────
+
+    // Fade-in ved scroll: hvert element fades inn med litt forsinkelse (stagger)
+    // når det ruller inn i viewport via IntersectionObserver.
     const fadeEls = document.querySelectorAll(".fade-in");
     fadeEls.forEach((el, i) => {
       const sibling = [...el.parentElement.querySelectorAll(".fade-in")];
@@ -1674,6 +1740,7 @@
     }, { threshold: 0.1 });
     fadeEls.forEach(el => observer.observe(el));
 
+    // Spiller en kort, oppadgående 8-bit-lyd via Web Audio API
     function playConfettiSound() {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
       const notes = [523, 659, 784, 1047];
@@ -1691,6 +1758,7 @@
       });
     }
 
+    // Lager 60 konfetti-elementer med tilfeldige farger, størrelser og hastigheter
     function launchConfetti() {
       playConfettiSound();
       const colors = ["#0071e3", "#34aadc", "#30d158", "#ff9f0a", "#ff375f", "#bf5af2", "#ffd60a"];
@@ -1707,7 +1775,7 @@
         setTimeout(() => confetti.remove(), 3500);
       }
     }
-    // 3D tilt-effekt på kort
+    // 3D tilt-effekt: kortene vipper lett mot musepekeren
     document.querySelectorAll(".card").forEach(card => {
       card.addEventListener("mousemove", e => {
         const rect = card.getBoundingClientRect();
@@ -1722,7 +1790,7 @@
       });
     });
 
-    // Rippel-effekt på knapper
+    // Rippel-effekt: lager en sirkelanimasjon fra klikk-punktet på alle knapper
     document.addEventListener("click", e => {
       const btn = e.target.closest("button");
       if (!btn || btn.id === "hamburger" || btn.id === "topp-knapp") return;
@@ -1735,7 +1803,9 @@
       r.addEventListener("animationend", () => r.remove());
     });
 
-    // ── Vær ──
+    // ── VÆR ──────────────────────────────────────────────────────────────────
+    // Henter værmeldingen fra Open-Meteo API.
+    // WMO-koder brukes av Open-Meteo for å beskrive været (0 = klarvær, 95 = torden, osv.)
     const wmoKoder = {
       0:["Klarvær","☀️"], 1:["Mest klart","🌤️"], 2:["Delvis skyet","⛅"], 3:["Overskyet","☁️"],
       45:["Tåke","🌫️"], 48:["Rimtåke","🌫️"],
@@ -1748,6 +1818,7 @@
     };
     const dagNavn = ["Søn","Man","Tir","Ons","Tor","Fre","Lør"];
 
+    // Søker etter en by via Open-Meteo Geocoding API og henter deretter været
     async function hentVær() {
       const by = document.getElementById("vær-by").value.trim();
       if (!by) return;
@@ -1761,6 +1832,7 @@
       } catch { visVærFeil(); }
     }
 
+    // Henter brukerens GPS-posisjon og slår opp stedsnavn via Nominatim (OpenStreetMap)
     async function hentVærGPS() {
       if (!navigator.geolocation) { visVærFeil("GPS ikke tilgjengelig."); return; }
       visVærLaster();
@@ -1776,6 +1848,7 @@
       }, () => visVærFeil("Klarte ikke hente posisjon."));
     }
 
+    // Henter nåværende vær og 5-dagersprognose fra Open-Meteo og oppdaterer UI
     async function hentVærData(lat, lon, stednavn) {
       const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,relative_humidity_2m&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=5`;
       try {
@@ -1806,7 +1879,9 @@ visVærResultat();
       } catch { visVærFeil(); }
     }
 
-    // ── Vær-animasjon ──
+    // ── VÆR-ANIMASJON ────────────────────────────────────────────────────────
+    // Canvas-basert animasjon som viser sol, regn, snø, skyer eller torden
+    // avhengig av WMO-koden. Kjøres i en requestAnimationFrame-løkke.
     let _værAnim = null, _værPartikler = [];
 
     function startVærAnimasjon(kode) {
@@ -1815,15 +1890,9 @@ visVærResultat();
       const boks = document.getElementById('vær-nå-boks');
       if (!canvas || !boks) return;
 
-      let type = 'sol';
-      if (kode === 0 || kode === 1) type = 'sol';
-      else if (kode === 2 || kode === 3) type = 'sky';
-      else if (kode === 45 || kode === 48) type = 'tåke';
-      else if (kode >= 51 && kode <= 67) type = 'regn';
-      else if (kode >= 71 && kode <= 77) type = 'snø';
-      else if (kode >= 80 && kode <= 82) type = 'regn';
-      else if (kode === 85 || kode === 86) type = 'snø';
-      else if (kode >= 95) type = 'torden';
+      const type = kode <= 1 ? 'sol' : kode <= 3 ? 'sky' : kode <= 48 ? 'tåke'
+        : kode <= 67 ? 'regn' : kode <= 77 ? 'snø' : kode <= 82 ? 'regn'
+        : kode <= 86 ? 'snø' : kode >= 95 ? 'torden' : 'sol';
 
       boks.className = boks.className.replace(/\b(sol|sky|tåke|regn|snø|torden)\b/g, '').trim();
       boks.classList.add(type);
@@ -1920,28 +1989,41 @@ visVærResultat();
       if (c) c.getContext('2d').clearRect(0, 0, c.width, c.height);
     }
 
+    // Cachet én gang — brukes av alle tre vær-tilstandsfunksjonene
+    const _værEl = { res: null, feil: null, laster: null };
+    function _værInit() {
+      if (!_værEl.res) {
+        _værEl.res    = document.getElementById('vær-resultat');
+        _værEl.feil   = document.getElementById('vær-feil');
+        _værEl.laster = document.getElementById('vær-laster');
+      }
+    }
     function visVærLaster() {
-      stopVærAnimasjon();
-      document.getElementById("vær-resultat").classList.add("skjult");
-      document.getElementById("vær-feil").classList.add("skjult");
-      document.getElementById("vær-laster").classList.remove("skjult");
+      _værInit(); stopVærAnimasjon();
+      _værEl.res.classList.add('skjult');
+      _værEl.feil.classList.add('skjult');
+      _værEl.laster.classList.remove('skjult');
     }
     function visVærResultat() {
-      document.getElementById("vær-laster").classList.add("skjult");
-      document.getElementById("vær-feil").classList.add("skjult");
-      document.getElementById("vær-resultat").classList.remove("skjult");
+      _værInit();
+      _værEl.laster.classList.add('skjult');
+      _værEl.feil.classList.add('skjult');
+      _værEl.res.classList.remove('skjult');
     }
     function visVærFeil(msg) {
-      document.getElementById("vær-laster").classList.add("skjult");
-      document.getElementById("vær-resultat").classList.add("skjult");
-      const el = document.getElementById("vær-feil");
-      el.textContent = msg || "Fant ikke byen. Prøv igjen.";
-      el.classList.remove("skjult");
+      _værInit();
+      _værEl.laster.classList.add('skjult');
+      _værEl.res.classList.add('skjult');
+      _værEl.feil.textContent = msg || 'Fant ikke byen. Prøv igjen.';
+      _værEl.feil.classList.remove('skjult');
     }
 
-    // ── Nyheter ──
+    // ── NYHETER ──────────────────────────────────────────────────────────────
+    // Henter nyheter fra VG sitt RSS-feed via rss2json eller CORS-proxyer som fallback.
+    // Resultater caches i localStorage og vises ved neste besøk om nettverket feiler.
     const VG_RSS = 'https://www.vg.no/rss/feed/';
 
+    // Hjelpefunksjon: fetch med automatisk timeout (default 5 sekunder)
     async function fetchMedTimeout(url, json = false, ms = 5000) {
       const ctrl = new AbortController();
       const id = setTimeout(() => ctrl.abort(), ms);
@@ -2028,6 +2110,7 @@ visVærResultat();
       }
     }
 
+    // Bygger HTML-kort for hver nyhet og setter dem inn i nyheter-grid
     function visNyheter(items) {
       document.getElementById('nyheter-laster').classList.add('skjult');
       document.getElementById('nyheter-grid').innerHTML = items.map(({ tittel, lenke, dato, bilde, beskr }) => {
@@ -2048,6 +2131,7 @@ visVærResultat();
       }).join('');
     }
 
+    // Konverterer en Date til lesbar "X min siden" / "X timer siden" / "X dager siden"
     function tidsiden(dato) {
       const min = Math.floor((Date.now() - dato) / 60000);
       if (min < 60) return `${min} min siden`;
@@ -2057,7 +2141,8 @@ visVærResultat();
       return `${d} dag${d !== 1 ? 'er' : ''} siden`;
     }
 
-    // Last nyheter automatisk første gang seksjonen vises, deretter hvert 5. minutt
+    // Bruker IntersectionObserver for å laste nyheter første gang seksjonen er synlig,
+    // og oppdaterer deretter automatisk hvert 5. minutt
     let nyhetInterval = null;
     const nyhetObserver = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting) {
@@ -2068,7 +2153,7 @@ visVærResultat();
     }, { threshold: 0.1 });
     nyhetObserver.observe(document.getElementById('nyheter'));
 
-    // Deleknapp
+    // Bruker navigator.share (mobil) om tilgjengelig, ellers kopierer lenken til utklippstavlen
     function delSide() {
       const btn = document.querySelector("footer button");
       if (navigator.share) {
@@ -2085,7 +2170,9 @@ visVærResultat();
       }
     }
 
-    // ── Analog klokke ──
+    // ── ANALOG KLOKKE ────────────────────────────────────────────────────────
+    // Tegner urskive-merker i SVG og oppdaterer viserne hvert animasjonsframe.
+    // Kjørt i en IIFE slik at variablene ikke forurenser det globale scope.
     (function() {
       const merkerGruppe = document.getElementById('klokke-merker');
       for (let i = 0; i < 60; i++) {
@@ -2133,7 +2220,9 @@ visVærResultat();
       oppdaterKlokke();
     })();
 
-    // ── Typing speed test ──
+    // ── SKRIVEHASTIGHETSTEST ─────────────────────────────────────────────────
+    // Måler WPM (ord per minutt) og nøyaktighet mens brukeren skriver en setning.
+    // Resultatet vises når setningen er fullstendig riktig skrevet.
     const skriveSentenser = [
       "Livet er for kort til å drikke dårlig kaffe.",
       "Den som ikke risikerer noe, risikerer alt.",
@@ -2147,38 +2236,53 @@ visVærResultat();
 
     let skriveTekst = "", skriveStart = null, skriveTimer = null;
 
+    // Cachet én gang — DOM-oppslag er dyre i en 100ms-timer
+    const _s = {
+      input:     () => document.getElementById('skriving-input'),
+      tekst:     () => document.getElementById('skriving-tekst'),
+      wpm:       () => document.getElementById('stat-wpm'),
+      nøy:       () => document.getElementById('stat-nøyaktighet'),
+      tid:       () => document.getElementById('stat-tid'),
+      resultat:  () => document.getElementById('skriving-resultat'),
+      resWpm:    () => document.getElementById('resultat-wpm'),
+      resTekst:  () => document.getElementById('resultat-tekst'),
+    };
+    // Kjør én gang etter DOMContentLoaded slik at elementene finnes
+    let _sEl = {};
+    document.addEventListener('DOMContentLoaded', () => {
+      for (const k in _s) _sEl[k] = _s[k]();
+    });
+
+    // Velger en ny tilfeldig setning (aldri samme som forrige) og nullstiller tilstand
     function nySkriveTekst() {
       const forrige = skriveTekst;
       do { skriveTekst = skriveSentenser[Math.floor(Math.random() * skriveSentenser.length)]; }
       while (skriveTekst === forrige && skriveSentenser.length > 1);
       skriveStart = null;
       clearInterval(skriveTimer);
-      const input = document.getElementById('skriving-input');
-      input.value = '';
-      input.disabled = false;
-      input.focus({ preventScroll: true });
-      document.getElementById('stat-wpm').textContent = '—';
-      document.getElementById('stat-nøyaktighet').textContent = '—';
-      document.getElementById('stat-tid').textContent = '—';
-      document.getElementById('skriving-resultat').classList.add('skjult');
-      document.getElementById('skriving-tekst').innerHTML =
-        skriveTekst.split('').map(c => `<span class="char">${c}</span>`).join('');
+      _sEl.input.value = '';
+      _sEl.input.disabled = false;
+      _sEl.input.focus({ preventScroll: true });
+      _sEl.wpm.textContent = '—';
+      _sEl.nøy.textContent = '—';
+      _sEl.tid.textContent = '—';
+      _sEl.resultat.classList.add('skjult');
+      _sEl.tekst.innerHTML = skriveTekst.split('').map(c => `<span class="char">${c}</span>`).join('');
     }
 
+    // Kjøres ved hvert tastetrykk: farger bokstaver riktig/feil og beregner live-statistikk
     function oppdaterSkriving() {
-      const input = document.getElementById('skriving-input');
-      const typed = input.value;
+      const typed = _sEl.input.value;
       if (!skriveStart && typed.length > 0) {
         skriveStart = Date.now();
         skriveTimer = setInterval(() => {
           const s = (Date.now() - skriveStart) / 1000;
-          const wpm = Math.round((input.value.length / 5) / (s / 60)) || 0;
-          document.getElementById('stat-tid').textContent = s.toFixed(1) + 's';
-          document.getElementById('stat-wpm').textContent = wpm;
+          _sEl.tid.textContent = s.toFixed(1) + 's';
+          _sEl.wpm.textContent = Math.round((typed.length / 5) / (s / 60)) || 0;
         }, 100);
       }
       let riktig = 0;
-      document.querySelectorAll('#skriving-tekst .char').forEach((span, i) => {
+      _sEl.tekst.querySelectorAll('.char').forEach((span, i) => {
         if (i < typed.length) {
           const ok = typed[i] === skriveTekst[i];
           span.className = 'char ' + (ok ? 'riktig' : 'feil');
@@ -2188,28 +2292,30 @@ visVærResultat();
         }
       });
       const nøyaktighet = typed.length > 0 ? Math.round((riktig / typed.length) * 100) : 100;
-      document.getElementById('stat-nøyaktighet').textContent = nøyaktighet + '%';
+      _sEl.nøy.textContent = nøyaktighet + '%';
       if (typed === skriveTekst) {
         clearInterval(skriveTimer);
         const s = (Date.now() - skriveStart) / 1000;
         const wpm = Math.round((skriveTekst.length / 5) / (s / 60));
-        document.getElementById('stat-wpm').textContent = wpm;
-        document.getElementById('stat-tid').textContent = s.toFixed(1) + 's';
-        input.disabled = true;
-        document.getElementById('resultat-wpm').textContent = wpm + ' WPM';
+        _sEl.wpm.textContent = wpm;
+        _sEl.tid.textContent = s.toFixed(1) + 's';
+        _sEl.input.disabled = true;
+        _sEl.resWpm.textContent = wpm + ' WPM';
         const kommentar = wpm >= 80 ? 'Lynrask! Skrive-mester 🏆'
           : wpm >= 60 ? 'Veldig bra! Over snittet 🎉'
           : wpm >= 40 ? 'Bra jobbet! Gjennomsnittlig 👍'
           : 'God start! Fortsett å øve 💪';
-        document.getElementById('resultat-tekst').textContent = `${kommentar} · ${nøyaktighet}% nøyaktighet · ${s.toFixed(1)}s`;
-        document.getElementById('skriving-resultat').classList.remove('skjult');
+        _sEl.resTekst.textContent = `${kommentar} · ${nøyaktighet}% nøyaktighet · ${s.toFixed(1)}s`;
+        _sEl.resultat.classList.remove('skjult');
       }
     }
 
-    // Scroll-til-topp-knapp
+    // ── SCROLL-TIL-TOPP ───────────────────────────────────────────────────────
+    // Knappen vises når brukeren har scrollet mer enn 300px nedover
     const toppKnapp = document.getElementById("topp-knapp");
 
-    // Typewriter-effekt
+    // ── TYPEWRITER-EFFEKT ────────────────────────────────────────────────────
+    // Skriver inn velkomstteksten bokstav for bokstav ved sideinnlasting
     const tittel = document.querySelector(".page-title");
     const tekst = "Hei og velkommen!";
     tittel.textContent = "";
@@ -2278,8 +2384,8 @@ visVærResultat();
 
   <footer>
     <p>Laget av <a href="https://github.com/simonfrogner" target="_blank">Simon Sæterlid Frogner</a> &nbsp;·&nbsp; © 2026</p>
-    <button onclick="delSide()" style="margin-top:12px;padding:8px 20px;font-size:0.85rem;">🔗 Del siden</button>
-    <p style="margin-top:16px;font-size:0.72rem;color:#a1a1a6;letter-spacing:0.04em;">v1.2 &nbsp;·&nbsp; mars 2026</p>
+    <button onclick="delSide()" class="footer-del-btn">🔗 Del siden</button>
+    <p class="footer-versjon">v1.3 &nbsp;·&nbsp; mars 2026</p>
   </footer>
 
 </body>
