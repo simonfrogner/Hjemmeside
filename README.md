@@ -8,26 +8,38 @@ En personlig nettside vibe-kodet med [Claude Code](https://claude.ai/code).
 
 ## Funksjoner
 
-- **Hjem** — velkomstside med typewriter-effekt og radial spotlight-bakgrunn
-- **Navnefakta** — skriv inn navnet ditt og få live data fra SSB (antall, toppår, trend) samt morsomme fakta
-- **Vær** — sanntidsvær basert på din posisjon eller by, med animerte væreffekter og 7-dagers prognose
-- **Nyheter** — siste nyheter fra VG, auto-oppdateres hvert 5. minutt med lokal cache ved feil
-- **Klokke** — analog og digital klokke med dato
-- **Skriving** — skrivehurtigtest med WPM og nøyaktighetsstatistikk
-- **Kryssord** — norsk kryssord med hint-system, ordavsløring, auto-deteksjon av seier, statistikk og nedtrekksmeny for temavalg
-- **Tetris** — klassisk Tetris med neon-design, musikk, nivåstigning og highscore
-- **Snake** — klassisk Nokia-spill med LCD-farger, pause, 8-bit lyd, wrap-around modus og top 3 highscore
-- **Mørkt tema** — bryter med SF Symbols-ikoner for å bytte mellom lyst og mørkt
-- **Scroll-til-topp-knapp** — dukker opp når du scroller ned
-- **Easter egg** — prøv å skrive «claude» i navnefeltet
-- **Mobilstøtte** — responsivt design med hamburgermeny
+Navigasjonen er gruppert i fem seksjoner:
+
+**Hjem** — velkomstside med kategorikort som lenker til Info, Verktøy og Spill
+
+**Info**
+- Vær — sanntidsvær basert på din posisjon eller by, med animerte væreffekter og 7-dagers prognose
+- Nyheter — siste nyheter fra VG, auto-oppdateres hvert 5. minutt med lokal cache ved feil
+
+**Verktøy**
+- Klokke — analog og digital klokke med dato
+- Skriving — skrivehurtigtest med WPM og nøyaktighetsstatistikk
+- Navnefakta — skriv inn navnet ditt og få live data fra SSB (antall, toppår, trend) samt morsomme fakta
+
+**Spill**
+- Kryssord — norsk kryssord med hint-system, ordavsløring, auto-deteksjon av seier, statistikk og nedtrekksmeny for temavalg
+- Tetris — klassisk Tetris med neon-design, musikk, nivåstigning og highscore
+- Snake — klassisk Nokia-spill med LCD-farger, pause, 8-bit lyd, wrap-around modus og top 3 highscore
+
+**Kontakt** — kontaktskjema
+
+**Generelt**
+- Mørkt tema — bryter med SF Symbols-ikoner for å bytte mellom lyst og mørkt
+- Scroll-til-topp-knapp — dukker opp når du scroller ned
+- Easter egg — prøv å skrive «claude» i navnefeltet
+- Mobilstøtte — responsivt design med hamburgermeny
 
 ## Design
 
 Inspirert av Apples designspråk:
 
 - Bakgrunn `#f5f5f7`, font `-apple-system`
-- Frosted glass-navigasjonsbar med hjem-ikon
+- Frosted glass-navigasjonsbar, midtstilt, med Apple-favicon (blå sirkel med S)
 - Radial spotlight-bakgrunn med unik farge per seksjon
 - Seksjonsetiketter og venstrestilte titler
 - Myke overganger og animasjoner
