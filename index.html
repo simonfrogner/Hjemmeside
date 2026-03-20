@@ -124,6 +124,76 @@
       background: rgba(0,0,0,0.06);
     }
 
+    /* DROPDOWN */
+    .nav-dropdown {
+      position: relative;
+    }
+
+    .nav-dropdown > a {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Liten pil ned */
+    .nav-dropdown > a::after {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: rotate(45deg) translateY(-2px);
+      opacity: 0.5;
+      transition: transform 0.2s;
+    }
+
+    .nav-dropdown:hover > a::after {
+      transform: rotate(225deg) translateY(-2px);
+    }
+
+    .dropdown-meny {
+      position: absolute;
+      top: calc(100% + 0px);
+      left: 50%;
+      transform: translateX(-50%) translateY(-6px);
+      padding-top: 12px;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 14px;
+      padding: 6px;
+      min-width: 160px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 200;
+    }
+
+    .nav-dropdown:hover .dropdown-meny {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .dropdown-meny a {
+      display: block;
+      padding: 8px 14px;
+      border-radius: 8px;
+      color: #1d1d1f;
+      text-decoration: none;
+      font-size: 0.88rem;
+      white-space: nowrap;
+      transition: background 0.15s;
+      background: none !important;
+    }
+
+    .dropdown-meny a:hover {
+      background: rgba(0,0,0,0.06) !important;
+    }
+
     .nav-right {
       display: flex;
       align-items: center;
@@ -604,6 +674,19 @@
       background: rgba(255,255,255,0.1);
     }
 
+    body.dark .dropdown-meny {
+      background: rgba(28,28,30,0.9);
+      border-color: rgba(255,255,255,0.1);
+    }
+
+    body.dark .dropdown-meny a {
+      color: #f5f5f7;
+    }
+
+    body.dark .dropdown-meny a:hover {
+      background: rgba(255,255,255,0.1) !important;
+    }
+
     body.dark .card {
       background: #1c1c1e;
       box-shadow: 0 4px 24px rgba(0,0,0,0.3);
@@ -775,6 +858,40 @@
         padding: 12px 16px;
         border-radius: 10px;
         font-size: 1.05rem;
+      }
+
+      /* Dropdown på mobil: alltid synlig, litt innrykk */
+      .nav-dropdown {
+        display: contents;
+      }
+
+      .nav-dropdown > a::after {
+        display: none;
+      }
+
+      .dropdown-meny {
+        position: static;
+        transform: none;
+        opacity: 1;
+        pointer-events: auto;
+        background: none;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 0 0 0 12px;
+        min-width: unset;
+      }
+
+      .dropdown-meny a {
+        font-size: 0.95rem;
+        padding: 10px 16px;
+        color: #555 !important;
+      }
+
+      body.dark .dropdown-meny a {
+        color: #a1a1a6 !important;
       }
 
       .card {
@@ -1257,9 +1374,33 @@
 
     <div class="nav-links" id="navLinks">
       <a href="#hjem" class="active" style="display:flex;align-items:center;gap:5px;"><svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7.5L9 2l7 5.5V16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7.5Z"/><path d="M6.5 17V11h5v6"/></svg>Hjem</a>
-      <a href="#info">Info</a>
-      <a href="#verktøy">Verktøy</a>
-      <a href="#spill">Spill</a>
+
+      <div class="nav-dropdown">
+        <a href="#info">Info</a>
+        <div class="dropdown-meny">
+          <a href="#vær">Vær</a>
+          <a href="#nyheter">Nyheter</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <a href="#verktøy">Verktøy</a>
+        <div class="dropdown-meny">
+          <a href="#klokke">Klokke</a>
+          <a href="#skriving">Skriving</a>
+          <a href="#navnefakta">Navnefakta</a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <a href="#spill">Spill</a>
+        <div class="dropdown-meny">
+          <a href="#kryssord">Kryssord</a>
+          <a href="#tetris">Tetris</a>
+          <a href="#snake">Snake</a>
+        </div>
+      </div>
+
       <a href="#kontakt" style="display:flex;align-items:center;gap:5px;"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="14" height="10" rx="2"/><path d="M1 5l7 5 7-5"/></svg>Kontakt</a>
       <div class="nav-tema-mobil">
         <span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="3"/><line x1="8" y1="1" x2="8" y2="3"/><line x1="8" y1="13" x2="8" y2="15"/><line x1="1" y1="8" x2="3" y2="8"/><line x1="13" y1="8" x2="15" y2="8"/><line x1="2.93" y1="2.93" x2="4.34" y2="4.34"/><line x1="11.66" y1="11.66" x2="13.07" y2="13.07"/><line x1="13.07" y1="2.93" x2="11.66" y2="4.34"/><line x1="4.34" y1="11.66" x2="2.93" y2="13.07"/></svg></span>
@@ -1711,7 +1852,7 @@
       kontakt: '#kontakt',
     };
     const sections = document.querySelectorAll("section");
-    const navLinks = document.querySelectorAll(".nav-links a");
+    const navLinks = document.querySelectorAll(".nav-links > a, .nav-links .nav-dropdown > a");
     window.addEventListener("scroll", () => {
       toppKnapp.classList.toggle("synlig", window.scrollY > 300);
       let current = "hjem";
@@ -2386,7 +2527,7 @@ visVærResultat();
   <footer>
     <p>Laget av <a href="https://github.com/simonfrogner" target="_blank">Simon Sæterlid Frogner</a> &nbsp;·&nbsp; © 2026</p>
     <button onclick="delSide()" class="footer-del-btn">🔗 Del siden</button>
-    <p class="footer-versjon">v1.3 &nbsp;·&nbsp; mars 2026</p>
+    <p class="footer-versjon">v1.5 &nbsp;·&nbsp; mars 2026</p>
   </footer>
 
 </body>
