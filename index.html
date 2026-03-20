@@ -813,6 +813,10 @@
         display: flex;
       }
 
+      nav {
+        justify-content: space-between;
+      }
+
       .nav-right {
         display: none;
       }
@@ -860,28 +864,46 @@
         font-size: 1.05rem;
       }
 
-      /* Dropdown på mobil: alltid synlig, litt innrykk */
+      /* Dropdown på mobil: klikk-toggle */
       .nav-dropdown {
-        display: contents;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .nav-dropdown > a {
+        justify-content: space-between;
       }
 
       .nav-dropdown > a::after {
-        display: none;
+        display: inline-block;
       }
 
       .dropdown-meny {
-        position: static;
-        transform: none;
+        position: static !important;
+        transform: none !important;
+        opacity: 0;
+        max-height: 0;
+        overflow: hidden;
+        pointer-events: none;
+        background: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        padding: 0 0 0 12px !important;
+        min-width: unset !important;
+        transition: opacity 0.2s, max-height 0.3s ease;
+      }
+
+      .nav-dropdown.mobil-åpen .dropdown-meny {
         opacity: 1;
+        max-height: 300px;
         pointer-events: auto;
-        background: none;
-        backdrop-filter: none;
-        -webkit-backdrop-filter: none;
-        border: none;
-        border-radius: 0;
-        box-shadow: none;
-        padding: 0 0 0 12px;
-        min-width: unset;
+      }
+
+      .nav-dropdown.mobil-åpen > a::after {
+        transform: rotate(225deg) translateY(-2px);
       }
 
       .dropdown-meny a {
@@ -1829,8 +1851,19 @@
       document.getElementById('navLinks').addEventListener('click', e => {
         const a = e.target.closest('a[href^="#"]');
         if (!a) return;
+
+        // På mobil: klikk på dropdown-trigger toggles underseksjoner
+        const dropdown = a.closest('.nav-dropdown');
+        if (dropdown && window.innerWidth <= 600 && a === dropdown.querySelector(':scope > a')) {
+          e.preventDefault();
+          dropdown.classList.toggle('mobil-åpen');
+          return;
+        }
+
         e.preventDefault();
         lukkMeny();
+        // Lukk alle mobil-dropdowns
+        document.querySelectorAll('.nav-dropdown.mobil-åpen').forEach(d => d.classList.remove('mobil-åpen'));
         document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
       });
 
@@ -2527,7 +2560,7 @@ visVærResultat();
   <footer>
     <p>Laget av <a href="https://github.com/simonfrogner" target="_blank">Simon Sæterlid Frogner</a> &nbsp;·&nbsp; © 2026</p>
     <button onclick="delSide()" class="footer-del-btn">🔗 Del siden</button>
-    <p class="footer-versjon">v1.5 &nbsp;·&nbsp; mars 2026</p>
+    <p class="footer-versjon">v1.6 &nbsp;·&nbsp; mars 2026</p>
   </footer>
 
 </body>
