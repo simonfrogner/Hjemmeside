@@ -1,6 +1,6 @@
 # Simon sin stilige nettside
 
-En personlig nettside vibe-kodet med [Claude Code](https://claude.ai/code).
+En personlig nettside laget med [Claude Code](https://claude.ai/code).
 
 🌐 **Live:** [simonfrogner.github.io/Hjemmeside](https://simonfrogner.github.io/Hjemmeside)
 
@@ -40,6 +40,8 @@ Inspirert av Apples designspråk:
 
 - Bakgrunn `#f5f5f7`, font `-apple-system`
 - Frosted glass-navigasjonsbar, midtstilt, med Apple-favicon (blå sirkel med S)
+- Apple-stil dropdown-meny på desktop: hover over Info, Verktøy og Spill
+- Kollapsbar mobilmeny med nedtrekkbare underseksjoner
 - Radial spotlight-bakgrunn med unik farge per seksjon
 - Seksjonsetiketter og venstrestilte titler
 - Myke overganger og animasjoner
