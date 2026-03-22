@@ -66,7 +66,7 @@ Format basert på [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
-## [v1.0] — januar/februar 2026
+## [v1.0] — 13–15. mars 2026
 ### Lagt til
 - Apple-inspirert design: #f5f5f7 bakgrunn, #0071e3 aksent, frosted glass-nav
 - Vær-seksjon med Open-Meteo API og canvas-animasjoner (regn, snø, sol, torden)
