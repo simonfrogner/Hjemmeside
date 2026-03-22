@@ -2190,11 +2190,12 @@
         ctx.fillText(tekst, x, pad.top - 4);
       });
 
-      // x-etiketter
+      // x-etiketter — hvert 4. år på smal skjerm, hvert 2. år ellers
+      const stegX = W < 500 ? 4 : 2;
       ctx.textAlign = 'center';
       ctx.font = `11px -apple-system, sans-serif`;
       år.forEach((å, i) => {
-        if (i % 2 !== 0) return;
+        if (i % stegX !== 0) return;
         ctx.fillStyle = tekstFarge;
         ctx.fillText(å, xPos(i), H - pad.bottom + 18);
       });
@@ -2285,6 +2286,37 @@
       canvas.parentElement.style.position = 'relative';
       canvas.parentElement.appendChild(tooltip);
 
+      // Tegner sirkler på linjene ved hover-indeks
+      function tegnMerker(idx) {
+        if (!boligGrafState) return;
+        tegnBoligFrame(1); // retegn grafen først (fjerner gamle merker)
+        const { år, serier, H } = boligGrafState;
+        const W = boligGrafState.W;
+        const ctx = canvas.getContext('2d');
+        ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+        const pad = { top: 30, right: 24, bottom: 50, left: 72 };
+        const grafW = W - pad.left - pad.right;
+        const grafH = H - pad.top - pad.bottom;
+        const aktive = serier.filter(s => s.aktiv);
+        const alleV  = aktive.flatMap(s => s.data).filter(v => v !== null);
+        if (!alleV.length) return;
+        const minV = Math.min(...alleV), maxV = Math.max(...alleV), range = maxV - minV || 1;
+        const xPos = i => pad.left + (i / (år.length - 1)) * grafW;
+        const yPos = v => pad.top + grafH - ((v - minV) / range) * grafH;
+
+        aktive.forEach(({ data, farge }) => {
+          const v = data[idx];
+          if (v === null) return;
+          ctx.beginPath();
+          ctx.arc(xPos(idx), yPos(v), 5, 0, Math.PI * 2);
+          ctx.fillStyle = farge;
+          ctx.fill();
+          ctx.strokeStyle = document.body.classList.contains('dark') ? '#1c1c1e' : '#fff';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        });
+      }
+
       canvas.addEventListener('mousemove', e => {
         if (!boligGrafState) return;
         const { år, serier, W } = boligGrafState;
@@ -2292,9 +2324,8 @@
         const mx = e.clientX - rect.left;
         const pad = { left: 72, right: 24 };
         const grafW = W - pad.left - pad.right;
-        const frac = (mx - pad.left) / grafW;
-        const idx  = Math.round(frac * (år.length - 1));
-        if (idx < 0 || idx >= år.length) { tooltip.style.display = 'none'; return; }
+        const idx  = Math.round(((mx - pad.left) / grafW) * (år.length - 1));
+        if (idx < 0 || idx >= år.length) { tooltip.style.display = 'none'; tegnBoligFrame(1); return; }
 
         const linjer = serier.filter(s => s.aktiv && s.data[idx] !== null)
           .map(s => `<span style="color:${s.farge}">●</span> ${s.label}: <b>${s.data[idx].toLocaleString('no')} kr/m²</b>`)
@@ -2307,8 +2338,9 @@
         const ty = e.clientY - rect.top - 10;
         tooltip.style.left = tx + 'px';
         tooltip.style.top  = ty + 'px';
+        tegnMerker(idx);
       });
-      canvas.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
+      canvas.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; tegnBoligFrame(1); });
 
       // Touch-støtte for mobil
       function visTooltipFraTouchX(e) {
@@ -2950,7 +2982,7 @@ visVærResultat();
   <footer>
     <p>Laget av <a href="https://github.com/simonfrogner" target="_blank">Simon Sæterlid Frogner</a> &nbsp;·&nbsp; © 2026</p>
     <button onclick="delSide()" class="footer-del-btn">🔗 Del siden</button>
-    <p class="footer-versjon">v1.7 &nbsp;·&nbsp; mars 2026</p>
+    <p class="footer-versjon">v1.8 &nbsp;·&nbsp; mars 2026</p>
   </footer>
 
 </body>
