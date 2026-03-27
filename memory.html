@@ -664,9 +664,12 @@
 
     if (match) {
       lydMatch();
-      const spillerKlasse = modus === 'mp' ? `spiller${aktivSpiller}` : '';
-      a.el.classList.add('matchet', spillerKlasse);
-      b.el.classList.add('matchet', spillerKlasse);
+      a.el.classList.add('matchet');
+      b.el.classList.add('matchet');
+      if (modus === 'mp') {
+        a.el.classList.add(`spiller${aktivSpiller}`);
+        b.el.classList.add(`spiller${aktivSpiller}`);
+      }
       parFunnet++;
 
       if (modus === 'mp') {
