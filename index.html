@@ -1968,12 +1968,21 @@
         <p class="seksjon-etikett fade-in">Tid</p>
         <h2 class="section-title fade-in">Nedtelling</h2>
         <div class="card fade-in" style="padding: 24px;">
-          <div class="nedtelling-form">
-            <input type="text" id="nedtelling-navn" placeholder="Navn (f.eks. Ferie)" maxlength="40" />
-            <input type="date" id="nedtelling-dato" placeholder="dd.mm.åååå" />
-            <button id="nedtelling-legg-til">Legg til</button>
+          <div class="nyheter-tabs" style="margin-bottom:20px;">
+            <button class="nyheter-tab aktiv" id="nd-tab-egne">Mine</button>
+            <button class="nyheter-tab" id="nd-tab-hellig">Helligdager</button>
           </div>
-          <div class="nedtelling-liste" id="nedtelling-liste"></div>
+          <div id="nd-egne">
+            <div class="nedtelling-form">
+              <input type="text" id="nedtelling-navn" placeholder="Navn (f.eks. Ferie)" maxlength="40" />
+              <input type="date" id="nedtelling-dato" placeholder="dd.mm.åååå" />
+              <button id="nedtelling-legg-til">Legg til</button>
+            </div>
+            <div class="nedtelling-liste" id="nedtelling-liste"></div>
+          </div>
+          <div id="nd-hellig" style="display:none;">
+            <div class="nedtelling-liste" id="helligdag-liste"></div>
+          </div>
         </div>
       </div>
     </section>
@@ -3734,6 +3743,79 @@ visVærResultat();
 
       visNedtellinger();
 
+      // ── HELLIGDAGER ───────────────────────────────────────────────────
+      // Henter norske helligdager fra Nager.Date API og viser som nedtellinger
+      async function hentHelligdager() {
+        const år = new Date().getFullYear();
+        const cacheKey = `helligdager_${år}`;
+        const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null');
+        if (cached) return cached;
+        const res = await fetch(`https://date.nager.at/api/v3/PublicHolidays/${år}/NO`);
+        if (!res.ok) throw new Error('Feil');
+        const data = await res.json();
+        localStorage.setItem(cacheKey, JSON.stringify(data));
+        return data;
+      }
+
+      async function visHelligdager() {
+        const liste = document.getElementById('helligdag-liste');
+        liste.innerHTML = '<p class="nedtelling-tom">Laster...</p>';
+        try {
+          const helligdager = await hentHelligdager();
+          const iDag = new Date(); iDag.setHours(0,0,0,0);
+          // Sorter og filtrer ut passerte
+          const kommende = helligdager
+            .map(h => ({ ...h, dager: Math.round((new Date(h.date) - iDag) / (1000*60*60*24)) }))
+            .sort((a, b) => a.dager - b.dager);
+
+          if (kommende.length === 0) {
+            liste.innerHTML = '<p class="nedtelling-tom">Ingen helligdager funnet.</p>';
+            return;
+          }
+
+          const nesteIdx = kommende.findIndex(h => h.dager >= 0);
+          liste.innerHTML = kommende.map((h, i) => {
+            const dato = new Date(h.date).toLocaleDateString('no-NO', { day: 'numeric', month: 'long', year: 'numeric' });
+            const erNeste = i === nesteIdx;
+            let dagerHTML;
+            if (h.dager < 0) {
+              dagerHTML = `<div><div class="nedtelling-dager passert">Passert</div><div class="nedtelling-dager-label">${Math.abs(h.dager)} dager siden</div></div>`;
+            } else if (h.dager === 0) {
+              dagerHTML = `<div><div class="nedtelling-dager" style="color:#34c759">I dag! 🎉</div></div>`;
+            } else {
+              dagerHTML = `<div><div class="nedtelling-dager" style="${erNeste ? 'color:#0071e3' : ''}">${h.dager}</div><div class="nedtelling-dager-label">dager igjen</div></div>`;
+            }
+            return `<div class="nedtelling-kort" style="flex-direction:column;align-items:stretch;gap:8px;${erNeste ? 'border-color:#0071e3;' : ''}">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
+                <div class="nedtelling-kort-info">
+                  <div class="nedtelling-navn">${h.localName}${erNeste ? ' 👈' : ''}</div>
+                  <div class="nedtelling-dato-liten">${dato}</div>
+                </div>
+                ${dagerHTML}
+              </div>
+            </div>`;
+          }).join('');
+        } catch(e) {
+          liste.innerHTML = '<p class="nedtelling-tom">Kunne ikke hente helligdager.</p>';
+        }
+      }
+
+      // Tab-bytte mellom egne nedtellinger og helligdager
+      let helligLastet = false;
+      document.getElementById('nd-tab-egne').addEventListener('click', () => {
+        document.getElementById('nd-tab-egne').classList.add('aktiv');
+        document.getElementById('nd-tab-hellig').classList.remove('aktiv');
+        document.getElementById('nd-egne').style.display = '';
+        document.getElementById('nd-hellig').style.display = 'none';
+      });
+      document.getElementById('nd-tab-hellig').addEventListener('click', () => {
+        document.getElementById('nd-tab-hellig').classList.add('aktiv');
+        document.getElementById('nd-tab-egne').classList.remove('aktiv');
+        document.getElementById('nd-hellig').style.display = '';
+        document.getElementById('nd-egne').style.display = 'none';
+        if (!helligLastet) { helligLastet = true; visHelligdager(); }
+      });
+
       byggTidssoneGrid();
       oppdaterTidssoner();
       setInterval(oppdaterTidssoner, 1000);
@@ -3856,7 +3938,7 @@ visVærResultat();
   <footer>
     <p>Laget av <a href="https://github.com/simonfrogner" target="_blank">Simon Sæterlid Frogner</a> &nbsp;·&nbsp; © 2026</p>
     <button id="footer-del-knapp" class="footer-del-btn">🔗 Del siden</button>
-    <p class="footer-versjon">v1.12 &nbsp;·&nbsp; mars 2026</p>
+    <p class="footer-versjon">v1.13 &nbsp;·&nbsp; mars 2026</p>
   </footer>
 
 </body>

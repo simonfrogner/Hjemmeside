@@ -23,7 +23,7 @@ Navigasjonen er gruppert i fem seksjoner:
 
 **Verktøy**
 - Skriving — skrivehurtigtest med WPM og nøyaktighetsstatistikk
-- Nedtelling — legg til hendelser med dato og se dager igjen med fargekodet fremgangsbjelke
+- Nedtelling — legg til hendelser med dato og se dager igjen med fargekodet fremgangsbjelke; egen fane for norske helligdager med neste kommende uthevet
 - Navnefakta — skriv inn navnet ditt og få live data fra SSB (antall, toppår, trend) samt morsomme fakta
 
 **Spill**
@@ -43,7 +43,7 @@ Navigasjonen er gruppert i fem seksjoner:
 
 ## Versjon
 
-v1.12 — kodeforenkling og kommentaroppdatering
+v1.13 — norske helligdager integrert i nedtelling, kodeforenkling
 
 ## Design
 
@@ -66,6 +66,7 @@ Inspirert av Apples designspråk:
 - [SSB PxWeb API](https://data.ssb.no/) (navnestatistikk og boligpriser, ingen API-nøkkel)
 - [Norges Bank API](https://data.norges-bank.no/) (valutakurser, ingen API-nøkkel)
 - [hvakosterstrommen.no API](https://www.hvakosterstrommen.no/strompris-api) (strømpriser, ingen API-nøkkel)
+- [Nager.Date API](https://date.nager.at/) (norske helligdager, ingen API-nøkkel)
 - NRK, VG og E24 RSS via CORS-proxy med localStorage-cache per kilde
 - Nominatim (omvendt geokoding)
 - Canvas API (væranimasjoner, Snake-spill, boligpris-graf, strømpris-graf, konfetti)
