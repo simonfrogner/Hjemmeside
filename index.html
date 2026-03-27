@@ -354,7 +354,8 @@
     #vær        { --sg: rgba(0,190,255,0.09); }
     #nyheter    { --sg: rgba(255,149,0,0.08); }
     #klokke     { --sg: rgba(255,204,0,0.08); }
-    #skriving   { --sg: rgba(52,199,89,0.08); }
+    #skriving    { --sg: rgba(52,199,89,0.08); }
+    #kalkulator  { --sg: rgba(255,159,10,0.08); }
     #kryssord   { --sg: rgba(0,163,200,0.09); }
     #tetris     { --sg: rgba(88,86,214,0.08); }
     #snake      { --sg: rgba(100,210,80,0.08); }
@@ -779,7 +780,8 @@
     body.dark #vær        { --sg: rgba(0,190,255,0.14); }
     body.dark #nyheter    { --sg: rgba(255,149,0,0.14); }
     body.dark #klokke     { --sg: rgba(255,204,0,0.13); }
-    body.dark #skriving   { --sg: rgba(52,199,89,0.14); }
+    body.dark #skriving    { --sg: rgba(52,199,89,0.14); }
+    body.dark #kalkulator  { --sg: rgba(255,159,10,0.14); }
     body.dark #kryssord   { --sg: rgba(0,163,200,0.14); }
     body.dark #tetris     { --sg: rgba(88,86,214,0.15); }
     body.dark #snake      { --sg: rgba(100,210,80,0.14); }
@@ -1385,7 +1387,7 @@
   /* ── HJEM ────────────────────────────────────────────────────────── */
   .hero-sub { color: #6e6e73; font-size: 1.1rem; margin: 12px 0 36px; }
   /* ── BOLIGPRISER ─────────────────────────────────────────────────── */
-  .bolig-søk { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+  .bolig-søk { display: flex; gap: 10px; margin-top: 16px; margin-bottom: 18px; flex-wrap: wrap; }
   .bolig-søk input {
     flex: 1; min-width: 180px; padding: 10px 14px; border-radius: 10px;
     border: 1px solid rgba(0,0,0,0.12); font-size: 0.95rem;
@@ -1469,7 +1471,7 @@
   /* ── STRØMPRISER ──────────────────────────────────────────────────── */
   .strøm-kontroller {
     display: flex; align-items: center; gap: 12px;
-    margin-bottom: 20px; flex-wrap: wrap;
+    margin-top: 16px; margin-bottom: 20px; flex-wrap: wrap;
   }
   .strøm-region-velger {
     padding: 8px 14px; border-radius: 12px;
@@ -1490,6 +1492,7 @@
   .strøm-canvas-wrap {
     background: white; border: 1.5px solid rgba(0,0,0,0.07);
     border-radius: 18px; padding: 20px; overflow: hidden;
+    margin-top: 16px;
   }
   body.dark .strøm-canvas-wrap {
     background: #1c1c1e; border-color: rgba(255,255,255,0.07);
@@ -1640,6 +1643,118 @@
   }
   body.dark .valuta-omregner-rad-item { background: #2c2c2e; color: #f5f5f7; }
   .valuta-omregner-rad-item span { font-weight: 600; }
+
+  /* ── KALKULATOR ───────────────────────────────────────────────────── */
+  .kalk-wrap {
+    display: flex; justify-content: center;
+  }
+  .kalk {
+    background: #1c1c1e;
+    border-radius: 24px;
+    overflow: hidden;
+    width: min(320px, 92vw);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+    user-select: none;
+  }
+  .kalk-display {
+    padding: 28px 22px 12px;
+    text-align: right;
+  }
+  .kalk-forrige {
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0.4);
+    min-height: 1.4em;
+    margin-bottom: 2px;
+    letter-spacing: 0.01em;
+    word-break: break-all;
+  }
+  .kalk-verdi {
+    font-size: 3.2rem;
+    font-weight: 300;
+    color: #ffffff;
+    line-height: 1.1;
+    word-break: break-all;
+    transition: font-size 0.1s;
+  }
+  .kalk-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 10px 14px 18px;
+  }
+  .kalk-btn {
+    border: none; cursor: pointer;
+    border-radius: 50%;
+    aspect-ratio: 1;
+    width: 100%;
+    font-size: 1.45rem;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 400;
+    display: flex; align-items: center; justify-content: center;
+    transition: filter 0.1s, transform 0.08s;
+  }
+  .kalk-btn:active { filter: brightness(1.25); transform: scale(0.93); }
+  .kalk-btn.fn   { background: #a5a5a5; color: #000; font-size: 1.2rem; }
+  .kalk-btn.op   { background: #ff9f0a; color: #fff; }
+  .kalk-btn.op.aktiv { background: #fff; color: #ff9f0a; }
+  .kalk-btn.tall { background: #333335; color: #fff; }
+  .kalk-btn.null { border-radius: 999px; aspect-ratio: unset; height: 100%; justify-content: flex-start; padding-left: 28px; }
+  .kalk-separator {
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+    margin: 0 14px;
+  }
+  /* Kopier-tooltip på display */
+  .kalk-display { position: relative; cursor: pointer; }
+  .kalk-display:active { opacity: 0.75; }
+  .kalk-kopiert {
+    position: absolute;
+    top: 10px; right: 22px;
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    font-size: 0.78rem;
+    padding: 3px 10px;
+    border-radius: 20px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+  }
+  .kalk-kopiert.vis { opacity: 1; }
+  /* Historikk */
+  .kalk-historikk-toggle {
+    width: 100%; background: none; border: none;
+    color: rgba(255,255,255,0.35); font-size: 0.78rem;
+    padding: 8px 14px 12px; cursor: pointer;
+    text-align: center; font-family: -apple-system, sans-serif;
+    transition: color 0.15s;
+  }
+  .kalk-historikk-toggle:hover { color: rgba(255,255,255,0.6); }
+  .kalk-historikk {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.3s ease;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .kalk-historikk.åpen { max-height: 260px; }
+  .kalk-historikk-liste {
+    padding: 8px 14px 14px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .kalk-historikk-rad {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 0.85rem; color: rgba(255,255,255,0.45);
+    padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+    cursor: pointer; transition: color 0.1s;
+  }
+  .kalk-historikk-rad:last-child { border-bottom: none; }
+  .kalk-historikk-rad:hover { color: rgba(255,255,255,0.75); }
+  .kalk-historikk-rad .kalk-hist-res { font-weight: 600; color: rgba(255,255,255,0.7); font-size: 0.95rem; }
+  .kalk-historikk-rad:hover .kalk-hist-res { color: #fff; }
+  .kalk-tom-historikk { color: rgba(255,255,255,0.25); font-size: 0.8rem; text-align: center; padding: 12px 0; }
+  body.dark .kalk { box-shadow: 0 24px 60px rgba(0,0,0,0.6); }
+  /* Light mode: litt lysere */
+  body:not(.dark) .kalk { background: #303030; }
+  body:not(.dark) .kalk-btn.tall { background: #505050; }
+  body:not(.dark) .kalk-btn.fn   { background: #b0b0b0; }
   </style>
 </head>
 <body>
@@ -1668,6 +1783,7 @@
           <a href="#boligpriser">Boligpriser</a>
           <a href="#strømpriser">Strømpriser</a>
           <a href="#valuta">Valuta</a>
+          <a href="#navnefakta">Navnefakta</a>
         </div>
       </div>
 
@@ -1676,17 +1792,17 @@
         <div class="dropdown-meny">
           <a href="#skriving">Skriving</a>
           <a href="#nedtelling">Nedtelling</a>
-          <a href="#navnefakta">Navnefakta</a>
+          <a href="#kalkulator">Kalkulator</a>
         </div>
       </div>
 
       <div class="nav-dropdown">
         <a href="#spill">Spill</a>
         <div class="dropdown-meny">
-          <a href="#kryssord">Kryssord</a>
           <a href="#tetris">Tetris</a>
           <a href="#snake">Snake</a>
           <a href="#memory">Memory</a>
+          <a href="#kryssord">Kryssord</a>
         </div>
       </div>
 
@@ -1724,17 +1840,17 @@
         <a href="#info" class="hjem-kort" data-nav>
           <div class="hjem-kort-ikon">💡</div>
           <div class="hjem-kort-tittel">Info</div>
-          <div class="hjem-kort-beskrivelse">Klokke, tidssoner, vær, nyheter, boligpriser, strøm og valuta</div>
+          <div class="hjem-kort-beskrivelse">Klokke, tidssoner, vær, nyheter, boligpriser, strøm, valuta og navnefakta</div>
         </a>
         <a href="#verktøy" class="hjem-kort" data-nav>
           <div class="hjem-kort-ikon">🛠️</div>
           <div class="hjem-kort-tittel">Verktøy</div>
-          <div class="hjem-kort-beskrivelse">Skrivetest, nedtelling og navnefakta</div>
+          <div class="hjem-kort-beskrivelse">Skrivetest, kalkulator og nedtelling</div>
         </a>
         <a href="#spill" class="hjem-kort" data-nav>
           <div class="hjem-kort-ikon">🎮</div>
           <div class="hjem-kort-tittel">Spill</div>
-          <div class="hjem-kort-beskrivelse">Kryssord, Tetris, Snake og Memory</div>
+          <div class="hjem-kort-beskrivelse">Tetris, Snake, Memory og Kryssord</div>
         </a>
       </div>
     </section>
@@ -1915,6 +2031,25 @@
       </div>
     </section>
 
+    <!-- INFO: NAVNEFAKTA -->
+    <section id="navnefakta">
+      <div class="seksjon-innhold">
+      <p class="seksjon-etikett fade-in">Info</p>
+      <h2 class="section-title fade-in">Fakta om navnet ditt</h2>
+      <div class="fakta-innhold fade-in">
+        <div class="input-group">
+          <input type="text" id="navnBoks" placeholder="Skriv navnet ditt her...">
+          <button id="navn-si-hei-knapp">Si hei!</button>
+        </div>
+        <h2 id="svar" class="fakta-svar"></h2>
+        <div class="navn-section">
+          <h3 id="faktaTittel" class="fakta-tittel"></h3>
+          <ul id="navnFakta" class="tom fakta-liste"></ul>
+        </div>
+      </div>
+      </div>
+    </section>
+
     <!-- VERKTØY-GRUPPE -->
     <div id="verktøy" class="gruppe-header"><p class="gruppe-label">Verktøy</p></div>
 
@@ -1943,25 +2078,6 @@
       </div>
     </section>
 
-    <!-- VERKTØY: NAVNEFAKTA -->
-    <section id="navnefakta">
-      <div class="seksjon-innhold">
-      <p class="seksjon-etikett fade-in">Navnefakta</p>
-      <h2 class="section-title fade-in">Fakta om navnet ditt</h2>
-      <div class="fakta-innhold fade-in">
-        <div class="input-group">
-          <input type="text" id="navnBoks" placeholder="Skriv navnet ditt her...">
-          <button id="navn-si-hei-knapp">Si hei!</button>
-        </div>
-        <h2 id="svar" class="fakta-svar"></h2>
-        <div class="navn-section">
-          <h3 id="faktaTittel" class="fakta-tittel"></h3>
-          <ul id="navnFakta" class="tom fakta-liste"></ul>
-        </div>
-      </div>
-      </div>
-    </section>
-
     <!-- NEDTELLING -->
     <section id="nedtelling">
       <div class="seksjon-innhold">
@@ -1987,18 +2103,56 @@
       </div>
     </section>
 
-    <!-- SPILL-GRUPPE -->
-    <div id="spill" class="gruppe-header"><p class="gruppe-label">Spill</p></div>
-
-    <!-- KRYSSORD -->
-    <section id="kryssord">
+    <!-- KALKULATOR -->
+    <section id="kalkulator">
       <div class="seksjon-innhold">
-      <p class="seksjon-etikett fade-in">Spill</p>
-      <h2 class="section-title fade-in">Kryssord</h2>
-      <p class="section-intro">Norsk kryssord med teknologi-tema. Klarer du å løse alle?</p>
-      <a href="kryssord.html"><button class="tetris-btn">Spill nå</button></a>
+        <p class="seksjon-etikett fade-in">Verktøy</p>
+        <h2 class="section-title fade-in">Kalkulator</h2>
+        <div class="kalk-wrap fade-in">
+          <div class="kalk" id="kalk">
+            <div class="kalk-display" id="kalk-display">
+              <div class="kalk-kopiert" id="kalk-kopiert">Kopiert!</div>
+              <div class="kalk-forrige" id="kalk-forrige"></div>
+              <div class="kalk-verdi" id="kalk-verdi">0</div>
+            </div>
+            <div class="kalk-separator"></div>
+            <div class="kalk-grid">
+              <!-- Rad 1 -->
+              <button class="kalk-btn fn" data-k="ac">AC</button>
+              <button class="kalk-btn fn" data-k="sign">⁺∕₋</button>
+              <button class="kalk-btn fn" data-k="pst">%</button>
+              <button class="kalk-btn op" data-k="÷">÷</button>
+              <!-- Rad 2 -->
+              <button class="kalk-btn tall" data-k="7">7</button>
+              <button class="kalk-btn tall" data-k="8">8</button>
+              <button class="kalk-btn tall" data-k="9">9</button>
+              <button class="kalk-btn op" data-k="×">×</button>
+              <!-- Rad 3 -->
+              <button class="kalk-btn tall" data-k="4">4</button>
+              <button class="kalk-btn tall" data-k="5">5</button>
+              <button class="kalk-btn tall" data-k="6">6</button>
+              <button class="kalk-btn op" data-k="−">−</button>
+              <!-- Rad 4 -->
+              <button class="kalk-btn tall" data-k="1">1</button>
+              <button class="kalk-btn tall" data-k="2">2</button>
+              <button class="kalk-btn tall" data-k="3">3</button>
+              <button class="kalk-btn op" data-k="+">+</button>
+              <!-- Rad 5 -->
+              <button class="kalk-btn tall null" data-k="0" style="grid-column:span 2;">0</button>
+              <button class="kalk-btn tall" data-k=",">,</button>
+              <button class="kalk-btn op" data-k="=">=</button>
+            </div>
+            <button class="kalk-historikk-toggle" id="kalk-hist-toggle">Historikk ▾</button>
+            <div class="kalk-historikk" id="kalk-historikk">
+              <div class="kalk-historikk-liste" id="kalk-historikk-liste"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
+
+    <!-- SPILL-GRUPPE -->
+    <div id="spill" class="gruppe-header"><p class="gruppe-label">Spill</p></div>
 
     <!-- TETRIS -->
     <section id="tetris">
@@ -2030,11 +2184,22 @@
       </div>
     </section>
 
+    <!-- KRYSSORD -->
+    <section id="kryssord">
+      <div class="seksjon-innhold">
+      <p class="seksjon-etikett fade-in">Spill</p>
+      <h2 class="section-title fade-in">Kryssord</h2>
+      <p class="section-intro">Norsk kryssord med teknologi-tema. Klarer du å løse alle?</p>
+      <a href="kryssord.html"><button class="tetris-btn">Spill nå</button></a>
+      </div>
+    </section>
+
     <section id="kontakt">
       <div class="seksjon-innhold">
         <p class="seksjon-etikett fade-in">Kontakt</p>
         <h2 class="section-title fade-in">Si hei</h2>
         <p class="section-intro">Send meg en melding — jeg svarer så fort jeg kan.</p>
+        <p class="kontakt-status feil" style="margin-bottom:12px;">⚠️ Kontaktskjemaet er ikke i bruk for øyeblikket.</p>
         <form class="kontakt-skjema" id="kontaktSkjema" onsubmit="sendKontakt(event)">
           <input  type="text"  id="k-navn"    placeholder="Navn"         autocomplete="name"  required>
           <input  type="email" id="k-epost"   placeholder="E-post"       autocomplete="email" required>
@@ -2292,8 +2457,8 @@
     // er en underseksjon av «info» og ikke har egen topplenke i nav.
     const gruppeMap = {
       hjem: '#hjem',
-      klokke: '#info',   tidssoner: '#info', vær: '#info',      nyheter: '#info',      boligpriser: '#info',      strømpriser: '#info',      valuta: '#info',
-      skriving: '#verktøy', nedtelling: '#verktøy', navnefakta: '#verktøy',
+      klokke: '#info',   tidssoner: '#info', vær: '#info',      nyheter: '#info',      boligpriser: '#info',      strømpriser: '#info',      valuta: '#info',      navnefakta: '#info',
+      skriving: '#verktøy', nedtelling: '#verktøy', kalkulator: '#verktøy',
       kryssord: '#spill', tetris: '#spill', snake: '#spill', memory: '#spill',
       kontakt: '#kontakt',
     };
@@ -3937,6 +4102,184 @@ visVærResultat();
           if (!valutaLastet) { valutaLastet = true; setTimeout(visValuta, 220); }
         });
       });
+
+      // ── KALKULATOR ────────────────────────────────────────────────────
+      // Apple-stil kalkulator med tastaturstøtte, historikk og kopier
+      let kVis = '0';
+      let kForrige = '';
+      let kOp = null;
+      let kVentPåNyttTall = false;
+      let kUttrykk = '';    // Hele regnestykket som vises øverst
+      let kHistorikk = []; // { uttrykk, resultat }
+
+      const kValEl       = document.getElementById('kalk-verdi');
+      const kForrigeEl   = document.getElementById('kalk-forrige');
+      const kKopiertEl   = document.getElementById('kalk-kopiert');
+      const kHistListeEl = document.getElementById('kalk-historikk-liste');
+
+      function kOppdater() {
+        const len = kVis.replace('-', '').length;
+        kValEl.style.fontSize = len > 9 ? '1.8rem' : len > 6 ? '2.4rem' : '3.2rem';
+        kValEl.textContent = kVis.replace('.', ',');
+        kForrigeEl.textContent = kUttrykk;
+        document.querySelectorAll('.kalk-btn.op').forEach(b => {
+          b.classList.toggle('aktiv', b.dataset.k === kOp && kVentPåNyttTall);
+        });
+      }
+
+      // Vis historikk-liste
+      function kVisHistorikk() {
+        if (kHistorikk.length === 0) {
+          kHistListeEl.innerHTML = '<p class="kalk-tom-historikk">Ingen beregninger ennå</p>';
+          return;
+        }
+        kHistListeEl.innerHTML = [...kHistorikk].reverse().map((h, i) =>
+          `<div class="kalk-historikk-rad" data-idx="${kHistorikk.length - 1 - i}">
+            <span>${h.uttrykk}</span>
+            <span class="kalk-hist-res">= ${h.resultat.replace('.', ',')}</span>
+          </div>`
+        ).join('');
+      }
+
+      // Klikk på historikk-rad: bruk resultatet
+      document.getElementById('kalk-historikk-liste').addEventListener('click', e => {
+        const rad = e.target.closest('.kalk-historikk-rad');
+        if (!rad) return;
+        const idx = parseInt(rad.dataset.idx);
+        kVis = kHistorikk[idx].resultat;
+        kOp = null; kForrige = ''; kVentPåNyttTall = true; kUttrykk = '';
+        kOppdater();
+      });
+
+      function kTallTrykk(siffer) {
+        if (kVentPåNyttTall) {
+          kVis = siffer === ',' ? '0,' : siffer;
+          kVentPåNyttTall = false;
+          // Starter et nytt regnestykke etter = — nullstill uttrykket
+          if (!kOp) kUttrykk = '';
+        } else {
+          if (siffer === ',' && kVis.includes(',')) return;
+          if (kVis === '0' && siffer !== ',') kVis = siffer;
+          else kVis += siffer;
+        }
+        // Oppdater det løpende uttrykket: bytt ut siste tall
+        if (kOp) {
+          kUttrykk = `${kForrige.replace('.', ',')} ${kOp} ${kVis.replace('.', ',')}`;
+        } else {
+          kUttrykk = kVis.replace('.', ',');
+        }
+        kOppdater();
+      }
+
+      function kRegnUt() {
+        if (!kOp || kForrige === '') return parseFloat(kVis.replace(',', '.'));
+        const a = parseFloat(kForrige.replace(',', '.'));
+        const b = parseFloat(kVis.replace(',', '.'));
+        if (kOp === '+') return a + b;
+        if (kOp === '−') return a - b;
+        if (kOp === '×') return a * b;
+        if (kOp === '÷') return b === 0 ? 'Feil' : a / b;
+        return b;
+      }
+
+      function kFormatTall(n) {
+        if (n === 'Feil') return 'Feil';
+        // Unngå floating-point-støy (f.eks. 0.1+0.2)
+        const s = parseFloat(n.toPrecision(12)).toString();
+        return s;
+      }
+
+      function kHandle(k) {
+        if (k >= '0' && k <= '9') { kTallTrykk(k); return; }
+        if (k === ',') { kTallTrykk(','); return; }
+
+        if (k === 'ac') {
+          kVis = '0'; kForrige = ''; kOp = null; kVentPåNyttTall = false; kUttrykk = '';
+        } else if (k === 'sign') {
+          kVis = kVis.startsWith('-') ? kVis.slice(1) : (kVis === '0' ? '0' : '-' + kVis);
+          // Oppdater siste tall i uttrykket
+          if (kUttrykk) {
+            const deler = kUttrykk.trim().split(' ');
+            deler[deler.length - 1] = kVis.replace('.', ',');
+            kUttrykk = deler.join(' ');
+          }
+        } else if (k === 'pst') {
+          const v = parseFloat(kVis.replace(',', '.'));
+          kVis = kFormatTall(kOp ? parseFloat(kForrige.replace(',', '.')) * v / 100 : v / 100);
+        } else if (['+', '−', '×', '÷'].includes(k)) {
+          if (!kVentPåNyttTall) {
+            // Kjedet beregning: regn ut forrige operasjon først
+            if (kOp && kForrige !== '') {
+              const res = kRegnUt();
+              kVis = res === 'Feil' ? 'Feil' : kFormatTall(res);
+              kUttrykk = kVis.replace('.', ',');
+            } else {
+              kUttrykk = kVis.replace('.', ',');
+            }
+            kForrige = kVis;
+          }
+          kOp = k;
+          kVentPåNyttTall = true;
+          kUttrykk = `${kForrige.replace('.', ',')} ${k}`;
+        } else if (k === '=') {
+          if (!kOp) return;
+          // kUttrykk inneholder allerede "forrige op nyttTall" fra kTallTrykk
+          const fullUttrykk = kUttrykk;
+          const res = kRegnUt();
+          const resStr = res === 'Feil' ? 'Feil' : kFormatTall(res);
+          if (res !== 'Feil') {
+            kHistorikk.push({ uttrykk: fullUttrykk, resultat: resStr });
+            if (kHistorikk.length > 10) kHistorikk.shift();
+            if (document.getElementById('kalk-historikk').classList.contains('åpen')) kVisHistorikk();
+          }
+          kUttrykk = `${fullUttrykk} =`;
+          kVis = resStr;
+          kOp = null; kForrige = ''; kVentPåNyttTall = true;
+        }
+        kOppdater();
+      }
+
+      // Klikk på knapper
+      document.getElementById('kalk').addEventListener('click', e => {
+        const btn = e.target.closest('.kalk-btn');
+        if (btn) kHandle(btn.dataset.k);
+      });
+
+      // Kopier ved klikk på display
+      let kKopiertTimer = null;
+      document.getElementById('kalk-display').addEventListener('click', () => {
+        const tekst = kVis.replace('.', ',');
+        navigator.clipboard?.writeText(tekst).then(() => {
+          kKopiertEl.classList.add('vis');
+          clearTimeout(kKopiertTimer);
+          kKopiertTimer = setTimeout(() => kKopiertEl.classList.remove('vis'), 1500);
+        });
+      });
+
+      // Historikk-toggle
+      document.getElementById('kalk-hist-toggle').addEventListener('click', () => {
+        const h = document.getElementById('kalk-historikk');
+        const åpner = !h.classList.contains('åpen');
+        h.classList.toggle('åpen', åpner);
+        document.getElementById('kalk-hist-toggle').textContent = åpner ? 'Historikk ▴' : 'Historikk ▾';
+        if (åpner) kVisHistorikk();
+      });
+
+      // Tastaturstøtte (aktiv kun når kalkulator er synlig)
+      document.addEventListener('keydown', e => {
+        const kalkSeksjon = document.getElementById('kalkulator');
+        const rect = kalkSeksjon.getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+        const map = {
+          '0':'0','1':'1','2':'2','3':'3','4':'4','5':'5','6':'6','7':'7','8':'8','9':'9',
+          ',':',','.':',',
+          '+':'+','-':'−','*':'×','/':'÷',
+          'Enter':'=','=':'=','Backspace':'ac','Escape':'ac','%':'pst',
+        };
+        if (map[e.key]) { e.preventDefault(); kHandle(map[e.key]); }
+      });
+
+      kOppdater();
     });
 
   </script>
@@ -3944,7 +4287,7 @@ visVærResultat();
   <footer>
     <p>Laget av <a href="https://github.com/simonfrogner" target="_blank">Simon Sæterlid Frogner</a> &nbsp;·&nbsp; © 2026</p>
     <button id="footer-del-knapp" class="footer-del-btn">🔗 Del siden</button>
-    <p class="footer-versjon">v1.13 &nbsp;·&nbsp; mars 2026</p>
+    <p class="footer-versjon">v1.14 &nbsp;·&nbsp; mars 2026</p>
   </footer>
 
 </body>

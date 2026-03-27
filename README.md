@@ -20,11 +20,12 @@ Navigasjonen er gruppert i fem seksjoner:
 - Boligpriser — interaktiv graf med SSB-data, søk på kommune, togglebare serier
 - Strømpriser — 24-timers stolpediagram med hover-tooltip, snitt/min/maks og regionvelger (NO1–NO5)
 - Valuta — kurser for EUR, USD, GBP, SEK og DKK mot NOK med omregner og kursendring fra forrige dag
+- Navnefakta — skriv inn navnet ditt og få live data fra SSB (antall, toppår, trend) samt morsomme fakta
 
 **Verktøy**
 - Skriving — skrivehurtigtest med WPM og nøyaktighetsstatistikk
 - Nedtelling — legg til hendelser med dato og se dager igjen med fargekodet fremgangsbjelke; egen fane for norske helligdager med neste kommende uthevet
-- Navnefakta — skriv inn navnet ditt og få live data fra SSB (antall, toppår, trend) samt morsomme fakta
+- Kalkulator — Apple-stil kalkulator med historikk (siste 10 beregninger), kopier resultat og tastaturstøtte
 
 **Spill**
 - Kryssord — norsk kryssord med hint-system, ordavsløring, auto-deteksjon av seier, statistikk og nedtrekksmeny for temavalg
@@ -43,7 +44,7 @@ Navigasjonen er gruppert i fem seksjoner:
 
 ## Versjon
 
-v1.13 — norske helligdager integrert i nedtelling, kodeforenkling
+v1.14 — Apple-stil kalkulator med historikk og kopier; navnefakta flyttet til Info
 
 ## Design
 
