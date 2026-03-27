@@ -41,6 +41,10 @@ Navigasjonen er gruppert i fem seksjoner:
 - Easter egg — prøv å skrive «claude» i navnefeltet
 - Mobilstøtte — responsivt design med hamburgermeny
 
+## Versjon
+
+v1.12 — kodeforenkling og kommentaroppdatering
+
 ## Design
 
 Inspirert av Apples designspråk:
