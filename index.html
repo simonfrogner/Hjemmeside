@@ -2233,8 +2233,10 @@
       setTimeout(() => loader.remove(), 500);
     });
 
-    // scrollRestoration er allerede satt i <head> — fjerner hash hvis den har sneket seg inn
-    if (location.hash) history.replaceState(null, '', location.pathname);
+    // Hvis siden åpnes med en hash (f.eks. #tidssoner), scroll dit etter load.
+    // Fjern deretter hash fra URL så Safari ikke husker den ved neste besøk.
+    const startHash = location.hash;
+    if (startHash) history.replaceState(null, '', location.pathname);
     window.scrollTo(0, 0);
 
     window.addEventListener('pageshow', () => {
@@ -2245,6 +2247,10 @@
 
     window.addEventListener("DOMContentLoaded", () => {
       window.scrollTo(0, 0);
+      if (startHash) {
+        const mål = document.querySelector(startHash);
+        if (mål) requestAnimationFrame(() => requestAnimationFrame(() => mål.scrollIntoView({ behavior: 'instant' })));
+      }
 
       // Intercept nav-klikk: scroll til seksjon uten å legge til hash i URL-en.
       // Forhindrer at Safari husker hash og scroller dit ved neste refresh.
