@@ -15,6 +15,8 @@ Navigasjonen er gruppert i fem seksjoner:
 **Info**
 - Vær — sanntidsvær basert på din posisjon eller by, med animerte væreffekter og 7-dagers prognose
 - Nyheter — siste nyheter fra VG, auto-oppdateres hvert 5. minutt med lokal cache ved feil
+- Boligpriser — interaktiv graf med SSB-data, søk på kommune, togglebare serier
+- Fjelloverganger — oversikt over 10 norske fjelloverganger med høyde og riksvegnummer
 
 **Verktøy**
 - Klokke — analog og digital klokke med dato
@@ -25,11 +27,13 @@ Navigasjonen er gruppert i fem seksjoner:
 - Kryssord — norsk kryssord med hint-system, ordavsløring, auto-deteksjon av seier, statistikk og nedtrekksmeny for temavalg
 - Tetris — klassisk Tetris med neon-design, musikk, nivåstigning og highscore
 - Snake — klassisk Nokia-spill med LCD-farger, pause, 8-bit lyd, wrap-around modus og top 3 highscore
+- Memory — 4×4 emoji-memory med flip-animasjon, lydeffekter, konfetti, beste rekord og 2-spiller modus
 
 **Kontakt** — kontaktskjema
 
 **Generelt**
-- Mørkt tema — bryter med SF Symbols-ikoner for å bytte mellom lyst og mørkt
+- Mørkt tema — bryter med SF Symbols-ikoner for å bytte mellom lyst og mørkt, synkroniseres til alle spill
+- Fade-overgang — nav-lenker fader siden ut/inn istedenfor å scrolle
 - Scroll-til-topp-knapp — dukker opp når du scroller ned
 - Easter egg — prøv å skrive «claude» i navnefeltet
 - Mobilstøtte — responsivt design med hamburgermeny
@@ -52,10 +56,11 @@ Inspirert av Apples designspråk:
 - [Open-Meteo API](https://open-meteo.com/) (vær, ingen API-nøkkel)
 - [SSB PxWeb API](https://data.ssb.no/) (navnestatistikk, ingen API-nøkkel)
 - Nominatim (omvendt geokoding)
-- Canvas API (væranimasjoner, Snake-spill)
+- Canvas API (væranimasjoner, Snake-spill, boligpris-graf, konfetti)
 - VG RSS via CORS-proxy med localStorage-cache
-- Web Audio API (konfetti-lyd, Tetris-musikk og Snake-lydeffekter)
-- localStorage (tema, highscores og statistikk)
+- Web Audio API (Memory-lydeffekter, Tetris-musikk og Snake-lydeffekter)
+- localStorage (tema, highscores, rekorder og statistikk)
+- SSB PxWeb API (boligpriser tabell 06035, kvadratmeterpris)
 - GitHub Pages (hosting)
 
 ---
