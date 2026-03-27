@@ -270,13 +270,88 @@
     section:nth-child(even) { background: #f5f5f7; }
 
     /* ── SECTION SPOTLIGHTS — delt via CSS custom property --sg (spotlight-farge) ── */
-    #hjem,#vær,#klokke,#kryssord,#snake { --sb: #ffffff; }
+    #vær,#klokke,#kryssord,#snake { --sb: #ffffff; }
     #navnefakta,#nyheter,#skriving,#tetris { --sb: #f5f5f7; }
-    #hjem,#vær,#klokke,#kryssord,#snake,
+    #vær,#klokke,#kryssord,#snake,
     #navnefakta,#nyheter,#skriving,#tetris {
       background: radial-gradient(ellipse 70% 60% at 50% 48%, var(--sg,transparent) 0%, transparent 70%), var(--sb);
     }
-    #hjem       { --sg: rgba(0,113,227,0.10); }
+    #hjem {
+      background: linear-gradient(-45deg, #e0f0ff, #f0e6ff, #ffe6f0, #e6f5ff, #f5e6ff);
+      background-size: 400% 400%;
+      animation: hjem-gradient 12s ease infinite;
+    }
+    body.dark #hjem {
+      background: linear-gradient(-45deg, #0a1628, #1a0a2e, #2a0a1e, #0a1e2a, #1a0a28);
+      background-size: 400% 400%;
+      animation: hjem-gradient 12s ease infinite;
+    }
+    .hjem-grid {
+      display: flex; gap: 20px; justify-content: center;
+      flex-wrap: wrap; padding: 0 24px 32px;
+      max-width: 800px; margin: 0 auto;
+    }
+    .hjem-kort {
+      background: rgba(255,255,255,0.55);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255,255,255,0.75);
+      border-radius: 24px;
+      padding: 32px 28px 28px;
+      flex: 1; min-width: 190px; max-width: 230px;
+      text-decoration: none; color: inherit;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 0; text-align: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;
+      cursor: pointer;
+      position: relative; overflow: hidden;
+    }
+    .hjem-kort::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hjem-kort:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 48px rgba(0,0,0,0.14), 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .hjem-kort:hover .hjem-kort-ikon {
+      animation: ikon-bounce 0.45s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    body.dark .hjem-kort {
+      background: rgba(36,36,38,0.65);
+      border-color: rgba(255,255,255,0.08);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    }
+    body.dark .hjem-kort::before {
+      background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 60%);
+    }
+    .hjem-kort-ikon {
+      font-size: 2.6rem; line-height: 1;
+      margin-bottom: 16px;
+    }
+    .hjem-kort-tittel {
+      font-size: 1.1rem; font-weight: 700;
+      color: #1d1d1f; letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+    body.dark .hjem-kort-tittel { color: #f5f5f7; }
+    .hjem-kort-beskrivelse {
+      font-size: 0.8rem; color: #6e6e73; line-height: 1.5;
+    }
+    @keyframes ikon-bounce {
+      0%   { transform: scale(1); }
+      40%  { transform: scale(1.25) rotate(-6deg); }
+      70%  { transform: scale(0.95) rotate(3deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    @keyframes hjem-gradient {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
     #navnefakta { --sg: rgba(147,51,234,0.08); }
     #vær        { --sg: rgba(0,190,255,0.09); }
     #nyheter    { --sg: rgba(255,149,0,0.08); }
@@ -700,9 +775,8 @@
 
     body.dark section { background: #1c1c1e; border-top-color: rgba(255,255,255,0.06); }
     body.dark section:nth-child(even) { background: #000000; }
-    body.dark #hjem,body.dark #vær,body.dark #klokke,body.dark #kryssord,body.dark #snake { --sb: #1c1c1e; }
+    body.dark #vær,body.dark #klokke,body.dark #kryssord,body.dark #snake { --sb: #1c1c1e; }
     body.dark #navnefakta,body.dark #nyheter,body.dark #skriving,body.dark #tetris { --sb: #000000; }
-    body.dark #hjem       { --sg: rgba(41,151,255,0.15); }
     body.dark #navnefakta { --sg: rgba(147,51,234,0.15); }
     body.dark #vær        { --sg: rgba(0,190,255,0.14); }
     body.dark #nyheter    { --sg: rgba(255,149,0,0.14); }
@@ -1349,39 +1423,6 @@
   body.dark .bolig-forslag { background: #1c1c1e; border-color: rgba(255,255,255,0.1); }
   body.dark .bolig-forslag div:hover { background: #2c2c2e; }
   body.dark #bolig-canvas { background: #1c1c1e; border-color: rgba(255,255,255,0.07); }
-  /* ── FJELLOVERGANGER ─────────────────────────────────────────────── */
-  .fjell-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-  .fjell-kort {
-    background: white;
-    border: 1.5px solid rgba(0,0,0,0.07);
-    border-radius: 16px;
-    padding: 16px 18px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .fjell-navn { font-size: 0.95rem; font-weight: 600; color: #1d1d1f; }
-  .fjell-rute { font-size: 0.8rem; color: #6e6e73; }
-  .fjell-høyde { font-size: 0.78rem; color: #a1a1a6; margin-top: 2px; }
-  .fjell-ekstern-knapp {
-    display: inline-flex; align-items: center; gap: 6px;
-    margin-top: 16px;
-    padding: 10px 20px;
-    background: #0071e3; color: white;
-    border: none; border-radius: 980px;
-    font-size: 0.9rem; font-weight: 500;
-    cursor: pointer; text-decoration: none;
-    transition: background 0.2s;
-  }
-  .fjell-ekstern-knapp:hover { background: #0077ed; }
-  .fjell-info { font-size: 0.83rem; color: #6e6e73; margin-top: 6px; }
-  body.dark .fjell-kort { background: #1c1c1e; border-color: rgba(255,255,255,0.07); }
-  body.dark .fjell-navn { color: #f5f5f7; }
   /* ── GRUPPE-HEADER ────────────────────────────────────────────────── */
   .gruppe-header { padding: 16px max(20px, calc(50vw - 340px)) 0; }
   .gruppe-label {
@@ -1427,6 +1468,181 @@
   }
   body.dark .kontakt-skjema input:focus,
   body.dark .kontakt-skjema textarea:focus { border-color: #2997ff; }
+
+  /* ── STRØMPRISER ──────────────────────────────────────────────────── */
+  .strøm-kontroller {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px; flex-wrap: wrap;
+  }
+  .strøm-region-velger {
+    padding: 8px 14px; border-radius: 12px;
+    border: 1.5px solid rgba(0,0,0,0.1);
+    background: white; font-size: 0.9rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    color: #1d1d1f; cursor: pointer;
+  }
+  body.dark .strøm-region-velger {
+    background: #1c1c1e; color: #f5f5f7;
+    border-color: rgba(255,255,255,0.12);
+  }
+  .strøm-nå {
+    font-size: 0.9rem; color: #6e6e73;
+  }
+  .strøm-nå strong { color: #1d1d1f; font-size: 1.1rem; }
+  body.dark .strøm-nå strong { color: #f5f5f7; }
+  .strøm-canvas-wrap {
+    background: white; border: 1.5px solid rgba(0,0,0,0.07);
+    border-radius: 18px; padding: 20px; overflow: hidden;
+  }
+  body.dark .strøm-canvas-wrap {
+    background: #1c1c1e; border-color: rgba(255,255,255,0.07);
+  }
+  #strøm-canvas { width: 100%; display: block; }
+  .strøm-stats {
+    display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap;
+  }
+  .strøm-stat-boks {
+    flex: 1; min-width: 80px;
+    background: #f5f5f7; border-radius: 12px;
+    padding: 10px 14px; text-align: center;
+  }
+  body.dark .strøm-stat-boks { background: #2c2c2e; }
+  .strøm-stat-verdi { font-size: 1.15rem; font-weight: 600; color: #1d1d1f; }
+  body.dark .strøm-stat-verdi { color: #f5f5f7; }
+  .strøm-stat-label { font-size: 0.75rem; color: #6e6e73; margin-top: 2px; }
+  .strøm-info { font-size: 0.8rem; color: #a1a1a6; margin-top: 10px; }
+
+  /* ── NEDTELLING ───────────────────────────────────────────────────── */
+  .nedtelling-form {
+    display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 24px;
+  }
+  .nedtelling-form input[type="text"] {
+    flex: 1; min-width: 160px; padding: 9px 14px;
+    border-radius: 12px; border: 1.5px solid rgba(0,0,0,0.1);
+    font-size: 0.95rem; font-family: -apple-system, sans-serif;
+    background: white; color: #1d1d1f;
+  }
+  .nedtelling-form input[type="date"] {
+    padding: 9px 14px; border-radius: 12px;
+    border: 1.5px solid rgba(0,0,0,0.1);
+    font-size: 0.95rem; font-family: -apple-system, sans-serif;
+    background: white; color: #1d1d1f; cursor: pointer;
+  }
+  body.dark .nedtelling-form input {
+    background: #1c1c1e; color: #f5f5f7; border-color: rgba(255,255,255,0.12);
+  }
+  .nedtelling-form button {
+    padding: 9px 20px; border-radius: 12px; border: none;
+    background: #0071e3; color: white; font-size: 0.9rem;
+    font-weight: 600; cursor: pointer; font-family: -apple-system, sans-serif;
+  }
+  .nedtelling-form button:hover { background: #0077ed; }
+  .nedtelling-liste { display: flex; flex-direction: column; gap: 10px; }
+  .nedtelling-kort {
+    background: white; border: 1.5px solid rgba(0,0,0,0.07);
+    border-radius: 16px; padding: 16px 20px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  body.dark .nedtelling-kort { background: #1c1c1e; border-color: rgba(255,255,255,0.07); }
+  .nedtelling-kort-info { display: flex; flex-direction: column; gap: 3px; }
+  .nedtelling-navn { font-size: 0.95rem; font-weight: 600; color: #1d1d1f; }
+  body.dark .nedtelling-navn { color: #f5f5f7; }
+  .nedtelling-dato-liten { font-size: 0.78rem; color: #a1a1a6; }
+  .nedtelling-dager {
+    font-size: 1.8rem; font-weight: 700; color: #0071e3;
+    font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  .nedtelling-dager.passert { color: #a1a1a6; font-size: 1.1rem; }
+  .nedtelling-dager-label { font-size: 0.7rem; color: #6e6e73; text-align: right; }
+  .nedtelling-slett {
+    background: none; border: none; cursor: pointer; color: #a1a1a6;
+    font-size: 1.1rem; padding: 4px; line-height: 1;
+    transition: color 0.15s;
+  }
+  .nedtelling-slett:hover { color: #ff3b30; }
+  .nedtelling-tom { font-size: 0.9rem; color: #a1a1a6; text-align: center; padding: 20px 0; }
+  .nedtelling-progress-wrap {
+    height: 4px; background: rgba(0,0,0,0.07); border-radius: 2px;
+    margin-top: 10px; overflow: hidden;
+  }
+  body.dark .nedtelling-progress-wrap { background: rgba(255,255,255,0.1); }
+  .nedtelling-progress-bar {
+    height: 100%; border-radius: 2px;
+    background: #0071e3; transition: width 0.4s ease;
+  }
+
+  /* ── TIDSSONER ────────────────────────────────────────────────────── */
+  .tidssone-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+  }
+  .tidssone-kort {
+    background: white; border: 1.5px solid rgba(0,0,0,0.07);
+    border-radius: 20px; padding: 18px 16px 14px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    text-align: center;
+  }
+  body.dark .tidssone-kort { background: #1c1c1e; border-color: rgba(255,255,255,0.07); }
+  .tidssone-by { font-size: 0.78rem; font-weight: 600; color: #6e6e73; letter-spacing: 0.04em; text-transform: uppercase; }
+  .tidssone-tid { font-size: 1.5rem; font-weight: 700; color: #1d1d1f; font-variant-numeric: tabular-nums; }
+  body.dark .tidssone-tid { color: #f5f5f7; }
+  .tidssone-dato { font-size: 0.75rem; color: #a1a1a6; }
+  .tidssone-svg { width: 80px; height: 80px; }
+  .ts-ytterkant { fill: none; stroke: rgba(0,0,0,0.08); stroke-width: 2; }
+  .ts-time   { stroke: #1d1d1f; stroke-width: 2.5; stroke-linecap: round; }
+  .ts-minutt { stroke: #1d1d1f; stroke-width: 2; stroke-linecap: round; }
+  .ts-sekund { stroke: #0071e3; stroke-width: 1.5; stroke-linecap: round; }
+  .ts-sentrum { fill: #1d1d1f; }
+  body.dark .ts-ytterkant { stroke: rgba(255,255,255,0.12); }
+  body.dark .ts-time, body.dark .ts-minutt { stroke: #f5f5f7; }
+  body.dark .ts-sekund { stroke: #409cff; }
+  body.dark .ts-sentrum { fill: #f5f5f7; }
+
+  /* ── VALUTA ───────────────────────────────────────────────────────── */
+  .valuta-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+  }
+  .valuta-kort {
+    background: white; border: 1.5px solid rgba(0,0,0,0.07);
+    border-radius: 16px; padding: 16px 18px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  body.dark .valuta-kort { background: #1c1c1e; border-color: rgba(255,255,255,0.07); }
+  .valuta-flagg { font-size: 1.6rem; line-height: 1; }
+  .valuta-kode { font-size: 0.78rem; font-weight: 600; color: #6e6e73; margin-top: 4px; }
+  .valuta-kurs { font-size: 1.2rem; font-weight: 700; color: #1d1d1f; }
+  body.dark .valuta-kurs { color: #f5f5f7; }
+  .valuta-label { font-size: 0.75rem; color: #a1a1a6; }
+  .valuta-dato { font-size: 0.8rem; color: #a1a1a6; margin-top: 12px; }
+  .valuta-endring { font-size: 0.75rem; font-weight: 500; margin-top: 2px; }
+  .valuta-endring.opp { color: #34c759; }
+  .valuta-endring.ned { color: #ff3b30; }
+  .valuta-omregner { margin-bottom: 4px; }
+  .valuta-grid { border-top: 1.5px solid rgba(0,0,0,0.07); padding-top: 20px; }
+  body.dark .valuta-grid { border-color: rgba(255,255,255,0.07); }
+  .valuta-omregner-rad { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .valuta-omregner input {
+    width: 160px; padding: 9px 12px; border-radius: 10px;
+    border: 1.5px solid rgba(0,0,0,0.1); font-size: 1rem;
+    font-family: -apple-system, sans-serif; background: white; color: #1d1d1f;
+  }
+  body.dark .valuta-omregner input { background: #1c1c1e; color: #f5f5f7; border-color: rgba(255,255,255,0.12); }
+  .valuta-omregner select {
+    padding: 9px 12px; border-radius: 10px;
+    border: 1.5px solid rgba(0,0,0,0.1); font-size: 0.9rem;
+    font-family: -apple-system, sans-serif; background: white; color: #1d1d1f; cursor: pointer;
+  }
+  body.dark .valuta-omregner select { background: #1c1c1e; color: #f5f5f7; border-color: rgba(255,255,255,0.12); }
+  .valuta-omregner-resultat { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .valuta-omregner-rad-item {
+    background: #f5f5f7; border-radius: 10px; padding: 8px 14px;
+    font-size: 0.9rem; color: #1d1d1f;
+  }
+  body.dark .valuta-omregner-rad-item { background: #2c2c2e; color: #f5f5f7; }
+  .valuta-omregner-rad-item span { font-weight: 600; }
   </style>
 </head>
 <body>
@@ -1448,18 +1664,21 @@
       <div class="nav-dropdown">
         <a href="#info">Info</a>
         <div class="dropdown-meny">
+          <a href="#klokke">Klokke</a>
+          <a href="#tidssoner">Tidssoner</a>
           <a href="#vær">Vær</a>
           <a href="#nyheter">Nyheter</a>
           <a href="#boligpriser">Boligpriser</a>
-          <a href="#fjelloverganger">Fjelloverganger</a>
+          <a href="#strømpriser">Strømpriser</a>
+          <a href="#valuta">Valuta</a>
         </div>
       </div>
 
       <div class="nav-dropdown">
         <a href="#verktøy">Verktøy</a>
         <div class="dropdown-meny">
-          <a href="#klokke">Klokke</a>
           <a href="#skriving">Skriving</a>
+          <a href="#nedtelling">Nedtelling</a>
           <a href="#navnefakta">Navnefakta</a>
         </div>
       </div>
@@ -1504,10 +1723,60 @@
     <!-- HJEM -->
     <section id="hjem">
       <h1 class="page-title fade-in">Hei og velkommen!</h1>
+      <div class="hjem-grid fade-in">
+        <a href="#info" class="hjem-kort" data-nav>
+          <div class="hjem-kort-ikon">💡</div>
+          <div class="hjem-kort-tittel">Info</div>
+          <div class="hjem-kort-beskrivelse">Klokke, tidssoner, vær, nyheter, boligpriser, strøm og valuta</div>
+        </a>
+        <a href="#verktøy" class="hjem-kort" data-nav>
+          <div class="hjem-kort-ikon">🛠️</div>
+          <div class="hjem-kort-tittel">Verktøy</div>
+          <div class="hjem-kort-beskrivelse">Skrivetest, nedtelling og navnefakta</div>
+        </a>
+        <a href="#spill" class="hjem-kort" data-nav>
+          <div class="hjem-kort-ikon">🎮</div>
+          <div class="hjem-kort-tittel">Spill</div>
+          <div class="hjem-kort-beskrivelse">Kryssord, Tetris, Snake og Memory</div>
+        </a>
+      </div>
     </section>
 
     <!-- INFO-GRUPPE -->
     <div id="info" class="gruppe-header"><p class="gruppe-label">Info</p></div>
+
+    <!-- KLOKKE -->
+    <section id="klokke">
+      <div class="seksjon-innhold">
+        <p class="seksjon-etikett fade-in">Tid</p>
+        <h2 class="section-title fade-in">Akkurat nå</h2>
+        <div class="klokke-layout fade-in">
+          <svg class="klokke-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <circle class="klokke-ytterkant" cx="100" cy="100" r="96"/>
+            <g id="klokke-merker"></g>
+            <line id="klokke-time"   class="klokke-time"   x1="100" y1="108" x2="100" y2="50"/>
+            <line id="klokke-minutt" class="klokke-minutt" x1="100" y1="112" x2="100" y2="32"/>
+            <line id="klokke-sekund-hale" class="klokke-sekund" x1="100" y1="100" x2="100" y2="122"/>
+            <line id="klokke-sekund"      class="klokke-sekund" x1="100" y1="100" x2="100" y2="24"/>
+            <circle class="klokke-sentrum"       cx="100" cy="100" r="5"/>
+            <circle class="klokke-sentrum-indre" cx="100" cy="100" r="2.5"/>
+          </svg>
+          <div class="klokke-tekst">
+            <div class="klokke-digital" id="klokke-digital"></div>
+            <div class="klokke-dato"    id="klokke-dato"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIDSSONER -->
+    <section id="tidssoner">
+      <div class="seksjon-innhold">
+        <p class="seksjon-etikett fade-in">Verden</p>
+        <h2 class="section-title fade-in">Klokken rundt om</h2>
+        <div class="tidssone-grid fade-in" id="tidssone-grid"></div>
+      </div>
+    </section>
 
     <!-- VÆR -->
     <section id="vær">
@@ -1587,98 +1856,70 @@
       </div>
     </section>
 
-    <!-- FJELLOVERGANGER -->
-    <section id="fjelloverganger">
+    <!-- STRØMPRISER -->
+    <section id="strømpriser">
       <div class="seksjon-innhold">
-        <p class="seksjon-etikett fade-in">Veiforhold</p>
-        <h2 class="section-title fade-in">Fjelloverganger</h2>
-        <div class="card fade-in" style="padding: 28px 28px 24px;">
-          <div class="fjell-grid">
-            <div class="fjell-kort">
-              <div class="fjell-navn">Haukelifjellet</div>
-              <div class="fjell-rute">E134</div>
-              <div class="fjell-høyde">868 moh.</div>
-            </div>
-            <div class="fjell-kort">
-              <div class="fjell-navn">Hardangervidda</div>
-              <div class="fjell-rute">Rv7</div>
-              <div class="fjell-høyde">1243 moh.</div>
-            </div>
-            <div class="fjell-kort">
-              <div class="fjell-navn">Hemsedalsfjellet</div>
-              <div class="fjell-rute">Rv52</div>
-              <div class="fjell-høyde">1434 moh.</div>
-            </div>
-            <div class="fjell-kort">
-              <div class="fjell-navn">Filefjell</div>
-              <div class="fjell-rute">Rv51 / E16</div>
-              <div class="fjell-høyde">1389 moh.</div>
-            </div>
-            <div class="fjell-kort">
-              <div class="fjell-navn">Dovrefjell</div>
-              <div class="fjell-rute">E6</div>
-              <div class="fjell-høyde">1026 moh.</div>
-            </div>
-            <div class="fjell-kort">
-              <div class="fjell-navn">Valdresflya</div>
-              <div class="fjell-rute">Rv51</div>
-              <div class="fjell-høyde">1389 moh.</div>
-            </div>
-            <div class="fjell-kort">
-              <div class="fjell-navn">Sognefjellsvegen</div>
-              <div class="fjell-rute">Rv55</div>
-              <div class="fjell-høyde">1434 moh.</div>
-            </div>
-            <div class="fjell-kort">
-              <div class="fjell-navn">Strynefjell</div>
-              <div class="fjell-rute">Rv15</div>
-              <div class="fjell-høyde">1139 moh.</div>
-            </div>
-            <div class="fjell-kort">
-              <div class="fjell-navn">Saltfjellet</div>
-              <div class="fjell-rute">E6</div>
-              <div class="fjell-høyde">686 moh.</div>
-            </div>
-            <div class="fjell-kort">
-              <div class="fjell-navn">Bjørnfjell</div>
-              <div class="fjell-rute">E10</div>
-              <div class="fjell-høyde">520 moh.</div>
+        <p class="seksjon-etikett fade-in">Energi</p>
+        <h2 class="seksjon-tittel fade-in">Strømpriser i dag</h2>
+        <div class="card fade-in" style="padding: 24px 24px 16px;">
+          <div class="strøm-kontroller">
+            <select class="strøm-region-velger" id="strøm-region">
+              <option value="NO1">NO1 – Oslo</option>
+              <option value="NO2">NO2 – Kristiansand</option>
+              <option value="NO3">NO3 – Trondheim</option>
+              <option value="NO4">NO4 – Tromsø</option>
+              <option value="NO5">NO5 – Bergen</option>
+            </select>
+            <div class="strøm-nå" id="strøm-nå-tekst"></div>
+          </div>
+          <div class="strøm-canvas-wrap">
+            <canvas id="strøm-canvas" height="220"></canvas>
+          </div>
+          <div class="strøm-stats" id="strøm-stats" style="display:none;"></div>
+          <p class="strøm-info">Kilde: hvakosterstrommen.no · Spotpris ekskl. avgifter og strømstøtte</p>
+        </div>
+        <p id="strøm-feil" class="vær-feil skjult"></p>
+      </div>
+    </section>
+
+    <!-- VALUTA -->
+    <section id="valuta">
+      <div class="seksjon-innhold">
+        <p class="seksjon-etikett fade-in">Økonomi</p>
+        <h2 class="seksjon-tittel fade-in">Valutakurser</h2>
+        <div class="card fade-in" style="padding: 24px;">
+          <div class="valuta-omregner" id="valuta-omregner" style="display:none;">
+            <div class="valuta-omregner-rad">
+              <input type="number" id="valuta-beløp-fra" value="100" min="0" step="any" />
+              <select id="valuta-fra">
+                <option value="NOK">NOK</option>
+                <option value="EUR">EUR</option>
+                <option value="USD">USD</option>
+                <option value="GBP">GBP</option>
+                <option value="SEK">SEK</option>
+                <option value="DKK">DKK</option>
+              </select>
+              <span style="font-size:1.2rem;">→</span>
+              <input type="number" id="valuta-beløp-til" value="" min="0" step="any" />
+              <select id="valuta-til">
+                <option value="EUR">EUR</option>
+                <option value="USD">USD</option>
+                <option value="GBP">GBP</option>
+                <option value="SEK">SEK</option>
+                <option value="DKK">DKK</option>
+                <option value="NOK">NOK</option>
+              </select>
             </div>
           </div>
-          <a href="https://www.vegvesen.no/trafikk/fjelloverganger" target="_blank" rel="noopener" class="fjell-ekstern-knapp">
-            Se live status på vegvesen.no ↗
-          </a>
-          <p class="fjell-info">Kilde: Statens vegvesen · Status oppdateres på vegvesen.no</p>
+          <div class="valuta-grid" id="valuta-grid" style="margin-top:20px;"></div>
+          <p class="valuta-dato" id="valuta-dato"></p>
         </div>
+        <p id="valuta-feil" class="vær-feil skjult"></p>
       </div>
     </section>
 
     <!-- VERKTØY-GRUPPE -->
     <div id="verktøy" class="gruppe-header"><p class="gruppe-label">Verktøy</p></div>
-
-    <!-- KLOKKE -->
-    <section id="klokke">
-      <div class="seksjon-innhold">
-        <p class="seksjon-etikett fade-in">Tid</p>
-        <h2 class="section-title fade-in">Akkurat nå</h2>
-        <div class="klokke-layout fade-in">
-          <svg class="klokke-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-            <circle class="klokke-ytterkant" cx="100" cy="100" r="96"/>
-            <g id="klokke-merker"></g>
-            <line id="klokke-time"   class="klokke-time"   x1="100" y1="108" x2="100" y2="50"/>
-            <line id="klokke-minutt" class="klokke-minutt" x1="100" y1="112" x2="100" y2="32"/>
-            <line id="klokke-sekund-hale" class="klokke-sekund" x1="100" y1="100" x2="100" y2="122"/>
-            <line id="klokke-sekund"      class="klokke-sekund" x1="100" y1="100" x2="100" y2="24"/>
-            <circle class="klokke-sentrum"       cx="100" cy="100" r="5"/>
-            <circle class="klokke-sentrum-indre" cx="100" cy="100" r="2.5"/>
-          </svg>
-          <div class="klokke-tekst">
-            <div class="klokke-digital" id="klokke-digital"></div>
-            <div class="klokke-dato"    id="klokke-dato"></div>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- SKRIVING -->
     <section id="skriving">
@@ -1721,6 +1962,22 @@
           <ul id="navnFakta" class="tom fakta-liste"></ul>
         </div>
       </div>
+      </div>
+    </section>
+
+    <!-- NEDTELLING -->
+    <section id="nedtelling">
+      <div class="seksjon-innhold">
+        <p class="seksjon-etikett fade-in">Tid</p>
+        <h2 class="section-title fade-in">Nedtelling</h2>
+        <div class="card fade-in" style="padding: 24px;">
+          <div class="nedtelling-form">
+            <input type="text" id="nedtelling-navn" placeholder="Navn (f.eks. Ferie)" maxlength="40" />
+            <input type="date" id="nedtelling-dato" />
+            <button id="nedtelling-legg-til">Legg til</button>
+          </div>
+          <div class="nedtelling-liste" id="nedtelling-liste"></div>
+        </div>
       </div>
     </section>
 
@@ -2021,8 +2278,8 @@
     // Maper enkelt-seksjoner til riktig gruppelenke i nav
     const gruppeMap = {
       hjem: '#hjem',
-      vær: '#info',      nyheter: '#info',      boligpriser: '#info',      fjelloverganger: '#info',
-      klokke: '#verktøy', skriving: '#verktøy', navnefakta: '#verktøy',
+      klokke: '#info',   tidssoner: '#info', vær: '#info',      nyheter: '#info',      boligpriser: '#info',      strømpriser: '#info',      valuta: '#info',
+      skriving: '#verktøy', nedtelling: '#verktøy', navnefakta: '#verktøy',
       kryssord: '#spill', tetris: '#spill', snake: '#spill', memory: '#spill',
       kontakt: '#kontakt',
     };
@@ -3157,7 +3414,447 @@ visVærResultat();
     document.getElementById('skriving-prøv-igjen-knapp').addEventListener('click', nySkriveTekst);
     document.getElementById('navn-si-hei-knapp').addEventListener('click', siHei);
     document.getElementById('navnBoks').addEventListener('keydown', e => { if (e.key === 'Enter') siHei(); });
-    document.getElementById('footer-del-knapp').addEventListener('click', delSide);
+    window.addEventListener('load', () => {
+      document.getElementById('footer-del-knapp').addEventListener('click', delSide);
+
+      // ── STRØMPRISER ──────────────────────────────────────────────────
+      const STRØM_CACHE_TTL = 30 * 60 * 1000;
+      let strømData = null;
+
+      function strømFarge(øre) {
+        if (øre < 50)  return '#34c759';
+        if (øre < 100) return '#ff9f0a';
+        return '#ff3b30';
+      }
+
+      let strømHoverIdx = -1;
+
+      function tegnStrøm(data, hoverIdx = strømHoverIdx) {
+        const canvas = document.getElementById('strøm-canvas');
+        const wrap = canvas.parentElement;
+        const dpr = window.devicePixelRatio || 1;
+        const W = Math.max(wrap.offsetWidth - 40, 200);
+        const H = 220;
+        canvas.width  = W * dpr;
+        canvas.height = H * dpr;
+        canvas.style.width  = W + 'px';
+        canvas.style.height = H + 'px';
+        const ctx = canvas.getContext('2d');
+        ctx.scale(dpr, dpr);
+
+        const mørk = document.body.classList.contains('dark');
+        const tekstFarge = mørk ? '#a1a1a6' : '#6e6e73';
+        const nåFarge    = mørk ? '#f5f5f7' : '#1d1d1f';
+
+        const priser = data.map(d => d.NOK_per_kWh * 100);
+        const maxPris = Math.max(...priser, 50);
+        const padL = 44, padR = 8, padT = 16, padB = 36;
+        const grafW = W - padL - padR;
+        const grafH = H - padT - padB;
+        const nåTime = new Date().getHours();
+        const bW = grafW / 24 - 2;
+
+        priser.forEach((øre, i) => {
+          const x = padL + (i / 24) * grafW;
+          const barH = (øre / maxPris) * grafH;
+          const y = padT + grafH - barH;
+          const erHover = i === hoverIdx;
+          const erNå = i === nåTime;
+          ctx.fillStyle = erNå ? nåFarge : strømFarge(øre);
+          ctx.globalAlpha = erHover ? 1 : (erNå ? 1 : 0.7);
+          if (erHover) {
+            ctx.shadowColor = strømFarge(øre);
+            ctx.shadowBlur = 8;
+          }
+          ctx.beginPath();
+          ctx.roundRect(x, y, bW, barH, 3);
+          ctx.fill();
+          ctx.shadowBlur = 0;
+          ctx.globalAlpha = 1;
+        });
+
+        ctx.fillStyle = tekstFarge;
+        ctx.font = '11px -apple-system, sans-serif';
+        ctx.textAlign = 'center';
+        [0, 6, 12, 18, 23].forEach(t => {
+          const x = padL + (t / 24) * grafW + (grafW / 24) / 2;
+          ctx.fillText(t + ':00', x, H - padB + 16);
+        });
+
+        ctx.textAlign = 'right';
+        [0, Math.round(maxPris / 2), Math.round(maxPris)].forEach(v => {
+          const y = padT + grafH - (v / maxPris) * grafH;
+          ctx.fillText(v + ' ø', padL - 6, y + 4);
+        });
+
+        const nåX = padL + (nåTime / 24) * grafW + bW / 2;
+        ctx.strokeStyle = mørk ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.1)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 3]);
+        ctx.beginPath();
+        ctx.moveTo(nåX, padT);
+        ctx.lineTo(nåX, padT + grafH);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Tooltip ved hover
+        if (hoverIdx >= 0 && hoverIdx < priser.length) {
+          const øre = priser[hoverIdx];
+          const x = padL + (hoverIdx / 24) * grafW + bW / 2;
+          const barH = (øre / maxPris) * grafH;
+          const y = padT + grafH - barH - 10;
+          const label = `${hoverIdx}:00 – ${Math.round(øre)} øre`;
+          ctx.font = 'bold 12px -apple-system, sans-serif';
+          const tw = ctx.measureText(label).width;
+          const tx = Math.min(Math.max(x - tw / 2 - 8, 2), W - tw - 18);
+          const ty = Math.max(y - 28, 4);
+          ctx.fillStyle = mørk ? '#2c2c2e' : '#1d1d1f';
+          ctx.globalAlpha = 0.92;
+          ctx.beginPath();
+          ctx.roundRect(tx, ty, tw + 16, 24, 6);
+          ctx.fill();
+          ctx.globalAlpha = 1;
+          ctx.fillStyle = '#fff';
+          ctx.textAlign = 'left';
+          ctx.fillText(label, tx + 8, ty + 16);
+        }
+      }
+
+      async function hentStrøm(region) {
+        const cacheKey = 'strøm_cache_' + region;
+        const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null');
+        const nå = Date.now();
+        const iDag = new Date().toISOString().slice(0, 10);
+        if (cached && cached.dato === iDag && nå - cached.ts < STRØM_CACHE_TTL) return cached.data;
+        const dato = new Date();
+        const år = dato.getFullYear();
+        const mnd = String(dato.getMonth() + 1).padStart(2, '0');
+        const dag = String(dato.getDate()).padStart(2, '0');
+        const url = `https://www.hvakosterstrommen.no/api/v1/prices/${år}/${mnd}-${dag}_${region}.json`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('API feil');
+        const data = await res.json();
+        localStorage.setItem(cacheKey, JSON.stringify({ dato: iDag, ts: nå, data }));
+        return data;
+      }
+
+      async function oppdaterStrøm() {
+        const region = document.getElementById('strøm-region').value;
+        const feilEl = document.getElementById('strøm-feil');
+        const nåEl   = document.getElementById('strøm-nå-tekst');
+        feilEl.classList.add('skjult');
+        try {
+          strømData = await hentStrøm(region);
+          requestAnimationFrame(() => tegnStrøm(strømData));
+          const nåTime = new Date().getHours();
+          const priser = strømData.map(d => d.NOK_per_kWh * 100);
+          const øreNå = Math.round(priser[nåTime]);
+          const snitt  = Math.round(priser.reduce((a, b) => a + b, 0) / priser.length);
+          const min    = Math.round(Math.min(...priser));
+          const maks   = Math.round(Math.max(...priser));
+          nåEl.innerHTML = `Nå: <strong>${øreNå} øre/kWh</strong>`;
+          const statsEl = document.getElementById('strøm-stats');
+          statsEl.style.display = 'flex';
+          statsEl.innerHTML = `
+            <div class="strøm-stat-boks"><div class="strøm-stat-verdi">${snitt} ø</div><div class="strøm-stat-label">Snitt</div></div>
+            <div class="strøm-stat-boks"><div class="strøm-stat-verdi" style="color:#34c759">${min} ø</div><div class="strøm-stat-label">Lavest</div></div>
+            <div class="strøm-stat-boks"><div class="strøm-stat-verdi" style="color:#ff3b30">${maks} ø</div><div class="strøm-stat-label">Høyest</div></div>
+          `;
+        } catch(e) {
+          feilEl.textContent = 'Kunne ikke hente strømpriser.';
+          feilEl.classList.remove('skjult');
+        }
+      }
+
+      document.getElementById('strøm-region').addEventListener('change', oppdaterStrøm);
+      window.addEventListener('resize', () => { if (strømData) tegnStrøm(strømData); });
+
+      const strømCanvas = document.getElementById('strøm-canvas');
+      strømCanvas.addEventListener('mousemove', e => {
+        if (!strømData) return;
+        const rect = strømCanvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const W = strømCanvas.offsetWidth;
+        const padL = 44, padR = 8;
+        const grafW = W - padL - padR;
+        const i = Math.floor((mx - padL) / (grafW / 24));
+        const nyIdx = (i >= 0 && i < 24) ? i : -1;
+        if (nyIdx !== strømHoverIdx) {
+          strømHoverIdx = nyIdx;
+          tegnStrøm(strømData);
+        }
+      });
+      strømCanvas.addEventListener('mouseleave', () => {
+        strømHoverIdx = -1;
+        if (strømData) tegnStrøm(strømData);
+      });
+      document.querySelectorAll('a[href="#strømpriser"]').forEach(a => {
+        a.addEventListener('click', () => setTimeout(oppdaterStrøm, 220));
+      });
+      document.getElementById('theme-toggle').addEventListener('change', () => {
+        if (strømData) setTimeout(() => tegnStrøm(strømData), 50);
+      });
+      oppdaterStrøm();
+
+      // ── TIDSSONER ─────────────────────────────────────────────────────
+      const TIDSSONER = [
+        { by: 'Oslo',      tz: 'Europe/Oslo' },
+        { by: 'London',    tz: 'Europe/London' },
+        { by: 'New York',  tz: 'America/New_York' },
+        { by: 'Los Angeles', tz: 'America/Los_Angeles' },
+        { by: 'Tokyo',     tz: 'Asia/Tokyo' },
+        { by: 'Dubai',     tz: 'Asia/Dubai' },
+        { by: 'Sydney',    tz: 'Australia/Sydney' },
+        { by: 'São Paulo', tz: 'America/Sao_Paulo' },
+      ];
+
+      function tegnMiniKlokke(svg, h, m, s) {
+        const cx = 40, cy = 40, r = 36;
+        const grad = (deg) => (deg - 90) * Math.PI / 180;
+        const pt = (ang, len) => [cx + Math.cos(ang) * len, cy + Math.sin(ang) * len];
+        const tA = grad((h % 12) / 12 * 360 + m / 60 * 30);
+        const mA = grad(m / 60 * 360 + s / 60 * 6);
+        const sA = grad(s / 60 * 360);
+        const [tx, ty] = pt(tA, 22);
+        const [mx, my] = pt(mA, 30);
+        const [sx, sy] = pt(sA, 32);
+        svg.querySelector('.ts-time').setAttribute('x2', tx);
+        svg.querySelector('.ts-time').setAttribute('y2', ty);
+        svg.querySelector('.ts-minutt').setAttribute('x2', mx);
+        svg.querySelector('.ts-minutt').setAttribute('y2', my);
+        svg.querySelector('.ts-sekund').setAttribute('x2', sx);
+        svg.querySelector('.ts-sekund').setAttribute('y2', sy);
+      }
+
+      function byggTidssoneGrid() {
+        const grid = document.getElementById('tidssone-grid');
+        grid.innerHTML = TIDSSONER.map((t, i) => `
+          <div class="tidssone-kort">
+            <div class="tidssone-by">${t.by}</div>
+            <svg class="tidssone-svg" viewBox="0 0 80 80" id="ts-svg-${i}">
+              <circle class="ts-ytterkant" cx="40" cy="40" r="38"/>
+              <line class="ts-time"   x1="40" y1="40" x2="40" y2="20"/>
+              <line class="ts-minutt" x1="40" y1="40" x2="40" y2="12"/>
+              <line class="ts-sekund" x1="40" y1="40" x2="40" y2="10"/>
+              <circle class="ts-sentrum" cx="40" cy="40" r="3"/>
+            </svg>
+            <div class="tidssone-tid" id="ts-tid-${i}">--:--:--</div>
+            <div class="tidssone-dato" id="ts-dato-${i}"></div>
+          </div>`).join('');
+      }
+
+      function oppdaterTidssoner() {
+        const nå = new Date();
+        TIDSSONER.forEach((t, i) => {
+          const lokalt = new Date(nå.toLocaleString('en-US', { timeZone: t.tz }));
+          const h = lokalt.getHours(), m = lokalt.getMinutes(), s = lokalt.getSeconds();
+          document.getElementById(`ts-tid-${i}`).textContent =
+            `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+          document.getElementById(`ts-dato-${i}`).textContent =
+            lokalt.toLocaleDateString('no-NO', { weekday: 'short', day: 'numeric', month: 'short' });
+          const svg = document.getElementById(`ts-svg-${i}`);
+          if (svg) tegnMiniKlokke(svg, h, m, s);
+        });
+      }
+
+      // ── NEDTELLING ────────────────────────────────────────────────────
+      let nedtellinger = JSON.parse(localStorage.getItem('nedtellinger') || '[]');
+
+      function lagreNedtellinger() {
+        localStorage.setItem('nedtellinger', JSON.stringify(nedtellinger));
+      }
+
+      function dagerTil(datoStr) {
+        const mål = new Date(datoStr);
+        const iDag = new Date();
+        iDag.setHours(0,0,0,0);
+        mål.setHours(0,0,0,0);
+        return Math.round((mål - iDag) / (1000 * 60 * 60 * 24));
+      }
+
+      function visNedtellinger() {
+        const liste = document.getElementById('nedtelling-liste');
+        if (nedtellinger.length === 0) {
+          liste.innerHTML = '<p class="nedtelling-tom">Ingen nedtellinger ennå. Legg til en hendelse!</p>';
+          return;
+        }
+        nedtellinger.sort((a, b) => new Date(a.dato) - new Date(b.dato));
+        liste.innerHTML = nedtellinger.map((n, i) => {
+          const dager = dagerTil(n.dato);
+          const dato = new Date(n.dato).toLocaleDateString('no-NO', { day: 'numeric', month: 'long', year: 'numeric' });
+          let dagerHTML;
+          if (dager < 0) {
+            dagerHTML = `<div><div class="nedtelling-dager passert">Passert</div><div class="nedtelling-dager-label">${Math.abs(dager)} dager siden</div></div>`;
+          } else if (dager === 0) {
+            dagerHTML = `<div><div class="nedtelling-dager" style="color:#34c759">I dag! 🎉</div></div>`;
+          } else {
+            dagerHTML = `<div><div class="nedtelling-dager">${dager}</div><div class="nedtelling-dager-label">dager igjen</div></div>`;
+          }
+          let progressHTML = '';
+          if (n.opprettet && dager >= 0) {
+            const totalt = dagerTil(n.dato) + (dager === 0 ? 0 : Math.round((new Date(n.dato) - new Date(n.opprettet)) / (1000*60*60*24)) - dager);
+            const totaldager = Math.round((new Date(n.dato) - new Date(n.opprettet)) / (1000*60*60*24));
+            const pst = totaldager > 0 ? Math.min(100, Math.round((1 - dager / totaldager) * 100)) : 100;
+            const farge = pst >= 90 ? '#34c759' : pst >= 60 ? '#ff9f0a' : '#0071e3';
+            progressHTML = `<div class="nedtelling-progress-wrap">
+              <div class="nedtelling-progress-bar" style="width:${pst}%;background:${farge}"></div>
+            </div>`;
+          }
+          return `<div class="nedtelling-kort" style="flex-direction:column;align-items:stretch;gap:8px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
+              <div class="nedtelling-kort-info">
+                <div class="nedtelling-navn">${n.navn}</div>
+                <div class="nedtelling-dato-liten">${dato}</div>
+              </div>
+              ${dagerHTML}
+              <button class="nedtelling-slett" data-idx="${i}" title="Slett">✕</button>
+            </div>
+            ${progressHTML}
+          </div>`;
+        }).join('');
+
+        liste.querySelectorAll('.nedtelling-slett').forEach(btn => {
+          btn.addEventListener('click', () => {
+            nedtellinger.splice(Number(btn.dataset.idx), 1);
+            lagreNedtellinger();
+            visNedtellinger();
+          });
+        });
+      }
+
+      document.getElementById('nedtelling-legg-til').addEventListener('click', () => {
+        const navn = document.getElementById('nedtelling-navn').value.trim();
+        const dato = document.getElementById('nedtelling-dato').value;
+        if (!navn || !dato) return;
+        nedtellinger.push({ navn, dato, opprettet: new Date().toISOString().slice(0,10) });
+        lagreNedtellinger();
+        visNedtellinger();
+        document.getElementById('nedtelling-navn').value = '';
+        document.getElementById('nedtelling-dato').value = '';
+      });
+
+      document.getElementById('nedtelling-navn').addEventListener('keydown', e => {
+        if (e.key === 'Enter') document.getElementById('nedtelling-legg-til').click();
+      });
+
+      visNedtellinger();
+
+      byggTidssoneGrid();
+      oppdaterTidssoner();
+      setInterval(oppdaterTidssoner, 1000);
+
+      // ── VALUTA ────────────────────────────────────────────────────────
+      const VALUTA_CACHE_TTL = 60 * 60 * 1000; // 1 time
+      const VALUTA_INFO = {
+        EUR: { flagg: '🇪🇺', navn: 'Euro' },
+        USD: { flagg: '🇺🇸', navn: 'Amerikanske dollar' },
+        GBP: { flagg: '🇬🇧', navn: 'Britiske pund' },
+        SEK: { flagg: '🇸🇪', navn: 'Svenske kroner' },
+        DKK: { flagg: '🇩🇰', navn: 'Danske kroner' },
+      };
+      // Rekkefølge i API-svaret: DKK=0, USD=1, GBP=2, EUR=3, SEK=4
+      const VALUTA_REKKEFØLGE = ['EUR', 'USD', 'GBP', 'SEK', 'DKK'];
+      const VALUTA_IDX = { EUR: 3, USD: 1, GBP: 2, SEK: 4, DKK: 0 };
+
+      async function hentValuta() {
+        const cacheKey = 'valuta_cache';
+        const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null');
+        const nå = Date.now();
+        if (cached && nå - cached.ts < VALUTA_CACHE_TTL) return cached.data;
+
+        const url = 'https://data.norges-bank.no/api/data/EXR/B.EUR+USD+GBP+SEK+DKK.NOK.SP?format=sdmx-json&lastNObservations=2&locale=no';
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('API feil');
+        const json = await res.json();
+
+        const series = json.data.dataSets[0].series;
+        const dato = json.data.dataSets[0].reportingEnd.slice(0, 10);
+        const kurser = {}, forrige = {};
+        for (const [kode, idx] of Object.entries(VALUTA_IDX)) {
+          const obs = series[`0:${idx}:0:0`]?.observations;
+          if (obs) {
+            const keys = Object.keys(obs).sort((a,b) => b - a);
+            kurser[kode]  = parseFloat(obs[keys[0]][0]);
+            forrige[kode] = keys[1] !== undefined ? parseFloat(obs[keys[1]][0]) : null;
+          }
+        }
+        const data = { kurser, forrige, dato };
+        localStorage.setItem(cacheKey, JSON.stringify({ ts: nå, data }));
+        return data;
+      }
+
+      let valutaKurser = {};
+
+      function tilNok(beløp, kode) {
+        if (kode === 'NOK') return beløp;
+        return beløp * valutaKurser[kode];
+      }
+      function fraNok(beløp, kode) {
+        if (kode === 'NOK') return beløp;
+        return beløp / valutaKurser[kode];
+      }
+
+      let sistEndretFelt = 'fra';
+
+      function oppdaterOmregner() {
+        if (!Object.keys(valutaKurser).length) return;
+        const fra = document.getElementById('valuta-fra').value;
+        const til = document.getElementById('valuta-til').value;
+        if (sistEndretFelt === 'fra') {
+          const beløp = parseFloat(document.getElementById('valuta-beløp-fra').value) || 0;
+          const resultat = fraNok(tilNok(beløp, fra), til);
+          document.getElementById('valuta-beløp-til').value = resultat.toFixed(4).replace(/\.?0+$/, '') || '';
+        } else {
+          const beløp = parseFloat(document.getElementById('valuta-beløp-til').value) || 0;
+          const resultat = fraNok(tilNok(beløp, til), fra);
+          document.getElementById('valuta-beløp-fra').value = resultat.toFixed(4).replace(/\.?0+$/, '') || '';
+        }
+      }
+
+      async function visValuta() {
+        const feilEl = document.getElementById('valuta-feil');
+        const gridEl = document.getElementById('valuta-grid');
+        const datoEl = document.getElementById('valuta-dato');
+        const omregnerEl = document.getElementById('valuta-omregner');
+        feilEl.classList.add('skjult');
+        try {
+          const { kurser, forrige, dato } = await hentValuta();
+          valutaKurser = kurser;
+          gridEl.innerHTML = VALUTA_REKKEFØLGE.map(kode => {
+            const kurs = kurser[kode];
+            const info = VALUTA_INFO[kode];
+            const formatert = kurs >= 10 ? kurs.toFixed(2) : kurs.toFixed(4);
+            const forrigeFormatert = forrige[kode] ? (forrige[kode] >= 10 ? forrige[kode].toFixed(2) : forrige[kode].toFixed(4)) : '';
+            const tooltip = forrige[kode] ? `title="Forrige dag: ${forrigeFormatert} NOK"` : '';
+            return `<div class="valuta-kort" ${tooltip}>
+              <div class="valuta-flagg">${info.flagg}</div>
+              <div class="valuta-kode">${kode}</div>
+              <div class="valuta-kurs">${formatert}</div>
+              <div class="valuta-label">NOK</div>
+            </div>`;
+          }).join('');
+          datoEl.textContent = `Kilde: Norges Bank · Sist oppdatert ${dato}`;
+          omregnerEl.style.display = 'block';
+          sistEndretFelt = 'fra';
+          oppdaterOmregner();
+        } catch(e) {
+          feilEl.textContent = 'Kunne ikke hente valutakurser.';
+          feilEl.classList.remove('skjult');
+        }
+      }
+
+      document.getElementById('valuta-beløp-fra').addEventListener('input', () => { sistEndretFelt = 'fra'; oppdaterOmregner(); });
+      document.getElementById('valuta-beløp-til').addEventListener('input', () => { sistEndretFelt = 'til'; oppdaterOmregner(); });
+      document.getElementById('valuta-fra').addEventListener('change', oppdaterOmregner);
+      document.getElementById('valuta-til').addEventListener('change', oppdaterOmregner);
+
+      let valutaLastet = false;
+      document.querySelectorAll('a[href="#valuta"]').forEach(a => {
+        a.addEventListener('click', () => {
+          if (!valutaLastet) { valutaLastet = true; setTimeout(visValuta, 220); }
+        });
+      });
+    });
 
   </script>
 

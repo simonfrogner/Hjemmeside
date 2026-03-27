@@ -10,17 +10,20 @@ En personlig nettside laget med [Claude Code](https://claude.ai/code).
 
 Navigasjonen er gruppert i fem seksjoner:
 
-**Hjem** — velkomstside med kategorikort som lenker til Info, Verktøy og Spill
+**Hjem** — velkomstside med animert gradient-bakgrunn og kategorikort (Info, Verktøy, Spill) med bounce-animasjon ved hover
 
 **Info**
+- Klokke — analog og digital klokke med dato
+- Tidssoner — mini-analogklokker med digital tid for 8 byer rundt om i verden, oppdateres hvert sekund
 - Vær — sanntidsvær basert på din posisjon eller by, med animerte væreffekter og 7-dagers prognose
 - Nyheter — siste nyheter fra NRK, VG og E24 med tab-velger, auto-oppdateres hvert 5. minutt med lokal cache ved feil
 - Boligpriser — interaktiv graf med SSB-data, søk på kommune, togglebare serier
-- Fjelloverganger — oversikt over 10 norske fjelloverganger med høyde og riksvegnummer
+- Strømpriser — 24-timers stolpediagram med hover-tooltip, snitt/min/maks og regionvelger (NO1–NO5)
+- Valuta — kurser for EUR, USD, GBP, SEK og DKK mot NOK med omregner og kursendring fra forrige dag
 
 **Verktøy**
-- Klokke — analog og digital klokke med dato
 - Skriving — skrivehurtigtest med WPM og nøyaktighetsstatistikk
+- Nedtelling — legg til hendelser med dato og se dager igjen med fargekodet fremgangsbjelke
 - Navnefakta — skriv inn navnet ditt og få live data fra SSB (antall, toppår, trend) samt morsomme fakta
 
 **Spill**
@@ -43,6 +46,8 @@ Navigasjonen er gruppert i fem seksjoner:
 Inspirert av Apples designspråk:
 
 - Bakgrunn `#f5f5f7`, font `-apple-system`
+- Animert gradient-bakgrunn på hjem-siden (lilla/blå/rosa)
+- Frosted glass-kategorikort med bounce-animasjon på hjem-siden
 - Frosted glass-navigasjonsbar, midtstilt, med Apple-favicon (blå sirkel med S)
 - Apple-stil dropdown-meny på desktop: hover over Info, Verktøy og Spill
 - Kollapsbar mobilmeny med nedtrekkbare underseksjoner
@@ -54,13 +59,14 @@ Inspirert av Apples designspråk:
 
 - Vanilla HTML / CSS / JavaScript
 - [Open-Meteo API](https://open-meteo.com/) (vær, ingen API-nøkkel)
-- [SSB PxWeb API](https://data.ssb.no/) (navnestatistikk, ingen API-nøkkel)
-- Nominatim (omvendt geokoding)
-- Canvas API (væranimasjoner, Snake-spill, boligpris-graf, konfetti)
+- [SSB PxWeb API](https://data.ssb.no/) (navnestatistikk og boligpriser, ingen API-nøkkel)
+- [Norges Bank API](https://data.norges-bank.no/) (valutakurser, ingen API-nøkkel)
+- [hvakosterstrommen.no API](https://www.hvakosterstrommen.no/strompris-api) (strømpriser, ingen API-nøkkel)
 - NRK, VG og E24 RSS via CORS-proxy med localStorage-cache per kilde
+- Nominatim (omvendt geokoding)
+- Canvas API (væranimasjoner, Snake-spill, boligpris-graf, strømpris-graf, konfetti)
 - Web Audio API (Memory-lydeffekter, Tetris-musikk og Snake-lydeffekter)
-- localStorage (tema, highscores, rekorder og statistikk)
-- SSB PxWeb API (boligpriser tabell 06035, kvadratmeterpris)
+- localStorage (tema, highscores, rekorder, nedtellinger og statistikk)
 - GitHub Pages (hosting)
 
 ---
