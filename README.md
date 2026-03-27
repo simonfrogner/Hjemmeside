@@ -14,7 +14,7 @@ Navigasjonen er gruppert i fem seksjoner:
 
 **Info**
 - Vær — sanntidsvær basert på din posisjon eller by, med animerte væreffekter og 7-dagers prognose
-- Nyheter — siste nyheter fra VG, auto-oppdateres hvert 5. minutt med lokal cache ved feil
+- Nyheter — siste nyheter fra NRK, VG og E24 med tab-velger, auto-oppdateres hvert 5. minutt med lokal cache ved feil
 - Boligpriser — interaktiv graf med SSB-data, søk på kommune, togglebare serier
 - Fjelloverganger — oversikt over 10 norske fjelloverganger med høyde og riksvegnummer
 
@@ -57,7 +57,7 @@ Inspirert av Apples designspråk:
 - [SSB PxWeb API](https://data.ssb.no/) (navnestatistikk, ingen API-nøkkel)
 - Nominatim (omvendt geokoding)
 - Canvas API (væranimasjoner, Snake-spill, boligpris-graf, konfetti)
-- VG RSS via CORS-proxy med localStorage-cache
+- NRK, VG og E24 RSS via CORS-proxy med localStorage-cache per kilde
 - Web Audio API (Memory-lydeffekter, Tetris-musikk og Snake-lydeffekter)
 - localStorage (tema, highscores, rekorder og statistikk)
 - SSB PxWeb API (boligpriser tabell 06035, kvadratmeterpris)

@@ -1051,6 +1051,10 @@
       justify-content: center;
       min-width: 80px;
       opacity: 0.5;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #1d1d1f;
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
     }
     .nyheter-tab:hover, .nyheter-tab.aktiv {
       background: white;
@@ -1546,7 +1550,12 @@
     <section id="nyheter">
       <div class="seksjon-innhold">
       <p class="seksjon-etikett fade-in">Nyheter</p>
-      <h2 class="section-title fade-in">VG</h2>
+      <h2 class="section-title fade-in">Nyheter</h2>
+      <div class="nyheter-tabs fade-in">
+        <button class="nyheter-tab aktiv" data-kilde="nrk">NRK</button>
+        <button class="nyheter-tab" data-kilde="vg">VG</button>
+        <button class="nyheter-tab" data-kilde="e24">E24</button>
+      </div>
       <div id="nyheter-laster" class="vær-laster fade-in">
         <div class="spinner spinner-sm"></div>
       </div>
@@ -2745,9 +2754,14 @@ visVærResultat();
     }
 
     // ── NYHETER ──────────────────────────────────────────────────────────────
-    // Henter nyheter fra VG sitt RSS-feed via rss2json eller CORS-proxyer som fallback.
+    // Henter nyheter fra VG eller NRK sitt RSS-feed via rss2json eller CORS-proxyer som fallback.
     // Resultater caches i localStorage og vises ved neste besøk om nettverket feiler.
-    const VG_RSS = 'https://www.vg.no/rss/feed/';
+    const RSS_KILDER = {
+      nrk: { url: 'https://www.nrk.no/toppsaker.rss',  cacheKey: 'nyheter_cache_nrk' },
+      vg:  { url: 'https://www.vg.no/rss/feed/',       cacheKey: 'nyheter_cache_vg' },
+      e24: { url: 'https://e24.no/rss',                cacheKey: 'nyheter_cache_e24' }
+    };
+    let aktivKilde = 'nrk';
 
     // Hjelpefunksjon: fetch med automatisk timeout (default 5 sekunder)
     async function fetchMedTimeout(url, json = false, ms = 5000) {
@@ -2762,13 +2776,13 @@ visVærResultat();
       }
     }
 
-    async function hentNyheter() {
+    async function hentNyheter(kilde = aktivKilde) {
+      aktivKilde = kilde;
       document.getElementById('nyheter-grid').innerHTML = '';
       document.getElementById('nyheter-feil').classList.add('skjult');
       document.getElementById('nyheter-laster').classList.remove('skjult');
 
-      const rssUrl = VG_RSS;
-      const cacheKey = 'nyheter_cache_vg';
+      const { url: rssUrl, cacheKey } = RSS_KILDER[kilde];
 
       try {
         let items = null;
@@ -2867,13 +2881,24 @@ visVærResultat();
       return `${d} dag${d !== 1 ? 'er' : ''} siden`;
     }
 
+    // Tab-bytte
+    document.querySelectorAll('.nyheter-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.nyheter-tab').forEach(t => t.classList.remove('aktiv'));
+        tab.classList.add('aktiv');
+        clearInterval(nyhetInterval);
+        hentNyheter(tab.dataset.kilde);
+        nyhetInterval = setInterval(() => hentNyheter(aktivKilde), 5 * 60 * 1000);
+      });
+    });
+
     // Bruker IntersectionObserver for å laste nyheter første gang seksjonen er synlig,
     // og oppdaterer deretter automatisk hvert 5. minutt
     let nyhetInterval = null;
     const nyhetObserver = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting) {
         hentNyheter();
-        nyhetInterval = setInterval(() => hentNyheter(), 5 * 60 * 1000);
+        nyhetInterval = setInterval(() => hentNyheter(aktivKilde), 5 * 60 * 1000);
         nyhetObserver.disconnect();
       }
     }, { threshold: 0.1 });
@@ -3118,7 +3143,7 @@ visVærResultat();
     document.getElementById('vær-søk-knapp').addEventListener('click', hentVær);
     document.getElementById('vær-gps-knapp').addEventListener('click', hentVærGPS);
     document.getElementById('vær-by').addEventListener('keydown', e => { if (e.key === 'Enter') hentVær(); });
-    document.getElementById('nyheter-prøv-igjen').addEventListener('click', hentNyheter);
+    document.getElementById('nyheter-prøv-igjen').addEventListener('click', () => hentNyheter(aktivKilde));
     document.getElementById('bolig-input').addEventListener('input', boligSøk);
     document.getElementById('bolig-forslag').addEventListener('click', e => {
       const div = e.target.closest('[data-kode]');
@@ -3139,7 +3164,7 @@ visVærResultat();
   <footer>
     <p>Laget av <a href="https://github.com/simonfrogner" target="_blank">Simon Sæterlid Frogner</a> &nbsp;·&nbsp; © 2026</p>
     <button id="footer-del-knapp" class="footer-del-btn">🔗 Del siden</button>
-    <p class="footer-versjon">v1.9 &nbsp;·&nbsp; mars 2026</p>
+    <p class="footer-versjon">v1.10 &nbsp;·&nbsp; mars 2026</p>
   </footer>
 
 </body>
