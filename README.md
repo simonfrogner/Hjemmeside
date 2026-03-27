@@ -28,10 +28,11 @@ Navigasjonen er gruppert i fem seksjoner:
 - Kalkulator — Apple-stil kalkulator med historikk (siste 10 beregninger), kopier resultat og tastaturstøtte
 
 **Spill**
-- Kryssord — norsk kryssord med hint-system, ordavsløring, auto-deteksjon av seier, statistikk og nedtrekksmeny for temavalg
+- Pong — klassisk arkadespill mot AI (3 vanskelighetsgrader, dynamisk AI) eller 2-spiller på samme enhet; konfetti ved seier, lyd, mobilstøtte
 - Tetris — klassisk Tetris med neon-design, musikk, nivåstigning og highscore
 - Snake — klassisk Nokia-spill med LCD-farger, pause, 8-bit lyd, wrap-around modus og top 3 highscore
 - Memory — 4×4 emoji-memory med flip-animasjon, lydeffekter, konfetti, beste rekord og 2-spiller modus
+- Kryssord — norsk kryssord med hint-system, ordavsløring, auto-deteksjon av seier, statistikk og nedtrekksmeny for temavalg
 
 **Kontakt** — kontaktskjema
 
@@ -44,7 +45,7 @@ Navigasjonen er gruppert i fem seksjoner:
 
 ## Versjon
 
-v1.14 — Apple-stil kalkulator med historikk og kopier; navnefakta flyttet til Info
+v1.15 — Pong-spill med 1- og 2-spiller, dynamisk AI, konfetti og mobilstøtte
 
 ## Design
 

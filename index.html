@@ -1799,6 +1799,7 @@
       <div class="nav-dropdown">
         <a href="#spill">Spill</a>
         <div class="dropdown-meny">
+          <a href="#pong">Pong</a>
           <a href="#tetris">Tetris</a>
           <a href="#snake">Snake</a>
           <a href="#memory">Memory</a>
@@ -1850,7 +1851,7 @@
         <a href="#spill" class="hjem-kort" data-nav>
           <div class="hjem-kort-ikon">🎮</div>
           <div class="hjem-kort-tittel">Spill</div>
-          <div class="hjem-kort-beskrivelse">Tetris, Snake, Memory og Kryssord</div>
+          <div class="hjem-kort-beskrivelse">Pong, Tetris, Snake, Memory og Kryssord</div>
         </a>
       </div>
     </section>
@@ -2153,6 +2154,16 @@
 
     <!-- SPILL-GRUPPE -->
     <div id="spill" class="gruppe-header"><p class="gruppe-label">Spill</p></div>
+
+    <!-- PONG -->
+    <section id="pong">
+      <div class="seksjon-innhold">
+      <p class="seksjon-etikett fade-in">Spill</p>
+      <h2 class="section-title fade-in">Pong</h2>
+      <p class="section-intro">Klassisk arkadespill. Slå AI-en til 7 poeng.</p>
+      <a href="pong.html"><button class="tetris-btn">Spill nå</button></a>
+      </div>
+    </section>
 
     <!-- TETRIS -->
     <section id="tetris">
@@ -2459,7 +2470,7 @@
       hjem: '#hjem',
       klokke: '#info',   tidssoner: '#info', vær: '#info',      nyheter: '#info',      boligpriser: '#info',      strømpriser: '#info',      valuta: '#info',      navnefakta: '#info',
       skriving: '#verktøy', nedtelling: '#verktøy', kalkulator: '#verktøy',
-      kryssord: '#spill', tetris: '#spill', snake: '#spill', memory: '#spill',
+      pong: '#spill', kryssord: '#spill', tetris: '#spill', snake: '#spill', memory: '#spill',
       kontakt: '#kontakt',
     };
     const sections = document.querySelectorAll("section");
@@ -4287,7 +4298,7 @@ visVærResultat();
   <footer>
     <p>Laget av <a href="https://github.com/simonfrogner" target="_blank">Simon Sæterlid Frogner</a> &nbsp;·&nbsp; © 2026</p>
     <button id="footer-del-knapp" class="footer-del-btn">🔗 Del siden</button>
-    <p class="footer-versjon">v1.14 &nbsp;·&nbsp; mars 2026</p>
+    <p class="footer-versjon">v1.15 &nbsp;·&nbsp; mars 2026</p>
   </footer>
 
 </body>
