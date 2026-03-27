@@ -251,7 +251,9 @@
     /* SEKSJONER */
     .page {
       padding-top: 52px;
+      transition: opacity 0.18s ease;
     }
+    .page.fader-ut { opacity: 0; }
 
     section {
       min-height: 100vh;
@@ -1343,6 +1345,39 @@
   body.dark .bolig-forslag { background: #1c1c1e; border-color: rgba(255,255,255,0.1); }
   body.dark .bolig-forslag div:hover { background: #2c2c2e; }
   body.dark #bolig-canvas { background: #1c1c1e; border-color: rgba(255,255,255,0.07); }
+  /* ── FJELLOVERGANGER ─────────────────────────────────────────────── */
+  .fjell-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .fjell-kort {
+    background: white;
+    border: 1.5px solid rgba(0,0,0,0.07);
+    border-radius: 16px;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .fjell-navn { font-size: 0.95rem; font-weight: 600; color: #1d1d1f; }
+  .fjell-rute { font-size: 0.8rem; color: #6e6e73; }
+  .fjell-høyde { font-size: 0.78rem; color: #a1a1a6; margin-top: 2px; }
+  .fjell-ekstern-knapp {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 16px;
+    padding: 10px 20px;
+    background: #0071e3; color: white;
+    border: none; border-radius: 980px;
+    font-size: 0.9rem; font-weight: 500;
+    cursor: pointer; text-decoration: none;
+    transition: background 0.2s;
+  }
+  .fjell-ekstern-knapp:hover { background: #0077ed; }
+  .fjell-info { font-size: 0.83rem; color: #6e6e73; margin-top: 6px; }
+  body.dark .fjell-kort { background: #1c1c1e; border-color: rgba(255,255,255,0.07); }
+  body.dark .fjell-navn { color: #f5f5f7; }
   /* ── GRUPPE-HEADER ────────────────────────────────────────────────── */
   .gruppe-header { padding: 16px max(20px, calc(50vw - 340px)) 0; }
   .gruppe-label {
@@ -1394,7 +1429,7 @@
 <div id="claude-egg">
   <h2>🤖 Hei, Claude Code her!<br>Jeg bygde denne siden sammen med Simon!</h2>
   <p>Trykk hvor som helst for å lukke</p>
-  <button onclick="lukkEgg()">Tilbake til siden</button>
+  <button id="egg-tilbake-knapp">Tilbake til siden</button>
 </div>
 <div id="loader">
   <div class="spinner"></div>
@@ -1412,6 +1447,7 @@
           <a href="#vær">Vær</a>
           <a href="#nyheter">Nyheter</a>
           <a href="#boligpriser">Boligpriser</a>
+          <a href="#fjelloverganger">Fjelloverganger</a>
         </div>
       </div>
 
@@ -1430,6 +1466,7 @@
           <a href="#kryssord">Kryssord</a>
           <a href="#tetris">Tetris</a>
           <a href="#snake">Snake</a>
+          <a href="#memory">Memory</a>
         </div>
       </div>
 
@@ -1437,26 +1474,26 @@
       <div class="nav-tema-mobil">
         <span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="3"/><line x1="8" y1="1" x2="8" y2="3"/><line x1="8" y1="13" x2="8" y2="15"/><line x1="1" y1="8" x2="3" y2="8"/><line x1="13" y1="8" x2="15" y2="8"/><line x1="2.93" y1="2.93" x2="4.34" y2="4.34"/><line x1="11.66" y1="11.66" x2="13.07" y2="13.07"/><line x1="13.07" y1="2.93" x2="11.66" y2="4.34"/><line x1="4.34" y1="11.66" x2="2.93" y2="13.07"/></svg></span>
         <label class="switch">
-          <input type="checkbox" id="tema-mobil" onchange="toggleTheme(); document.querySelector('.switch input:not(#tema-mobil)').checked = this.checked">
+          <input type="checkbox" id="tema-mobil">
           <span class="slider"></span>
         </label>
         <span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 10.5A6 6 0 0 1 5.5 2.5a6 6 0 1 0 8 8z"/></svg></span>
       </div>
     </div>
-    <button class="hamburger" id="hamburger" onclick="toggleMeny()">
+    <button class="hamburger" id="hamburger">
       <span></span><span></span><span></span>
     </button>
     <div class="nav-right">
       <span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="3"/><line x1="8" y1="1" x2="8" y2="3"/><line x1="8" y1="13" x2="8" y2="15"/><line x1="1" y1="8" x2="3" y2="8"/><line x1="13" y1="8" x2="15" y2="8"/><line x1="2.93" y1="2.93" x2="4.34" y2="4.34"/><line x1="11.66" y1="11.66" x2="13.07" y2="13.07"/><line x1="13.07" y1="2.93" x2="11.66" y2="4.34"/><line x1="4.34" y1="11.66" x2="2.93" y2="13.07"/></svg></span>
       <label class="switch">
-        <input type="checkbox" onchange="toggleTheme()">
+        <input type="checkbox" id="theme-toggle">
         <span class="slider"></span>
       </label>
       <span><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 10.5A6 6 0 0 1 5.5 2.5a6 6 0 1 0 8 8z"/></svg></span>
     </div>
   </nav>
 
-  <button id="topp-knapp" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Til toppen">↑</button>
+  <button id="topp-knapp" title="Til toppen">↑</button>
 
   <div class="page">
 
@@ -1475,9 +1512,9 @@
       <h2 class="section-title fade-in">Været akkurat nå</h2>
       <div class="card vær-card fade-in">
         <div class="input-group">
-          <input type="text" id="vær-by" placeholder="Søk etter by..." onkeydown="if(event.key==='Enter') hentVær()">
-          <button onclick="hentVær()">Søk</button>
-          <button class="gps-btn" onclick="hentVærGPS()" title="Bruk min posisjon">📍</button>
+          <input type="text" id="vær-by" placeholder="Søk etter by...">
+          <button id="vær-søk-knapp">Søk</button>
+          <button class="gps-btn" id="vær-gps-knapp" title="Bruk min posisjon">📍</button>
         </div>
         <div id="vær-laster" class="vær-laster skjult">
           <div class="spinner spinner-sm"></div>
@@ -1513,7 +1550,7 @@
       <div id="nyheter-laster" class="vær-laster fade-in">
         <div class="spinner spinner-sm"></div>
       </div>
-      <div id="nyheter-feil" class="vær-feil skjult">Klarte ikke laste nyheter. <button onclick="hentNyheter()" style="padding:6px 14px;font-size:0.85rem;">Prøv igjen</button></div>
+      <div id="nyheter-feil" class="vær-feil skjult">Klarte ikke laste nyheter. <button id="nyheter-prøv-igjen" style="padding:6px 14px;font-size:0.85rem;">Prøv igjen</button></div>
       <div id="nyheter-grid" class="nyheter-liste"></div>
       </div>
     </section>
@@ -1524,20 +1561,86 @@
         <p class="seksjon-etikett fade-in">Boligpriser</p>
         <h2 class="seksjon-tittel fade-in">Prisutvikling per kommune</h2>
         <div class="bolig-søk">
-          <input type="text" id="bolig-input" placeholder="Søk kommune…" autocomplete="off" oninput="boligSøk()" />
+          <input type="text" id="bolig-input" placeholder="Søk kommune…" autocomplete="off" />
         </div>
         <div id="bolig-forslag" class="bolig-forslag" style="display:none;"></div>
         <div class="bolig-canvas-wrap" id="bolig-graf-wrap" style="display:none;">
           <canvas id="bolig-canvas" height="320"></canvas>
           <div class="bolig-legend">
-            <div class="bolig-legend-item" data-serie="0" onclick="toggleBoligSerie(0)" style="cursor:pointer;" title="Klikk for å skjule/vise"><div class="bolig-legend-dot" style="background:#0071e3;"></div> Eneboliger</div>
-            <div class="bolig-legend-item" data-serie="1" onclick="toggleBoligSerie(1)" style="cursor:pointer;" title="Klikk for å skjule/vise"><div class="bolig-legend-dot" style="background:#5e5ce6;"></div> Småhus</div>
-            <div class="bolig-legend-item" data-serie="2" onclick="toggleBoligSerie(2)" style="cursor:pointer;" title="Klikk for å skjule/vise"><div class="bolig-legend-dot" style="background:#ff3b30;"></div> Blokkleiligheter</div>
+            <div class="bolig-legend-item" data-serie="0" style="cursor:pointer;" title="Klikk for å skjule/vise"><div class="bolig-legend-dot" style="background:#0071e3;"></div> Eneboliger</div>
+            <div class="bolig-legend-item" data-serie="1" style="cursor:pointer;" title="Klikk for å skjule/vise"><div class="bolig-legend-dot" style="background:#5e5ce6;"></div> Småhus</div>
+            <div class="bolig-legend-item" data-serie="2" style="cursor:pointer;" title="Klikk for å skjule/vise"><div class="bolig-legend-dot" style="background:#ff3b30;"></div> Blokkleiligheter</div>
           </div>
           <p class="bolig-info">Klikk på en boligtype for å skjule/vise den i grafen.</p>
           <p class="bolig-info">Kilde: SSB tabell 06035 · Gjennomsnittlig kvadratmeterpris (P-ROM) · Selveierboliger</p>
         </div>
         <p id="bolig-feil" class="vær-feil skjult"></p>
+      </div>
+    </section>
+
+    <!-- FJELLOVERGANGER -->
+    <section id="fjelloverganger">
+      <div class="seksjon-innhold">
+        <p class="seksjon-etikett fade-in">Veiforhold</p>
+        <h2 class="section-title fade-in">Fjelloverganger</h2>
+        <div class="card fade-in" style="padding: 28px 28px 24px;">
+          <div class="fjell-grid">
+            <div class="fjell-kort">
+              <div class="fjell-navn">Haukelifjellet</div>
+              <div class="fjell-rute">E134</div>
+              <div class="fjell-høyde">868 moh.</div>
+            </div>
+            <div class="fjell-kort">
+              <div class="fjell-navn">Hardangervidda</div>
+              <div class="fjell-rute">Rv7</div>
+              <div class="fjell-høyde">1243 moh.</div>
+            </div>
+            <div class="fjell-kort">
+              <div class="fjell-navn">Hemsedalsfjellet</div>
+              <div class="fjell-rute">Rv52</div>
+              <div class="fjell-høyde">1434 moh.</div>
+            </div>
+            <div class="fjell-kort">
+              <div class="fjell-navn">Filefjell</div>
+              <div class="fjell-rute">Rv51 / E16</div>
+              <div class="fjell-høyde">1389 moh.</div>
+            </div>
+            <div class="fjell-kort">
+              <div class="fjell-navn">Dovrefjell</div>
+              <div class="fjell-rute">E6</div>
+              <div class="fjell-høyde">1026 moh.</div>
+            </div>
+            <div class="fjell-kort">
+              <div class="fjell-navn">Valdresflya</div>
+              <div class="fjell-rute">Rv51</div>
+              <div class="fjell-høyde">1389 moh.</div>
+            </div>
+            <div class="fjell-kort">
+              <div class="fjell-navn">Sognefjellsvegen</div>
+              <div class="fjell-rute">Rv55</div>
+              <div class="fjell-høyde">1434 moh.</div>
+            </div>
+            <div class="fjell-kort">
+              <div class="fjell-navn">Strynefjell</div>
+              <div class="fjell-rute">Rv15</div>
+              <div class="fjell-høyde">1139 moh.</div>
+            </div>
+            <div class="fjell-kort">
+              <div class="fjell-navn">Saltfjellet</div>
+              <div class="fjell-rute">E6</div>
+              <div class="fjell-høyde">686 moh.</div>
+            </div>
+            <div class="fjell-kort">
+              <div class="fjell-navn">Bjørnfjell</div>
+              <div class="fjell-rute">E10</div>
+              <div class="fjell-høyde">520 moh.</div>
+            </div>
+          </div>
+          <a href="https://www.vegvesen.no/trafikk/fjelloverganger" target="_blank" rel="noopener" class="fjell-ekstern-knapp">
+            Se live status på vegvesen.no ↗
+          </a>
+          <p class="fjell-info">Kilde: Statens vegvesen · Status oppdateres på vegvesen.no</p>
+        </div>
       </div>
     </section>
 
@@ -1576,8 +1679,8 @@
         <div class="skriving-wrapper fade-in">
           <div class="skriving-tekst" id="skriving-tekst"></div>
           <div class="input-group">
-            <input type="text" id="skriving-input" placeholder="Begynn å skrive her…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" oninput="oppdaterSkriving()">
-            <button onclick="nySkriveTekst()">Ny setning</button>
+            <input type="text" id="skriving-input" placeholder="Begynn å skrive her…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" >
+            <button id="skriving-ny-knapp">Ny setning</button>
           </div>
           <div class="skriving-stats">
             <div class="stat-boks"><div class="stat-verdi" id="stat-wpm">—</div><div class="stat-label">WPM</div></div>
@@ -1587,7 +1690,7 @@
           <div class="skriving-resultat skjult" id="skriving-resultat">
             <div class="resultat-wpm" id="resultat-wpm"></div>
             <p class="resultat-tekst" id="resultat-tekst"></p>
-            <button onclick="nySkriveTekst()">Prøv igjen</button>
+            <button id="skriving-prøv-igjen-knapp">Prøv igjen</button>
           </div>
         </div>
       </div>
@@ -1600,8 +1703,8 @@
       <h2 class="section-title fade-in">Fakta om navnet ditt</h2>
       <div class="fakta-innhold fade-in">
         <div class="input-group">
-          <input type="text" id="navnBoks" placeholder="Skriv navnet ditt her..." onkeydown="if(event.key==='Enter') siHei()">
-          <button onclick="siHei()">Si hei!</button>
+          <input type="text" id="navnBoks" placeholder="Skriv navnet ditt her...">
+          <button id="navn-si-hei-knapp">Si hei!</button>
         </div>
         <h2 id="svar" class="fakta-svar"></h2>
         <div class="navn-section">
@@ -1642,6 +1745,15 @@
       <h2 class="section-title fade-in">Snake</h2>
       <p class="section-intro">Klassisk Nokia-spill. Spis maten, voks, og unngå å krasje.</p>
       <a href="snake.html"><button class="tetris-btn">Spill nå</button></a>
+      </div>
+    </section>
+
+    <section id="memory">
+      <div class="seksjon-innhold">
+      <p class="seksjon-etikett fade-in">Spill</p>
+      <h2 class="section-title fade-in">Memory</h2>
+      <p class="section-intro">Finn alle 8 par. Tell trekk og tid.</p>
+      <a href="memory.html"><button class="tetris-btn">Spill nå</button></a>
       </div>
     </section>
 
@@ -1877,9 +1989,15 @@
 
         e.preventDefault();
         lukkMeny();
-        // Lukk alle mobil-dropdowns
         document.querySelectorAll('.nav-dropdown.mobil-åpen').forEach(d => d.classList.remove('mobil-åpen'));
-        document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
+        const mål = document.querySelector(a.getAttribute('href'));
+        if (!mål) return;
+        const side = document.querySelector('.page');
+        side.classList.add('fader-ut');
+        setTimeout(() => {
+          mål.scrollIntoView({ behavior: 'instant' });
+          side.classList.remove('fader-ut');
+        }, 180);
       });
 
       const lagretTema = localStorage.getItem("tema");
@@ -1894,9 +2012,9 @@
     // Maper enkelt-seksjoner til riktig gruppelenke i nav
     const gruppeMap = {
       hjem: '#hjem',
-      vær: '#info',      nyheter: '#info',      boligpriser: '#info',
+      vær: '#info',      nyheter: '#info',      boligpriser: '#info',      fjelloverganger: '#info',
       klokke: '#verktøy', skriving: '#verktøy', navnefakta: '#verktøy',
-      kryssord: '#spill', tetris: '#spill', snake: '#spill',
+      kryssord: '#spill', tetris: '#spill', snake: '#spill', memory: '#spill',
       kontakt: '#kontakt',
     };
     const sections = document.querySelectorAll("section");
@@ -2041,7 +2159,7 @@
       const treff = boligKommuner.filter(k => k.navn.toLowerCase().includes(q)).slice(0, 8);
       if (!treff.length) { boks.style.display = 'none'; return; }
       boks.innerHTML = treff.map(k =>
-        `<div onclick="velgBoligKommune('${k.kode}','${k.navn.replace(/'/g,"\\'")}')">
+        `<div data-kode="${k.kode}" data-navn="${k.navn.replace(/"/g,'&quot;')}">
           ${k.navn}
           ${k.fylke ? `<span style="color:#a1a1a6;font-size:0.8rem;margin-left:6px;">${k.fylke}</span>` : ''}
         </div>`
@@ -2094,6 +2212,17 @@
 
     // Global grafstate — brukes av tooltip og toggle
     let boligGrafState = null;
+
+    // Retegn grafen når vinduet endrer størrelse (uten animasjon)
+    window.addEventListener('resize', () => {
+      if (!boligGrafState) return;
+      const canvas = document.getElementById('bolig-canvas');
+      const W = canvas.offsetWidth;
+      boligGrafState.W = W;
+      canvas.width  = W * devicePixelRatio;
+      canvas.height = boligGrafState.H * devicePixelRatio;
+      tegnBoligFrame(1);
+    });
 
     // Tegner (eller retegner) linjediagrammet med animasjon
     function tegneBoligGraf(år, ene, små, blokk, kommunenavn) {
@@ -2977,12 +3106,40 @@ visVærResultat();
     }
   }
 
+    // ── EVENT LISTENERS ──────────────────────────────────────────────────────
+    document.getElementById('egg-tilbake-knapp').addEventListener('click', lukkEgg);
+    document.getElementById('hamburger').addEventListener('click', toggleMeny);
+    document.getElementById('topp-knapp').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    document.getElementById('theme-toggle').addEventListener('change', toggleTheme);
+    document.getElementById('tema-mobil').addEventListener('change', function() {
+      toggleTheme();
+      document.querySelector('.switch input:not(#tema-mobil)').checked = this.checked;
+    });
+    document.getElementById('vær-søk-knapp').addEventListener('click', hentVær);
+    document.getElementById('vær-gps-knapp').addEventListener('click', hentVærGPS);
+    document.getElementById('vær-by').addEventListener('keydown', e => { if (e.key === 'Enter') hentVær(); });
+    document.getElementById('nyheter-prøv-igjen').addEventListener('click', hentNyheter);
+    document.getElementById('bolig-input').addEventListener('input', boligSøk);
+    document.getElementById('bolig-forslag').addEventListener('click', e => {
+      const div = e.target.closest('[data-kode]');
+      if (div) velgBoligKommune(div.dataset.kode, div.dataset.navn);
+    });
+    document.querySelectorAll('.bolig-legend-item').forEach(el => {
+      el.addEventListener('click', () => toggleBoligSerie(Number(el.dataset.serie)));
+    });
+    document.getElementById('skriving-input').addEventListener('input', oppdaterSkriving);
+    document.getElementById('skriving-ny-knapp').addEventListener('click', nySkriveTekst);
+    document.getElementById('skriving-prøv-igjen-knapp').addEventListener('click', nySkriveTekst);
+    document.getElementById('navn-si-hei-knapp').addEventListener('click', siHei);
+    document.getElementById('navnBoks').addEventListener('keydown', e => { if (e.key === 'Enter') siHei(); });
+    document.getElementById('footer-del-knapp').addEventListener('click', delSide);
+
   </script>
 
   <footer>
     <p>Laget av <a href="https://github.com/simonfrogner" target="_blank">Simon Sæterlid Frogner</a> &nbsp;·&nbsp; © 2026</p>
-    <button onclick="delSide()" class="footer-del-btn">🔗 Del siden</button>
-    <p class="footer-versjon">v1.8 &nbsp;·&nbsp; mars 2026</p>
+    <button id="footer-del-knapp" class="footer-del-btn">🔗 Del siden</button>
+    <p class="footer-versjon">v1.9 &nbsp;·&nbsp; mars 2026</p>
   </footer>
 
 </body>
