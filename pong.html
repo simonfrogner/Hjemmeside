@@ -96,7 +96,7 @@
 <main>
   <p class="etikett">Spill</p>
   <h1>Pong</h1>
-  <p class="subtitle" id="subtitle">Klassisk arkadespill. Slå AI-en til 10 poeng.</p>
+  <p class="subtitle" id="subtitle">Klassisk arkadespill. Slå AI-en til 7 poeng.</p>
 
   <div class="vanske-rad">
     <span class="vanske-label">Modus:</span>
@@ -149,7 +149,7 @@
   // ── KONFIG ────────────────────────────────────────────────────────────
   const RACKET_W = 10, RACKET_H = 72, RACKET_RADIUS = 5;
   const BALL_R   = 7;
-  const VINNPOENG = 10;
+  const VINNPOENG = 7;
   const MARGIN   = 18;
 
   const VANSKELIGHET = {
@@ -590,8 +590,8 @@
       const toSpillere = aktivModus === 2;
       document.getElementById('vanske-rad').style.display = toSpillere ? 'none' : '';
       document.getElementById('subtitle').textContent = toSpillere
-        ? 'To spillere på samme tastatur. Første til 10 poeng vinner.'
-        : 'Klassisk arkadespill. Slå AI-en til 10 poeng.';
+        ? 'To spillere på samme tastatur. Første til 7 poeng vinner.'
+        : 'Klassisk arkadespill. Slå AI-en til 7 poeng.';
       document.getElementById('label-spiller').textContent = toSpillere ? 'S1' : 'Du';
       document.getElementById('label-ai').textContent      = toSpillere ? 'S2' : 'AI';
     });
