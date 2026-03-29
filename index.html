@@ -36,7 +36,7 @@
       align-items: center;
       justify-content: center;
       gap: 20px;
-      transition: opacity 0.7s ease;
+      transition: opacity 0.5s ease;
     }
 
     #loader.skjult {
@@ -74,7 +74,6 @@
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
       min-height: 100vh;
       color: #1d1d1f;
-      transition: background 0.3s ease, color 0.3s ease;
     }
 
     .page, nav { position: relative; z-index: 1; }
@@ -118,28 +117,6 @@
       font-weight: 400;
       font-size: 0.9rem;
       transition: background 0.2s;
-      position: relative;
-    }
-
-    .nav-links a::after {
-      content: '';
-      position: absolute;
-      bottom: 2px;
-      left: 14px;
-      right: 14px;
-      height: 1.5px;
-      background: #0071e3;
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.2s ease;
-    }
-
-    .nav-links a:hover::after {
-      transform: scaleX(1);
-    }
-
-    body.dark .nav-links a::after {
-      background: #409cff;
     }
 
     .nav-links a:hover,
@@ -155,17 +132,31 @@
     .nav-dropdown > a {
       display: flex;
       align-items: center;
+      gap: 4px;
     }
 
+    /* Liten pil ned */
     .nav-dropdown > a::after {
-      display: none;
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: rotate(45deg) translateY(-2px);
+      opacity: 0.5;
+      transition: transform 0.2s;
+    }
+
+    .nav-dropdown:hover > a::after {
+      transform: rotate(225deg) translateY(-2px);
     }
 
     .dropdown-meny {
       position: absolute;
       top: 100%;
       left: 50%;
-      transform: translateX(-50%) translateY(-10px);
+      transform: translateX(-50%) translateY(-6px);
       padding-top: 12px;
       background: rgba(255,255,255,0.85);
       backdrop-filter: saturate(180%) blur(20px);
@@ -489,11 +480,6 @@
       will-change: transform;
     }
 
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.14);
-    }
-
     p {
       color: #6e6e73;
       font-size: 1.05rem;
@@ -556,12 +542,11 @@
     button:hover {
       background: #0077ed;
       transform: translateY(-1px);
-      box-shadow: 0 0 0 4px rgba(0,113,227,0.25);
+      box-shadow: 0 6px 20px rgba(0,113,227,0.28);
     }
 
     button:active {
-      transform: scale(0.97);
-      box-shadow: none;
+      transform: translateY(0);
     }
 
     #svar {
@@ -953,10 +938,6 @@
         padding: 12px 16px;
         border-radius: 10px;
         font-size: 1.05rem;
-      }
-
-      .nav-links a::after {
-        display: none;
       }
 
       /* Dropdown på mobil: klikk-toggle */
@@ -1395,15 +1376,6 @@
     .card.fade-in.synlig {
       opacity: 1;
       transform: perspective(800px) rotateY(0deg) translateY(0);
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .fade-in,
-      .card.fade-in {
-        opacity: 1;
-        transform: none;
-        transition: none;
-      }
     }
 
     @keyframes fall {
@@ -2520,13 +2492,10 @@
     // Fade-in ved scroll: hvert element fades inn med litt forsinkelse (stagger)
     // når det ruller inn i viewport via IntersectionObserver.
     const fadeEls = document.querySelectorAll(".fade-in");
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     fadeEls.forEach((el, i) => {
-      if (!prefersReduced) {
-        const sibling = [...el.parentElement.querySelectorAll(".fade-in")];
-        const idx = sibling.indexOf(el);
-        el.style.transitionDelay = (idx * 0.08) + "s";
-      }
+      const sibling = [...el.parentElement.querySelectorAll(".fade-in")];
+      const idx = sibling.indexOf(el);
+      el.style.transitionDelay = (idx * 0.1) + "s";
     });
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => {
@@ -4329,7 +4298,7 @@ visVærResultat();
   <footer>
     <p>Laget av <a href="https://github.com/simonfrogner" target="_blank">Simon Sæterlid Frogner</a> &nbsp;·&nbsp; © 2026</p>
     <button id="footer-del-knapp" class="footer-del-btn">🔗 Del siden</button>
-    <p class="footer-versjon">v1.16 &nbsp;·&nbsp; mars 2026</p>
+    <p class="footer-versjon">v1.15 &nbsp;·&nbsp; mars 2026</p>
   </footer>
 
 </body>
