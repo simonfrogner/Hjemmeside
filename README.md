@@ -21,6 +21,7 @@ Navigasjonen er gruppert i fem seksjoner:
 - Strømpriser — 24-timers stolpediagram med hover-tooltip, snitt/min/maks og regionvelger (NO1–NO5)
 - Valuta — kurser for EUR, USD, GBP, SEK og DKK mot NOK med omregner og kursendring fra forrige dag
 - Navnefakta — skriv inn navnet ditt og få live data fra SSB (antall, toppår, trend) samt morsomme fakta
+- I dag i historien — 8 tilfeldige historiske hendelser fra Wikipedia for dagens dato
 
 **Verktøy**
 - Skriving — skrivehurtigtest med WPM og nøyaktighetsstatistikk
@@ -45,7 +46,7 @@ Navigasjonen er gruppert i fem seksjoner:
 
 ## Versjon
 
-v1.15 — Pong-spill med 1- og 2-spiller, dynamisk AI, konfetti og mobilstøtte
+v1.17 — Skeleton-loaders, I dag i historien, animerte hjem-kort med glow
 
 ## Design
 
