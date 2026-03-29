@@ -391,8 +391,8 @@
   let forrigeTs = null;
   function sløyfe(ts) {
     if (tilstand !== 'spiller') return;
-    const dt = forrigeTs === null ? 1 : Math.min((ts - forrigeTs) / (1000 / 60), 3);
-    forrigeTs = ts;
+    const dt = (!ts || forrigeTs === null) ? 1 : Math.min((ts - forrigeTs) / (1000 / 60), 3);
+    forrigeTs = ts || null;
     oppdater(dt);
     tegn();
     animId = requestAnimationFrame(sløyfe);
