@@ -2526,12 +2526,21 @@
 
     // ── NAVIGASJON ────────────────────────────────────────────────────────────
 
-    // Åpner/lukker hamburger-menyen på mobil. Kall uten argument for toggle, false for lukk.
-    function toggleMeny(force) {
+    // Åpner/lukker hamburger-menyen på mobil.
+    function toggleMeny() {
+      const åpen = document.getElementById('hamburger').classList.contains('åpen');
       ['hamburger','navLinks'].forEach(id =>
-        document.getElementById(id).classList.toggle('åpen', force));
+        document.getElementById(id).classList.toggle('åpen', !åpen));
     }
-    const lukkMeny = () => toggleMeny(false);
+    function lukkMeny() {
+      ['hamburger','navLinks'].forEach(id =>
+        document.getElementById(id).classList.remove('åpen'));
+    }
+
+    // Lukk menyen ved klikk utenfor nav
+    document.addEventListener('click', e => {
+      if (!e.target.closest('nav')) lukkMeny();
+    });
 
     // Bytter mellom lyst og mørkt tema og lagrer valget i localStorage
     function toggleTheme() {
