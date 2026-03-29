@@ -391,8 +391,7 @@
   let forrigeTs = null;
   function sløyfe(ts) {
     if (tilstand !== 'spiller') return;
-    if (forrigeTs === null) forrigeTs = ts;
-    const dt = Math.min((ts - forrigeTs) / (1000 / 60), 3); // normalisert mot 60fps, maks 3x
+    const dt = forrigeTs === null ? 1 : Math.min((ts - forrigeTs) / (1000 / 60), 3);
     forrigeTs = ts;
     oppdater(dt);
     tegn();
