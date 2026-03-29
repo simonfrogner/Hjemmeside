@@ -777,6 +777,7 @@
     body.dark #vær,body.dark #klokke,body.dark #kryssord,body.dark #snake { --sb: #1c1c1e; }
     body.dark #navnefakta,body.dark #nyheter,body.dark #skriving,body.dark #tetris { --sb: #000000; }
     body.dark #navnefakta { --sg: rgba(147,51,234,0.15); }
+    body.dark #historien  { --sg: rgba(255,149,0,0.14); --sb: #000000; }
     body.dark #vær        { --sg: rgba(0,190,255,0.14); }
     body.dark #nyheter    { --sg: rgba(255,149,0,0.14); }
     body.dark #klokke     { --sg: rgba(255,204,0,0.13); }
@@ -1667,6 +1668,40 @@
   body.dark .valuta-kurs { color: #f5f5f7; }
   .valuta-label { font-size: 0.75rem; color: #a1a1a6; }
   .valuta-dato { font-size: 0.8rem; color: #a1a1a6; margin-top: 12px; }
+
+  /* HISTORIEN I DAG */
+  .historien-liste {
+    list-style: none;
+    padding: 0;
+    max-width: 640px;
+  }
+  .historien-liste li {
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.07);
+    display: flex;
+    gap: 16px;
+    align-items: baseline;
+  }
+  .historien-liste li:last-child { border-bottom: none; }
+  .historien-år {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #0071e3;
+    min-width: 44px;
+    flex-shrink: 0;
+  }
+  .historien-tekst {
+    font-size: 0.95rem;
+    color: #1d1d1f;
+    line-height: 1.5;
+  }
+  .historien-kilde {
+    font-size: 0.8rem;
+    color: #a1a1a6;
+    margin-top: 16px;
+  }
+  body.dark .historien-liste li { border-bottom-color: rgba(255,255,255,0.08); }
+  body.dark .historien-tekst { color: #e5e5e7; }
   .valuta-endring { font-size: 0.75rem; font-weight: 500; margin-top: 2px; }
   .valuta-endring.opp { color: #34c759; }
   .valuta-endring.ned { color: #ff3b30; }
@@ -1834,6 +1869,7 @@
           <a href="#strømpriser">Strømpriser</a>
           <a href="#valuta">Valuta</a>
           <a href="#navnefakta">Navnefakta</a>
+          <a href="#historien">I dag i historien</a>
         </div>
       </div>
 
@@ -2134,6 +2170,22 @@
           <ul id="navnFakta" class="tom fakta-liste"></ul>
         </div>
       </div>
+      </div>
+    </section>
+
+    <!-- HISTORIEN I DAG -->
+    <section id="historien">
+      <div class="seksjon-innhold">
+        <p class="seksjon-etikett fade-in">Historia</p>
+        <h2 class="section-title fade-in">Hva skjedde i dag?</h2>
+        <div id="historien-laster" class="vær-laster" style="padding:0;">
+          <div class="sk-nyhet"><div class="sk sk-nyhet-bilde"></div><div class="sk-nyhet-tekst"><div class="sk sk-nyhet-tittel"></div><div class="sk sk-nyhet-ingress"></div></div></div>
+          <div class="sk-nyhet"><div class="sk sk-nyhet-bilde"></div><div class="sk-nyhet-tekst"><div class="sk sk-nyhet-tittel"></div><div class="sk sk-nyhet-ingress"></div></div></div>
+          <div class="sk-nyhet"><div class="sk sk-nyhet-bilde"></div><div class="sk-nyhet-tekst"><div class="sk sk-nyhet-tittel"></div><div class="sk sk-nyhet-ingress"></div></div></div>
+        </div>
+        <div id="historien-feil" class="vær-feil skjult"></div>
+        <ul id="historien-liste" class="historien-liste"></ul>
+        <p class="historien-kilde">Kilde: Wikipedia</p>
       </div>
     </section>
 
@@ -2554,7 +2606,7 @@
     // er en underseksjon av «info» og ikke har egen topplenke i nav.
     const gruppeMap = {
       hjem: '#hjem',
-      klokke: '#info',   tidssoner: '#info', vær: '#info',      nyheter: '#info',      boligpriser: '#info',      strømpriser: '#info',      valuta: '#info',      navnefakta: '#info',
+      klokke: '#info',   tidssoner: '#info', vær: '#info',      nyheter: '#info',      boligpriser: '#info',      strømpriser: '#info',      valuta: '#info',      navnefakta: '#info',      historien: '#info',
       skriving: '#verktøy', nedtelling: '#verktøy', kalkulator: '#verktøy',
       pong: '#spill', kryssord: '#spill', tetris: '#spill', snake: '#spill', memory: '#spill',
       kontakt: '#kontakt',
@@ -4211,6 +4263,52 @@ visVærResultat();
           if (!valutaLastet) { valutaLastet = true; setTimeout(visValuta, 220); }
         });
       });
+
+      // ── HISTORIEN I DAG ──────────────────────────────────────────────
+      async function hentHistorien() {
+        const lasterEl = document.getElementById('historien-laster');
+        const feilEl   = document.getElementById('historien-feil');
+        const listeEl  = document.getElementById('historien-liste');
+        const now      = new Date();
+        const måned    = now.getMonth() + 1;
+        const dag      = now.getDate();
+
+        lasterEl.classList.remove('skjult');
+        feilEl.classList.add('skjult');
+        listeEl.innerHTML = '';
+
+        try {
+          const res  = await fetch(`https://no.wikipedia.org/api/rest_v1/feed/onthisday/events/${måned}/${dag}`);
+          if (!res.ok) throw new Error();
+          const data = await res.json();
+
+          // Plukk ut 8 tilfeldige hendelser og sorter på år
+          const alle    = data.events || [];
+          const utvalg  = alle.sort(() => Math.random() - 0.5).slice(0, 8);
+          utvalg.sort((a, b) => a.year - b.year);
+
+          lasterEl.classList.add('skjult');
+          listeEl.innerHTML = utvalg.map(e => `
+            <li>
+              <span class="historien-år">${e.year}</span>
+              <span class="historien-tekst">${e.text}</span>
+            </li>
+          `).join('');
+        } catch {
+          lasterEl.classList.add('skjult');
+          feilEl.textContent = 'Kunne ikke hente historiske hendelser.';
+          feilEl.classList.remove('skjult');
+        }
+      }
+
+      let historienLastet = false;
+      document.querySelectorAll('a[href="#historien"]').forEach(a => {
+        a.addEventListener('click', () => {
+          if (!historienLastet) { historienLastet = true; setTimeout(hentHistorien, 220); }
+        });
+      });
+      // Last automatisk ved sideinnlasting
+      hentHistorien();
 
       // ── KALKULATOR ────────────────────────────────────────────────────
       // Apple-stil kalkulator med tastaturstøtte, historikk og kopier
