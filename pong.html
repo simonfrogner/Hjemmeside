@@ -89,8 +89,8 @@
 <body>
 
 <nav>
-  <span class="nav-logo">Simon sin nettside</span>
   <a href="index.html#spill" class="nav-back">← Tilbake</a>
+  <div class="nav-logo">Pong</div>
 </nav>
 
 <main>
@@ -288,7 +288,7 @@
   }
 
   // ── OPPDATERING ───────────────────────────────────────────────────────
-  function oppdater() {
+  function oppdater(dt = 1) {
     const cfg = aiCfg();
 
     // Trail: lagre ballposisjon, maks 10 punkter
@@ -298,18 +298,18 @@
     // Spillerbevegelse
     if (aktivModus === 2) {
       // 2-spiller: venstre = W/S, høyre = pil opp/ned
-      if (tastDown.w) spiller.y   = Math.max(0, spiller.y - 6);
-      if (tastDown.s) spiller.y   = Math.min(H - RACKET_H, spiller.y + 6);
-      if (tastDown.opp) spiller2.y = Math.max(0, spiller2.y - 6);
-      if (tastDown.ned) spiller2.y = Math.min(H - RACKET_H, spiller2.y + 6);
+      if (tastDown.w) spiller.y   = Math.max(0, spiller.y - 6 * dt);
+      if (tastDown.s) spiller.y   = Math.min(H - RACKET_H, spiller.y + 6 * dt);
+      if (tastDown.opp) spiller2.y = Math.max(0, spiller2.y - 6 * dt);
+      if (tastDown.ned) spiller2.y = Math.min(H - RACKET_H, spiller2.y + 6 * dt);
     } else {
-      if (tastDown.opp) spiller.y = Math.max(0, spiller.y - 6);
-      if (tastDown.ned) spiller.y = Math.min(H - RACKET_H, spiller.y + 6);
+      if (tastDown.opp) spiller.y = Math.max(0, spiller.y - 6 * dt);
+      if (tastDown.ned) spiller.y = Math.min(H - RACKET_H, spiller.y + 6 * dt);
     }
 
     // Ball-bevegelse
-    ball.x += ball.dx;
-    ball.y += ball.dy;
+    ball.x += ball.dx * dt;
+    ball.y += ball.dy * dt;
 
     // Vegg topp/bunn
     if (ball.y - BALL_R < 0) { ball.y = BALL_R; ball.dy *= -1; pip(300); }
@@ -353,7 +353,7 @@
     if (aktivModus === 1) {
       const aiMidtY = ai.y + RACKET_H / 2;
       const diff    = ball.y - aiMidtY;
-      ai.y += Math.sign(diff) * Math.min(Math.abs(diff) * cfg.aiReaksjon, cfg.aiHastighet);
+      ai.y += Math.sign(diff) * Math.min(Math.abs(diff) * cfg.aiReaksjon, cfg.aiHastighet) * dt;
       ai.y  = Math.max(0, Math.min(H - RACKET_H, ai.y));
     }
 
@@ -388,9 +388,13 @@
   }
 
   // ── SPILLSLØYFE ───────────────────────────────────────────────────────
-  function sløyfe() {
+  let forrigeTs = null;
+  function sløyfe(ts) {
     if (tilstand !== 'spiller') return;
-    oppdater();
+    if (forrigeTs === null) forrigeTs = ts;
+    const dt = Math.min((ts - forrigeTs) / (1000 / 60), 3); // normalisert mot 60fps, maks 3x
+    forrigeTs = ts;
+    oppdater(dt);
     tegn();
     animId = requestAnimationFrame(sløyfe);
   }
@@ -407,6 +411,7 @@
     spiller.y = H/2 - RACKET_H/2;
     ai.y      = H/2 - RACKET_H/2;
     trail = [];
+    forrigeTs = null;
     document.getElementById('start-knapp').textContent = 'Restart';
     document.getElementById('pause-knapp').style.display = '';
     if (animId) cancelAnimationFrame(animId);
