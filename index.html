@@ -1378,6 +1378,14 @@
       transform: perspective(800px) rotateY(0deg) translateY(0);
     }
 
+    @media (prefers-reduced-motion: reduce) {
+      .fade-in {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+    }
+
     @keyframes fall {
       to {
         transform: translateY(105vh) rotate(720deg);
@@ -2495,7 +2503,7 @@
     fadeEls.forEach((el, i) => {
       const sibling = [...el.parentElement.querySelectorAll(".fade-in")];
       const idx = sibling.indexOf(el);
-      el.style.transitionDelay = (idx * 0.1) + "s";
+      el.style.transitionDelay = (idx * 0.08) + "s";
     });
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => {
