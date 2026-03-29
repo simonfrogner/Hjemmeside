@@ -118,6 +118,28 @@
       font-weight: 400;
       font-size: 0.9rem;
       transition: background 0.2s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 2px;
+      left: 14px;
+      right: 14px;
+      height: 1.5px;
+      background: #0071e3;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.2s ease;
+    }
+
+    .nav-links a:hover::after {
+      transform: scaleX(1);
+    }
+
+    body.dark .nav-links a::after {
+      background: #409cff;
     }
 
     .nav-links a:hover,
