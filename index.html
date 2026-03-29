@@ -1090,7 +1090,55 @@
     .prognose-dag .dag-min { color: #a1a1a6; margin-top: 2px; }
 
     .vær-feil { text-align: center; color: #ff3b30; padding: 12px; font-size: 0.95rem; }
-    .vær-laster { display: flex; justify-content: center; padding: 24px; }
+    .vær-laster { display: flex; flex-direction: column; justify-content: center; padding: 24px; }
+
+    /* SKELETON LOADERS */
+    @keyframes skeleton-shimmer {
+      0%   { background-position: -400px 0; }
+      100% { background-position: 400px 0; }
+    }
+    .sk {
+      background: linear-gradient(90deg, #e8e8ed 25%, #f2f2f7 50%, #e8e8ed 75%);
+      background-size: 800px 100%;
+      animation: skeleton-shimmer 1.4s ease-in-out infinite;
+      border-radius: 8px;
+    }
+    body.dark .sk {
+      background: linear-gradient(90deg, #2c2c2e 25%, #3a3a3c 50%, #2c2c2e 75%);
+      background-size: 800px 100%;
+    }
+    .sk-vær {
+      max-width: 560px;
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    .sk-vær-ikon { width: 64px; height: 64px; border-radius: 50%; flex-shrink: 0; }
+    .sk-vær-info { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+    .sk-vær-temp { height: 36px; width: 100px; border-radius: 8px; }
+    .sk-vær-desc { height: 16px; width: 160px; border-radius: 6px; }
+    .sk-vær-detaljer { height: 12px; width: 220px; border-radius: 6px; }
+    .sk-prognose { display: flex; gap: 10px; margin-top: 16px; max-width: 560px; }
+    .sk-prognose-dag { flex: 1; height: 80px; border-radius: 12px; }
+
+    .sk-nyhet { display: flex; gap: 12px; padding: 14px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+    body.dark .sk-nyhet { border-bottom-color: rgba(255,255,255,0.06); }
+    .sk-nyhet-bilde { width: 80px; height: 60px; border-radius: 10px; flex-shrink: 0; }
+    .sk-nyhet-tekst { flex: 1; display: flex; flex-direction: column; gap: 8px; justify-content: center; }
+    .sk-nyhet-tittel { height: 16px; border-radius: 6px; }
+    .sk-nyhet-ingress { height: 12px; width: 75%; border-radius: 6px; }
+
+    .sk-graf { height: 220px; border-radius: 12px; margin-top: 12px; }
+    .sk-stats { display: flex; gap: 12px; margin-top: 12px; }
+    .sk-stats-item { flex: 1; height: 48px; border-radius: 10px; }
+
+    .sk-valuta-rad { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+    body.dark .sk-valuta-rad { border-bottom-color: rgba(255,255,255,0.06); }
+    .sk-valuta-flagg { width: 28px; height: 20px; border-radius: 4px; flex-shrink: 0; }
+    .sk-valuta-navn { height: 14px; width: 60px; border-radius: 6px; }
+    .sk-valuta-kurs { height: 14px; width: 80px; border-radius: 6px; margin-left: auto; }
 
     .gps-btn {
       background: rgba(0,113,227,0.08);
@@ -1905,8 +1953,22 @@
           <button id="vær-søk-knapp">Søk</button>
           <button class="gps-btn" id="vær-gps-knapp" title="Bruk min posisjon">📍</button>
         </div>
-        <div id="vær-laster" class="vær-laster skjult">
-          <div class="spinner spinner-sm"></div>
+        <div id="vær-laster" class="vær-laster skjult" style="padding:0;">
+          <div class="sk-vær">
+            <div class="sk sk-vær-ikon"></div>
+            <div class="sk-vær-info">
+              <div class="sk sk-vær-temp"></div>
+              <div class="sk sk-vær-desc"></div>
+              <div class="sk sk-vær-detaljer"></div>
+            </div>
+          </div>
+          <div class="sk-prognose">
+            <div class="sk sk-prognose-dag"></div>
+            <div class="sk sk-prognose-dag"></div>
+            <div class="sk sk-prognose-dag"></div>
+            <div class="sk sk-prognose-dag"></div>
+            <div class="sk sk-prognose-dag"></div>
+          </div>
         </div>
         <div id="vær-feil" class="vær-feil skjult">Fant ikke byen. Prøv igjen.</div>
         <div id="vær-resultat" class="vær-resultat skjult">
@@ -1941,8 +2003,12 @@
         <button class="nyheter-tab" data-kilde="vg">VG</button>
         <button class="nyheter-tab" data-kilde="e24">E24</button>
       </div>
-      <div id="nyheter-laster" class="vær-laster fade-in">
-        <div class="spinner spinner-sm"></div>
+      <div id="nyheter-laster" class="fade-in" style="padding:0;">
+        <div class="sk-nyhet"><div class="sk sk-nyhet-bilde"></div><div class="sk-nyhet-tekst"><div class="sk sk-nyhet-tittel"></div><div class="sk sk-nyhet-ingress"></div></div></div>
+        <div class="sk-nyhet"><div class="sk sk-nyhet-bilde"></div><div class="sk-nyhet-tekst"><div class="sk sk-nyhet-tittel"></div><div class="sk sk-nyhet-ingress"></div></div></div>
+        <div class="sk-nyhet"><div class="sk sk-nyhet-bilde"></div><div class="sk-nyhet-tekst"><div class="sk sk-nyhet-tittel"></div><div class="sk sk-nyhet-ingress"></div></div></div>
+        <div class="sk-nyhet"><div class="sk sk-nyhet-bilde"></div><div class="sk-nyhet-tekst"><div class="sk sk-nyhet-tittel"></div><div class="sk sk-nyhet-ingress"></div></div></div>
+        <div class="sk-nyhet" style="border-bottom:none;"><div class="sk sk-nyhet-bilde"></div><div class="sk-nyhet-tekst"><div class="sk sk-nyhet-tittel"></div><div class="sk sk-nyhet-ingress"></div></div></div>
       </div>
       <div id="nyheter-feil" class="vær-feil skjult">Klarte ikke laste nyheter. <button id="nyheter-prøv-igjen" style="padding:6px 14px;font-size:0.85rem;">Prøv igjen</button></div>
       <div id="nyheter-grid" class="nyheter-liste"></div>
@@ -1958,6 +2024,9 @@
           <input type="text" id="bolig-input" placeholder="Søk kommune…" autocomplete="off" />
         </div>
         <div id="bolig-forslag" class="bolig-forslag" style="display:none;"></div>
+        <div id="bolig-skeleton" style="display:none;">
+          <div class="sk sk-graf" style="height:280px;"></div>
+        </div>
         <div class="bolig-canvas-wrap" id="bolig-graf-wrap" style="display:none;">
           <canvas id="bolig-canvas" height="320"></canvas>
           <div class="bolig-legend">
@@ -1988,7 +2057,15 @@
             </select>
             <div class="strøm-nå" id="strøm-nå-tekst"></div>
           </div>
-          <div class="strøm-canvas-wrap">
+          <div id="strøm-skeleton">
+            <div class="sk sk-graf"></div>
+            <div class="sk-stats">
+              <div class="sk sk-stats-item"></div>
+              <div class="sk sk-stats-item"></div>
+              <div class="sk sk-stats-item"></div>
+            </div>
+          </div>
+          <div class="strøm-canvas-wrap" id="strøm-canvas-wrap" style="display:none;">
             <canvas id="strøm-canvas" height="220"></canvas>
           </div>
           <div class="strøm-stats" id="strøm-stats" style="display:none;"></div>
@@ -2027,7 +2104,14 @@
               </select>
             </div>
           </div>
-          <div class="valuta-grid" id="valuta-grid" style="margin-top:20px;"></div>
+          <div id="valuta-skeleton" style="margin-top:20px;">
+            <div class="sk-valuta-rad"><div class="sk sk-valuta-flagg"></div><div class="sk sk-valuta-navn"></div><div class="sk sk-valuta-kurs"></div></div>
+            <div class="sk-valuta-rad"><div class="sk sk-valuta-flagg"></div><div class="sk sk-valuta-navn"></div><div class="sk sk-valuta-kurs"></div></div>
+            <div class="sk-valuta-rad"><div class="sk sk-valuta-flagg"></div><div class="sk sk-valuta-navn"></div><div class="sk sk-valuta-kurs"></div></div>
+            <div class="sk-valuta-rad"><div class="sk sk-valuta-flagg"></div><div class="sk sk-valuta-navn"></div><div class="sk sk-valuta-kurs"></div></div>
+            <div class="sk-valuta-rad" style="border-bottom:none;"><div class="sk sk-valuta-flagg"></div><div class="sk sk-valuta-navn"></div><div class="sk sk-valuta-kurs"></div></div>
+          </div>
+          <div class="valuta-grid" id="valuta-grid" style="display:none;margin-top:20px;"></div>
           <p class="valuta-dato" id="valuta-dato"></p>
         </div>
         <p id="valuta-feil" class="vær-feil skjult"></p>
@@ -2631,6 +2715,7 @@
       document.getElementById('bolig-forslag').style.display = 'none';
       document.getElementById('bolig-feil').classList.add('skjult');
       document.getElementById('bolig-graf-wrap').style.display = 'none';
+      document.getElementById('bolig-skeleton').style.display = 'block';
 
       try {
         const res = await fetch('https://data.ssb.no/api/v0/no/table/06035', {
@@ -2659,9 +2744,11 @@
         const småhus      = verdier.slice(N,   2*N);
         const blokk       = verdier.slice(2*N, 3*N);
 
+        document.getElementById('bolig-skeleton').style.display = 'none';
         document.getElementById('bolig-graf-wrap').style.display = 'block';
         tegneBoligGraf(årliste, eneboliger, småhus, blokk, navn);
       } catch(e) {
+        document.getElementById('bolig-skeleton').style.display = 'none';
         const feil = document.getElementById('bolig-feil');
         feil.textContent = 'Kunne ikke hente data for denne kommunen.';
         feil.classList.remove('skjult');
@@ -3732,8 +3819,13 @@ visVærResultat();
         const feilEl = document.getElementById('strøm-feil');
         const nåEl   = document.getElementById('strøm-nå-tekst');
         feilEl.classList.add('skjult');
+        document.getElementById('strøm-skeleton').style.display = 'block';
+        document.getElementById('strøm-canvas-wrap').style.display = 'none';
+        document.getElementById('strøm-stats').style.display = 'none';
         try {
           strømData = await hentStrøm(region);
+          document.getElementById('strøm-skeleton').style.display = 'none';
+          document.getElementById('strøm-canvas-wrap').style.display = '';
           requestAnimationFrame(() => tegnStrøm(strømData));
           const nåTime = new Date().getHours();
           const priser = strømData.map(d => d.NOK_per_kWh * 100);
@@ -3750,6 +3842,7 @@ visVærResultat();
             <div class="strøm-stat-boks"><div class="strøm-stat-verdi" style="color:#ff3b30">${maks} ø</div><div class="strøm-stat-label">Høyest</div></div>
           `;
         } catch(e) {
+          document.getElementById('strøm-skeleton').style.display = 'none';
           feilEl.textContent = 'Kunne ikke hente strømpriser.';
           feilEl.classList.remove('skjult');
         }
@@ -4080,6 +4173,8 @@ visVærResultat();
         feilEl.classList.add('skjult');
         try {
           const { kurser, forrige, dato } = await hentValuta();
+          document.getElementById('valuta-skeleton').style.display = 'none';
+          gridEl.style.display = '';
           valutaKurser = kurser;
           gridEl.innerHTML = VALUTA_REKKEFØLGE.map(kode => {
             const kurs = kurser[kode];
@@ -4099,6 +4194,7 @@ visVærResultat();
           sistEndretFelt = 'fra';
           oppdaterOmregner();
         } catch(e) {
+          document.getElementById('valuta-skeleton').style.display = 'none';
           feilEl.textContent = 'Kunne ikke hente valutakurser.';
           feilEl.classList.remove('skjult');
         }
