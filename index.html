@@ -4278,7 +4278,7 @@ visVærResultat();
         listeEl.innerHTML = '';
 
         try {
-          const res  = await fetch(`https://no.wikipedia.org/api/rest_v1/feed/onthisday/events/${måned}/${dag}`);
+          const res  = await fetch(`https://en.wikipedia.org/api/rest_v1/feed/onthisday/events/${måned}/${dag}`);
           if (!res.ok) throw new Error();
           const data = await res.json();
 
