@@ -37,7 +37,7 @@ Navigasjonen er gruppert i fem seksjoner:
 **Kontakt** — kontaktskjema
 
 **Generelt**
-- Mørkt tema — bryter med SF Symbols-ikoner for å bytte mellom lyst og mørkt, synkroniseres til alle spill
+- Mørkt tema — bryter med SF Symbols-ikoner for å bytte mellom lyst og mørkt, synkroniseres til alle spill; smooth color-transition ved bytte
 - Fade-overgang — nav-lenker fader siden ut/inn istedenfor å scrolle
 - Scroll-til-topp-knapp — dukker opp når du scroller ned
 - Easter egg — prøv å skrive «claude» i navnefeltet
@@ -45,7 +45,7 @@ Navigasjonen er gruppert i fem seksjoner:
 
 ## Versjon
 
-v1.15 — Pong-spill med 1- og 2-spiller, dynamisk AI, konfetti og mobilstøtte
+v1.16 — Animasjoner og polering: scroll-reveal, micro-interactions, smooth tema-bytte
 
 ## Design
 
@@ -59,7 +59,7 @@ Inspirert av Apples designspråk:
 - Kollapsbar mobilmeny med nedtrekkbare underseksjoner
 - Radial spotlight-bakgrunn med unik farge per seksjon
 - Seksjonsetiketter og venstrestilte titler
-- Myke overganger og animasjoner
+- Myke overganger og animasjoner: scroll-reveal med stagger, hover-effekter på kort og knapper, animert underline på nav-lenker, smooth dropdown-reveal
 
 ## Teknologi
 
