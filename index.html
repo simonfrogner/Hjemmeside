@@ -1379,7 +1379,8 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .fade-in {
+      .fade-in,
+      .card.fade-in {
         opacity: 1;
         transform: none;
         transition: none;
@@ -2500,10 +2501,13 @@
     // Fade-in ved scroll: hvert element fades inn med litt forsinkelse (stagger)
     // når det ruller inn i viewport via IntersectionObserver.
     const fadeEls = document.querySelectorAll(".fade-in");
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     fadeEls.forEach((el, i) => {
-      const sibling = [...el.parentElement.querySelectorAll(".fade-in")];
-      const idx = sibling.indexOf(el);
-      el.style.transitionDelay = (idx * 0.08) + "s";
+      if (!prefersReduced) {
+        const sibling = [...el.parentElement.querySelectorAll(".fade-in")];
+        const idx = sibling.indexOf(el);
+        el.style.transitionDelay = (idx * 0.08) + "s";
+      }
     });
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(e => {
