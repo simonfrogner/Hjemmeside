@@ -46,7 +46,7 @@ Navigasjonen er gruppert i fem seksjoner:
 
 ## Versjon
 
-v1.18 — CSS-opprydding, .gitignore, slettet docs-mappe
+v1.19 — Hamburger-meny fikset, «Historie» etikett, hjem-kort uten beskrivelse
 
 ## Design
 
