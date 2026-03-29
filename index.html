@@ -1661,6 +1661,8 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 12px;
+    border-top: 1.5px solid rgba(0,0,0,0.07);
+    padding-top: 20px;
   }
   .valuta-kort {
     background: white; border: 1.5px solid rgba(0,0,0,0.07);
@@ -1712,7 +1714,6 @@
   .valuta-endring.opp { color: #34c759; }
   .valuta-endring.ned { color: #ff3b30; }
   .valuta-omregner { margin-bottom: 4px; }
-  .valuta-grid { border-top: 1.5px solid rgba(0,0,0,0.07); padding-top: 20px; }
   body.dark .valuta-grid { border-color: rgba(255,255,255,0.07); }
   .valuta-omregner-rad { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
   .valuta-omregner input {
@@ -1750,6 +1751,8 @@
   .kalk-display {
     padding: 28px 22px 12px;
     text-align: right;
+    position: relative;
+    cursor: pointer;
   }
   .kalk-forrige {
     font-size: 1.05rem;
@@ -1796,7 +1799,6 @@
     margin: 0 14px;
   }
   /* Kopier-tooltip på display */
-  .kalk-display { position: relative; cursor: pointer; }
   .kalk-display:active { opacity: 0.75; }
   .kalk-kopiert {
     position: absolute;
@@ -2058,7 +2060,7 @@
     <section id="boligpriser">
       <div class="seksjon-innhold">
         <p class="seksjon-etikett fade-in">Boligpriser</p>
-        <h2 class="seksjon-tittel fade-in">Prisutvikling per kommune</h2>
+        <h2 class="section-title fade-in">Prisutvikling per kommune</h2>
         <div class="bolig-søk">
           <input type="text" id="bolig-input" placeholder="Søk kommune…" autocomplete="off" />
         </div>
@@ -2084,7 +2086,7 @@
     <section id="strømpriser">
       <div class="seksjon-innhold">
         <p class="seksjon-etikett fade-in">Energi</p>
-        <h2 class="seksjon-tittel fade-in">Strømpriser i dag</h2>
+        <h2 class="section-title fade-in">Strømpriser i dag</h2>
         <div class="card fade-in" style="padding: 24px 24px 16px;">
           <div class="strøm-kontroller">
             <select class="strøm-region-velger" id="strøm-region">
@@ -2118,7 +2120,7 @@
     <section id="valuta">
       <div class="seksjon-innhold">
         <p class="seksjon-etikett fade-in">Økonomi</p>
-        <h2 class="seksjon-tittel fade-in">Valutakurser</h2>
+        <h2 class="section-title fade-in">Valutakurser</h2>
         <div class="card fade-in" style="padding: 24px;">
           <div class="valuta-omregner" id="valuta-omregner" style="display:none;">
             <div class="valuta-omregner-rad">
@@ -4506,7 +4508,7 @@ visVærResultat();
   <footer>
     <p>Laget av <a href="https://github.com/simonfrogner" target="_blank">Simon Sæterlid Frogner</a> &nbsp;·&nbsp; © 2026</p>
     <button id="footer-del-knapp" class="footer-del-btn">🔗 Del siden</button>
-    <p class="footer-versjon">v1.17 &nbsp;·&nbsp; mars 2026</p>
+    <p class="footer-versjon">v1.18 &nbsp;·&nbsp; mars 2026</p>
   </footer>
 
 </body>

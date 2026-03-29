@@ -46,7 +46,7 @@ Navigasjonen er gruppert i fem seksjoner:
 
 ## Versjon
 
-v1.17 — Skeleton-loaders, I dag i historien, animerte hjem-kort med glow
+v1.18 — CSS-opprydding, .gitignore, slettet docs-mappe
 
 ## Design
 
